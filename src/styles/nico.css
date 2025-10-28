@@ -29390,13 +29390,13 @@ input.main-search-input::placeholder {
     font-size: 12px;
     font-weight: 500;
     transition: all .3s ease-in-out !important;
-    background-image: url(/src/assets/images/chevron-right.svg);
+    background-image: url(/images/chevron-right.svg);
     color: var(--theme2)
 }
 
 .wp-content .accordion-item .accordion-header .accordion-button:not(.collapsed):after {
     font-size: 12px;
-    background-image: url(/src/assets/images/chevron-down.svg);
+    background-image: url(/images/chevron-down.svg);
     font-weight: 500;
     color: var(--theme2);
     transform: rotate(0);
@@ -29851,13 +29851,13 @@ input.main-search-input::placeholder {
     font-size: 12px;
     font-weight: 500;
     transition: all .3s ease-in-out !important;
-    background-image: url(/src/assets/images/chevron-right.svg);
+    background-image: url(/images/chevron-right.svg);
     color: var(--theme2)
 }
 
 .faq-content .accordion-item .accordion-header .accordion-button:not(.collapsed):after {
     font-size: 12px;
-    background-image: url(/src/assets/images/chevron-down.svg);
+    background-image: url(/images/chevron-down.svg);
     font-weight: 500;
     color: var(--theme2);
     transform: rotate(0);

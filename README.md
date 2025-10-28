@@ -170,8 +170,8 @@ This project is licensed under the MIT License.
 ## 🆘 Support
 
 For support and questions:
-- Email: hello@gamegeek.com
-- Phone: +1 (555) 123-4567
+- Email: support@gamegeek.asia
+- Phone: (+84) 902 122 120
 
 ## 🙏 Acknowledgments
 
