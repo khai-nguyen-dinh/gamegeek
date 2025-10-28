@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Styles */
+html {
+  font-family: 'Inter', system-ui, sans-serif;
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Animations */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slideUp {
+  0% { 
+    transform: translateY(20px); 
+    opacity: 0; 
+  }
+  100% { 
+    transform: translateY(0); 
+    opacity: 1; 
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0,0,0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -30px, 0);
+  }
+  70% {
+    transform: translate3d(0, -15px, 0);
+  }
+  90% {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+/* Utility Classes */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out;
+}
+
+.animate-bounce-slow {
+  animation: bounce 2s infinite;
+}
+
+/* Custom Components */
+.btn-primary {
+  @apply bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300;
+}
+
+.btn-secondary {
+  @apply border-2 border-primary-600 text-primary-600 px-6 py-3 rounded-lg font-semibold hover:bg-primary-600 hover:text-white transition-colors duration-300;
+}
+
+.card {
+  @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300;
+}
+
+.section-padding {
+  @apply py-20;
+}
+
+.container-custom {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Gradient Text */
+.gradient-text {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-800;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  @apply hidden md:hidden;
+}
+
+.mobile-menu.active {
+  @apply block;
+}
+
+/* Responsive Grid */
+.grid-responsive {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
+}
+
+.grid-responsive-2 {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-8;
+}
+
+.grid-responsive-4 {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8;
+}
+
+/* Hero Section */
+.hero-bg {
+  @apply bg-gradient-to-br from-gray-50 to-white;
+}
+
+/* Feature Cards */
+.feature-card {
+  @apply p-8 rounded-2xl border border-gray-100 hover:border-primary-200 hover:shadow-lg transition-all duration-300;
+}
+
+.feature-icon {
+  @apply w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center mb-6 transition-colors duration-300;
+}
+
+
+/* Service Cards */
+.service-card {
+  @apply bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300;
+}
+
+.service-icon {
+  @apply w-16 h-16 rounded-xl flex items-center justify-center mb-6;
+}
+
+/* Testimonial Cards */
+.testimonial-card {
+  @apply bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300;
+}
+
+/* Portfolio Cards */
+.portfolio-card {
+  @apply bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300;
+}
+
+/* CTA Sections */
+.cta-primary {
+  @apply py-20 bg-gradient-to-r from-primary-600 to-primary-800;
+}
+
+.cta-secondary {
+  @apply py-20 bg-gray-50;
+}
+
+/* Form Styles */
+.form-input {
+  @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+/* Navigation */
+.nav-link {
+  @apply text-gray-600 hover:text-primary-600 px-3 py-2 text-sm font-medium transition-colors;
+}
+
+.nav-link-mobile {
+  @apply text-gray-600 hover:text-primary-600 block px-3 py-2 text-base font-medium;
+}
+
+/* Footer */
+.footer-social {
+  @apply w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-primary-100 transition-colors;
+}
+
+/* Admin Panel */
+.admin-card {
+  @apply bg-gray-50 rounded-xl p-6 text-center;
+}
+
+.admin-icon {
+  @apply w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4;
+}
+
+/* Loading States */
+.loading {
+  @apply animate-pulse;
+}
+
+/* Focus States */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+}
+
+/* Hover Effects */
+.hover-lift {
+  @apply transform hover:scale-105 transition-transform duration-300;
+}
+
+.hover-glow {
+  @apply hover:shadow-lg hover:shadow-primary-200 transition-shadow duration-300;
+}

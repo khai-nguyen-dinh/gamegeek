@@ -1,0 +1,77 @@
+---
+// Hero section component
+---
+
+<section class="pt-16 hero-bg">
+  <div class="container-custom section-padding">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <!-- Left Content -->
+      <div class="space-y-8">
+        <div class="space-y-4">
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+            Building the
+            <span class="gradient-text">
+              Future
+            </span>
+            of Technology
+          </h1>
+          <p class="text-xl text-gray-600 leading-relaxed">
+            We create innovative digital solutions that transform businesses and drive growth. 
+            From web development to mobile apps, we bring your ideas to life.
+          </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="/contact" class="btn-primary hover-lift text-center">
+            Get Started Today
+          </a>
+          <a href="/portfolio" class="btn-secondary text-center">
+            View Our Work
+          </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-3 gap-8 pt-8">
+          <div class="text-center">
+            <div class="text-3xl font-bold text-primary-600">100+</div>
+            <div class="text-sm text-gray-600">Projects Completed</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-primary-600">50+</div>
+            <div class="text-sm text-gray-600">Happy Clients</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-primary-600">5+</div>
+            <div class="text-sm text-gray-600">Years Experience</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Content - Hero Image/Animation -->
+      <div class="relative">
+        <div class="relative z-10">
+          <!-- Main Hero Image Placeholder -->
+          <div class="bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl p-8 h-96 flex items-center justify-center">
+            <div class="text-center space-y-4">
+              <div class="w-24 h-24 bg-primary-600 rounded-full mx-auto flex items-center justify-center">
+                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-gray-900">Innovation</h3>
+              <p class="text-gray-600">Technology Solutions</p>
+            </div>
+          </div>
+
+          <!-- Floating Elements -->
+          <div class="absolute -top-4 -right-4 w-20 h-20 bg-yellow-400 rounded-full opacity-80 animate-bounce-slow"></div>
+          <div class="absolute -bottom-4 -left-4 w-16 h-16 bg-green-400 rounded-full opacity-80 animate-bounce-slow" style="animation-delay: 1s;"></div>
+          <div class="absolute top-1/2 -left-8 w-12 h-12 bg-purple-400 rounded-full opacity-80 animate-bounce-slow" style="animation-delay: 2s;"></div>
+        </div>
+
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 bg-gradient-to-r from-primary-50 to-transparent rounded-2xl -z-10"></div>
+      </div>
+    </div>
+  </div>
+</section>

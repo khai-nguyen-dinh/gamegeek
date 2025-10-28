@@ -1,0 +1,266 @@
+---
+import LayoutNico from '../layouts/LayoutNico.astro';
+---
+
+<LayoutNico title="Blog - NioTech" description="Stay updated with the latest technology trends, insights, and best practices from our team of experts.">
+  <div class="pt-16">
+    <!-- Hero Section -->
+    <section class="py-20 bg-gradient-to-br from-gray-50 to-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            Our Blog
+          </h1>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Insights, tips, and trends from our team of technology experts. 
+            Stay ahead of the curve with our latest articles.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Article -->
+    <section class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-gradient-to-r from-primary-600 to-primary-800 rounded-2xl p-8 md:p-12 text-white">
+          <div class="max-w-3xl">
+            <div class="flex items-center mb-4">
+              <span class="bg-white/20 px-3 py-1 rounded-full text-sm font-medium">Featured</span>
+              <span class="ml-4 text-primary-100">December 15, 2024</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">
+              The Future of Web Development: Trends to Watch in 2025
+            </h2>
+            <p class="text-xl text-primary-100 mb-8">
+              Explore the emerging technologies and frameworks that will shape web development 
+              in the coming year, from AI integration to new performance optimization techniques.
+            </p>
+            <a href="#" class="bg-white text-primary-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+              Read More →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blog Posts Grid -->
+    <section class="py-20 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Blog Post 1 -->
+          <article class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+              <div class="text-center">
+                <div class="w-16 h-16 bg-blue-600 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                  </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900">Web Development</h3>
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center mb-4">
+                <span class="text-sm text-gray-500">December 10, 2024</span>
+                <span class="mx-2 text-gray-300">•</span>
+                <span class="text-sm text-gray-500">5 min read</span>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-3">
+                Building Scalable React Applications
+              </h3>
+              <p class="text-gray-600 mb-4">
+                Learn best practices for structuring and scaling React applications 
+                for enterprise-level projects.
+              </p>
+              <a href="#" class="text-primary-600 font-medium hover:text-primary-700">
+                Read More →
+              </a>
+            </div>
+          </article>
+
+          <!-- Blog Post 2 -->
+          <article class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="h-48 bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
+              <div class="text-center">
+                <div class="w-16 h-16 bg-green-600 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900">Mobile Development</h3>
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center mb-4">
+                <span class="text-sm text-gray-500">December 8, 2024</span>
+                <span class="mx-2 text-gray-300">•</span>
+                <span class="text-sm text-gray-500">7 min read</span>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-3">
+                Cross-Platform Mobile Development with Flutter
+              </h3>
+              <p class="text-gray-600 mb-4">
+                Discover the benefits and challenges of using Flutter for 
+                cross-platform mobile app development.
+              </p>
+              <a href="#" class="text-primary-600 font-medium hover:text-primary-700">
+                Read More →
+              </a>
+            </div>
+          </article>
+
+          <!-- Blog Post 3 -->
+          <article class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="h-48 bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center">
+              <div class="text-center">
+                <div class="w-16 h-16 bg-purple-600 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z" />
+                  </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900">UI/UX Design</h3>
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center mb-4">
+                <span class="text-sm text-gray-500">December 5, 2024</span>
+                <span class="mx-2 text-gray-300">•</span>
+                <span class="text-sm text-gray-500">6 min read</span>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-3">
+                Design Systems: Creating Consistent User Experiences
+              </h3>
+              <p class="text-gray-600 mb-4">
+                Learn how to build and maintain design systems that ensure 
+                consistency across your digital products.
+              </p>
+              <a href="#" class="text-primary-600 font-medium hover:text-primary-700">
+                Read More →
+              </a>
+            </div>
+          </article>
+
+          <!-- Blog Post 4 -->
+          <article class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="h-48 bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center">
+              <div class="text-center">
+                <div class="w-16 h-16 bg-orange-600 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                  </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900">Cloud Computing</h3>
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center mb-4">
+                <span class="text-sm text-gray-500">December 3, 2024</span>
+                <span class="mx-2 text-gray-300">•</span>
+                <span class="text-sm text-gray-500">8 min read</span>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-3">
+                Cloud Migration Strategies for Small Businesses
+              </h3>
+              <p class="text-gray-600 mb-4">
+                A comprehensive guide to migrating your business infrastructure 
+                to the cloud safely and efficiently.
+              </p>
+              <a href="#" class="text-primary-600 font-medium hover:text-primary-700">
+                Read More →
+              </a>
+            </div>
+          </article>
+
+          <!-- Blog Post 5 -->
+          <article class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="h-48 bg-gradient-to-br from-red-100 to-red-200 flex items-center justify-center">
+              <div class="text-center">
+                <div class="w-16 h-16 bg-red-600 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900">E-commerce</h3>
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center mb-4">
+                <span class="text-sm text-gray-500">November 30, 2024</span>
+                <span class="mx-2 text-gray-300">•</span>
+                <span class="text-sm text-gray-500">4 min read</span>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-3">
+                E-commerce Trends That Will Dominate 2025
+              </h3>
+              <p class="text-gray-600 mb-4">
+                Stay ahead of the competition with these emerging e-commerce 
+                trends and technologies.
+              </p>
+              <a href="#" class="text-primary-600 font-medium hover:text-primary-700">
+                Read More →
+              </a>
+            </div>
+          </article>
+
+          <!-- Blog Post 6 -->
+          <article class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="h-48 bg-gradient-to-br from-indigo-100 to-indigo-200 flex items-center justify-center">
+              <div class="text-center">
+                <div class="w-16 h-16 bg-indigo-600 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900">Technology</h3>
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center mb-4">
+                <span class="text-sm text-gray-500">November 28, 2024</span>
+                <span class="mx-2 text-gray-300">•</span>
+                <span class="text-sm text-gray-500">9 min read</span>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-3">
+                The Impact of AI on Software Development
+              </h3>
+              <p class="text-gray-600 mb-4">
+                Explore how artificial intelligence is transforming the way 
+                we develop and maintain software applications.
+              </p>
+              <a href="#" class="text-primary-600 font-medium hover:text-primary-700">
+                Read More →
+              </a>
+            </div>
+          </article>
+        </div>
+
+        <!-- Load More Button -->
+        <div class="text-center mt-12">
+          <button class="bg-primary-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-700 transition-colors">
+            Load More Articles
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter Signup -->
+    <section class="py-20 bg-gradient-to-r from-primary-600 to-primary-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
+          Stay Updated
+        </h2>
+        <p class="text-xl text-primary-100 mb-8 max-w-3xl mx-auto">
+          Subscribe to our newsletter and never miss the latest insights, 
+          tips, and trends in technology.
+        </p>
+        <div class="max-w-md mx-auto flex gap-4">
+          <input type="email" placeholder="Enter your email" 
+            class="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white">
+          <button class="bg-white text-primary-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+            Subscribe
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+</LayoutNico>

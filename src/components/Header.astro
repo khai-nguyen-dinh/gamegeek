@@ -1,0 +1,138 @@
+---
+import { Icon } from 'astro-icon/components';
+---
+
+<header class="cs_site_header header_style_2 cs_style_1 cs_sticky_header cs_site_header_full_width header-transparent" id="main-header">
+  <div class="cs_main_header">
+    <div class="container">
+      <div class="cs_main_header_in">
+        <div class="cs_main_header_left">
+          <a class="cs_site_branding" href="/">
+            <img src="/src/assets/images/logo.png" alt="Logo">
+          </a>
+        </div>
+        <div class="cs_main_header_center">
+          <div class="cs_nav cs_primary_font fw-medium">
+            <span class="cs-munu_toggle">
+              <span></span>
+            </span>
+            <ul class="cs_nav_list fw-medium">
+              <li class="menu-item-has-children">
+                <a href="/">Home</a>
+                <span class="cs-munu_dropdown_toggle"><span></span></span>
+              </li>
+              <li class="menu-item-has-children">
+                <a href="/">Pages</a>
+                <span class="cs-munu_dropdown_toggle"><span></span></span>
+                <ul>
+                  <li><a href="/about">About Us</a></li>
+                  <li><a href="/contact">Contact</a></li>
+                </ul>
+              </li>
+              <li class="menu-item-has-children">
+                <a href="/portfolio">Portfolio</a>
+                <span class="cs-munu_dropdown_toggle"><span></span></span>
+              </li>
+              <li class="menu-item-has-children">
+                <a href="/services">Services</a>
+                <span class="cs-munu_dropdown_toggle"><span></span></span>
+              </li>
+              <li class="menu-item-has-children">
+                <a href="/blog">Blog</a>
+                <span class="cs-munu_dropdown_toggle"><span></span></span>
+              </li>
+              <li>
+                <a href="/contact">Contact</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="cs_main_header_right">
+          <div class="header-btn d-flex align-items-center">
+            <a class="search-trigger search-icon">
+              <i class="bi bi-search"></i>
+            </a>
+            <div class="header-button ms-4">
+              <a class="theme-btn" href="/contact">
+                <span>Get Started<i class="bi bi-arrow-right"></i></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  /* Header background transitions */
+  .header-transparent {
+    background: transparent !important;
+    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+  }
+
+  .header-scrolled {
+    background: #ffffff !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Ensure header content is properly styled */
+  #main-header.cs_site_header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    width: 100%;
+  }
+</style>
+
+<script>
+  // Mobile menu toggle functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Toggle mobile menu
+    const menuToggle = document.querySelector('.cs-munu_toggle');
+    const navList = document.querySelector('.cs_nav_list');
+    
+    if (menuToggle && navList) {
+      menuToggle.addEventListener('click', function() {
+        navList.classList.toggle('active');
+      });
+    }
+    
+    // Dropdown toggle functionality
+    const dropdownToggles = document.querySelectorAll('.cs-munu_dropdown_toggle');
+    dropdownToggles.forEach(toggle => {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        const parent = this.parentElement;
+        parent.classList.toggle('active');
+      });
+    });
+
+    // Header scroll behavior
+    const header = document.getElementById('main-header');
+    let lastScrollTop = 0;
+    
+    function handleScroll() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      if (scrollTop > 50) {
+        header.classList.remove('header-transparent');
+        header.classList.add('header-scrolled');
+      } else {
+        header.classList.add('header-transparent');
+        header.classList.remove('header-scrolled');
+      }
+      
+      lastScrollTop = scrollTop;
+    }
+
+    // Initial check for scroll position
+    handleScroll();
+    
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScroll, { passive: true });
+  });
+</script>
