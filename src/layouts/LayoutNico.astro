@@ -6,9 +6,10 @@ import '../styles/nico.css';
 export interface Props {
   title: string;
   description?: string;
+  keywords?: string;
 }
 
-const { title, description = "NioTech - Leading Technology Solutions" } = Astro.props;
+const { title, description = "GameGeek is the central hub connecting Vietnam's game studios, publishers, investors, and media. We empower collaboration, innovation, and sustainable growth across the entire game industry ecosystem.", keywords = "GameGeek, Vietnam game industry, game studios, publishers, investors, game ecosystem, game community Vietnam, game development Vietnam" } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -16,6 +17,7 @@ const { title, description = "NioTech - Leading Technology Solutions" } = Astro.
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />

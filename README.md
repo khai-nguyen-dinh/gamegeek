@@ -1,4 +1,4 @@
-# NioTech - Astro Website with Keystatic CMS
+# Gamegeek - Astro Website with Keystatic CMS
 
 A modern, responsive website built with Astro and Keystatic CMS, featuring a clean design and comprehensive content management capabilities.
 
@@ -45,7 +45,7 @@ A modern, responsive website built with Astro and Keystatic CMS, featuring a cle
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd niotech-astro
+cd gamegeek
 ```
 
 2. Install dependencies:
@@ -170,7 +170,7 @@ This project is licensed under the MIT License.
 ## 🆘 Support
 
 For support and questions:
-- Email: hello@niotech.com
+- Email: hello@gamegeek.com
 - Phone: +1 (555) 123-4567
 
 ## 🙏 Acknowledgments
