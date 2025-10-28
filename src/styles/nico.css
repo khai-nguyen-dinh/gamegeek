@@ -78,7 +78,7 @@
 }
 
 .slick-slide img {
-    display: block
+    display: block;
 }
 
 .slick-slide.slick-loading img {
@@ -22531,7 +22531,8 @@ input[type=radio]~label:before {
 
 .theme-btn i,
 .theme-btn svg {
-    margin-left: 6px
+    margin-left: 6px;
+    display: inline;
 }
 
 .theme-btn:before {
@@ -24887,7 +24888,7 @@ input[type=radio]~label:before {
     align-items: center;
     gap: 10px;
     background: #ffca69;
-    color: var(--theme);
+    color: #282c32;
     font-family: Urbanist, sans-serif;
     font-size: 16px;
     font-style: normal;
@@ -24909,7 +24910,7 @@ input[type=radio]~label:before {
 .section-title .title {
     color: var(--title);
     font-family: Urbanist, sans-serif;
-    font-size: 48px;
+    font-size: 42px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
@@ -25200,7 +25201,7 @@ input[type=radio]~label:before {
 .fancy-box.style2 .content h4 {
     color: var(--title);
     font-family: Urbanist, sans-serif;
-    font-size: 24px;
+    font-size: 18px;
     font-style: normal;
     font-weight: 600;
     line-height: 34px;
@@ -25433,7 +25434,8 @@ input[type=radio]~label:before {
 }
 
 .checklist.style1 li img {
-    margin-right: 10px
+    margin-right: 10px;
+    display: inline-block;
 }
 
 .contact-meta {
@@ -28537,10 +28539,10 @@ input.main-search-input::placeholder {
 .intro-wrapper.style1 .intro-content .intro-section-title .intro-title {
     color: var(--title);
     font-family: Urbanist, sans-serif;
-    font-size: 64px;
+    font-size: 45px;
     font-style: normal;
     font-weight: 700;
-    line-height: 80px;
+    line-height: 60px;
     letter-spacing: -1.28px;
     margin-bottom: 15px
 }
@@ -28986,6 +28988,10 @@ input.main-search-input::placeholder {
     text-align: center
 }
 
+.brandSliderOne .brand-logo img {
+    height: 180px;
+}
+
 .brandSliderTwo {
     padding: 30px 0 0;
     border-bottom: 0px
@@ -29186,6 +29192,11 @@ input.main-search-input::placeholder {
 .feature-box-items .content p {
     color: #565656;
     font-weight: 500
+}
+
+.about-section {
+    padding-top: 50px;
+    padding-bottom: 50px;
 }
 
 .about-section-3 {
@@ -29613,6 +29624,10 @@ input.main-search-input::placeholder {
 
 .wcu-wrapper.style2 .counter-box-wrapper {
     margin-top: 40px
+}
+
+.wcu-wrapper .fancy-box.style2 .icon img {
+    height: 80px;
 }
 
 .wcu-wrapper.style3 .wcu-content .section-title .text1 {
@@ -30912,7 +30927,8 @@ input.main-search-input::placeholder {
 }
 
 .blog-card.style1 .body .tag-meta img {
-    margin-right: 10px
+    margin-right: 10px;
+    display: inline;
 }
 
 .blog-card.style1 .body h3 {
@@ -30935,6 +30951,10 @@ input.main-search-input::placeholder {
 .blog-card.style1 .body .blog-meta {
     display: flex;
     align-items: center
+}
+
+.blog-meta .icon img {
+    display: inline;
 }
 
 .blog-card.style1 .body .blog-meta .item {

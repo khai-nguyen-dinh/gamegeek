@@ -2,6 +2,23 @@
 // About Section Component
 ---
 
+<style>
+  /* Keep icons inline with text in checklist */
+  .checklist.style1 li img {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  
+  .checklist.style1 li {
+    display: flex;
+    align-items: flex-start;
+  }
+</style>
+
 <section class="about-section fix">
   <div class="about-container-wrapper style1">
     <div class="container">
@@ -34,28 +51,28 @@
             <div class="about-content">
               <div class="section-title">
                 <div class="subtitle wow fadeInUp" data-wow-delay=".2s">
-                  About Our App 
+                  About Us 
                   <img src="/images/icon_title.png" alt="icon">
                 </div>
                 <h2 class="title wow fadeInUp" data-wow-delay=".4s">
-                  Simple Reports & Analytics Backdown As it
+                  GameGeek – Vietnam’s Game Industry Hub Reimagined
                 </h2>
                 <p class="section-desc wow fadeInUp" data-wow-delay=".6s">
-                  There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use
+                  stablished in 2014, GameGeek connects every corner of Vietnam’s gaming ecosystem — from studios, publishers, media providers to investors. Our mission is to empower collaboration, fuel innovation, and accelerate the industry’s growth through data, insights, and community
                 </p>
               </div>
               <ul class="checklist style1 wow fadeInUp" data-wow-delay=".2s">
                 <li>
                   <img src="/images/checkmarkIcon.svg" alt="icon"> 
-                  With our Technological and Marketing Solutions.
+                  With our ecosystem-driven insights and industry connections.
                 </li>
                 <li>
                   <img src="/images/checkmarkIcon.svg" alt="icon"> 
-                  We are trusted all over the world.
+                  We are trusted by leading studios and partners across Asia.
                 </li>
                 <li>
                   <img src="/images/checkmarkIcon.svg" alt="icon"> 
-                  Start Your 14 Days Free Trials Today!
+                  Join GameGeek and shape the next chapter of Vietnam’s game industry!
                 </li>
               </ul>
               <a class="theme-btn wow fadeInUp" data-wow-delay=".2s" href="/about" data-discover="true">

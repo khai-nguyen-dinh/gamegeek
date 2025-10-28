@@ -17,32 +17,23 @@ import { Icon } from 'astro-icon/components';
               <span></span>
             </span>
             <ul class="cs_nav_list fw-medium">
-              <li class="menu-item-has-children">
-                <a href="/">Home</a>
-                <span class="cs-munu_dropdown_toggle"><span></span></span>
-              </li>
-              <li class="menu-item-has-children">
-                <a href="/">Pages</a>
-                <span class="cs-munu_dropdown_toggle"><span></span></span>
-                <ul>
-                  <li><a href="/about">About Us</a></li>
-                  <li><a href="/contact">Contact</a></li>
-                </ul>
-              </li>
-              <li class="menu-item-has-children">
-                <a href="/portfolio">Portfolio</a>
-                <span class="cs-munu_dropdown_toggle"><span></span></span>
-              </li>
-              <li class="menu-item-has-children">
-                <a href="/services">Services</a>
-                <span class="cs-munu_dropdown_toggle"><span></span></span>
-              </li>
-              <li class="menu-item-has-children">
-                <a href="/blog">Blog</a>
-                <span class="cs-munu_dropdown_toggle"><span></span></span>
+              <li>
+                <a href="/">HOME</a>
               </li>
               <li>
-                <a href="/contact">Contact</a>
+                <a href="/about">ABOUT</a>
+              </li>
+              <li>
+                <a href="/services">SOLUTION</a>
+              </li>
+              <li>
+                <a href="/blog">NEWS</a>
+              </li>
+              <li>
+                <a href="/portfolio">PROGRAMS</a>
+              </li>
+              <li>
+                <a href="/contact">CARRIER</a>
               </li>
             </ul>
           </div>
@@ -100,16 +91,6 @@ import { Icon } from 'astro-icon/components';
         navList.classList.toggle('active');
       });
     }
-    
-    // Dropdown toggle functionality
-    const dropdownToggles = document.querySelectorAll('.cs-munu_dropdown_toggle');
-    dropdownToggles.forEach(toggle => {
-      toggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        const parent = this.parentElement;
-        parent.classList.toggle('active');
-      });
-    });
 
     // Header scroll behavior
     const header = document.getElementById('main-header');
