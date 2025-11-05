@@ -1,0 +1,473 @@
+---
+import LayoutNico from '../../layouts/LayoutAbout.astro';
+
+// Get the slug from the URL params
+export async function getStaticPaths() {
+  // Sample event data
+  const events = [
+    {
+      slug: 'vietnam-game-connect-2025',
+      title: 'Vietnam Game Connect 2025',
+      date: 'July 16, 2025',
+      time: '08:15 - 20:00',
+      location: 'Meliá Hotels, 44 Ly Thuong Kiet Street, Tran Hung Đao, Hoan Kiem, Hanoi, Vietnam',
+      speakers: 19,
+      image: '/images/1748226528-4814542829448199111382598292933028175524248n.jpg',
+      thumb: '/images/1748226528-4814542829448199111382598292933028175524248n.jpg',
+      thumb2: '/images/blogThumb1_1.jpg',
+      thumb3: '/images/blogThumb1_2.jpg',
+      thumb4: '/images/blogThumb1_1.jpg',
+      breadcrumbBg: '/images/1748226528-4814542829448199111382598292933028175524248n.jpg',
+      sector: 'Gaming Industry',
+      category: 'Expo-Conference',
+      type: 'Event',
+      description: 'Vietnam Game Connect (VGC) is a day of expo-conference that unites Vietnamese game and app developers under one roof to connect and share knowledge.',
+      content: `
+        <p class="mb-3 wow fadeInUp" data-wow-delay=".6s">At Vietnam Game Connect 2025, a Google representative confirmed that the Vietnam's game industry achieved 6.7 billion global downloads in 2024, the highest of any country last year. With this, Vietnam officially surpassed China to become the world's top exporter of mobile games.</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay=".8s">Far from merely following global trends, Vietnamese studios are now competing on the world stage. One standout success is Screwdom by iKame, which has gained traction in the puzzle genre. According to Appmagic, players now spend over 100 minutes per day on the game, outpacing global staples like Candy Crush (~66 minutes) and Royal Match (~88 minutes).</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay="1s">The scoreboard looks good, but the monetization gap tells another story. Vietnam's average revenue per daily active user (excluding IAA) stands at just $0.06, nearly 10 times lower than the global benchmark of $0.70. Clearly, generating installs is only part of the equation. Local studios still fall short when it comes to building high LTV products and driving stronger IAP monetization.</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay="1.2s">To complement this local momentum, VGC 2025 also brought in a global perspective. GameGeek curated a lineup of experts from both Eastern and Western markets, featuring veterans with backgrounds from studios like King, Rollic, Ludus, and Supercent. These voices are helping guide local developers toward deeper design strategies and planning for long-term monetization, moving the focus from downloads to sustainable revenue growth.</p>
+        
+        <h4 class="mt-5 mb-3 wow fadeInUp" data-wow-delay=".4s">Vietnam Game Connect 2025: Building a Global-First Game Industry</h4>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay=".6s">This year, VGC welcomed more than 700 attendees, including Vietnamese studios and international platforms like AWS, Google, TikTok, and AppLovin. Through strategic discussions, attendees explored how data, AI, and user behavior are shaping mobile gaming's next wave.</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay=".8s">A key theme echoed throughout the event: competing at a global scale takes more than just good game design. Reaching hundreds of millions of downloads requires efficient, cost-effective systems, with the goal of automated pipelines over manual work, AI to optimize user acquisition and long-term decision making, this can be done by clean data collection, accurate interpretation, and time to build an inhouse backend.</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay="1s">A prime example came from South Korea's Supercent, developers of the 130‑million‑download hit Snake Clash. Their team shared how they ran 72 rounds of internal testing, which helped reduce CPI from $1.30 to $0.50 and raise day‑1 retention from 35% to 57%. They built and used a proprietary AI-powered backend, noting that off‑the‑shelf AI tools simply didn't offer the necessary precision at scale.</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay="1.2s">Vietnam's top studios are already catching up. iKame demonstrated their in-house BI platform, which leverages gameplay data from the first three days post-launch to predict ROAS for 30-, 180-, and even 365-day spans. Their four-layer tech stack—built on Google Cloud, Looker, Python, Airflow, and integrated app/event data—delivers real-time insights to internal dashboards and APIs. Teams no longer wait weeks for results; decisions can be made today.</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay="1.4s">Still, this level of technical infrastructure currently exists within the top 1% of studios. For Vietnam to build an even stronger ecosystem, such systems must become industry-wide. VGC 2025 not only highlighted success stories, it made those systems and tools visible—equipping more studios to take the next step.</p>
+        
+        <h4 class="mt-5 mb-3 wow fadeInUp" data-wow-delay=".4s">GameGeek: Backing Vietnam's Developers at Home and Abroad</h4>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay=".6s">GameGeek is dedicated to elevating the Vietnamese gaming ecosystem by forging active ties with global hubs like Pocket Gamer (UK), Mobidictum (Turkey), and Gamescom Asia. By engaging with these communities and events, Vietnam is positioning itself as a resource-rich and opportunity-driven destination in the global game market.</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay=".8s">As the host of VGC, GameGeek is committed to supporting developers who are working with grit, curiosity, and the drive to improve. The mission is straightforward: create meaningful connections, share strategic insights, and help local teams access the knowledge, tools, and venture capital to turn ambition into impact.</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay="1s">But this mission doesn't stop at VGC. GameGeek is heading to Chinajoy—one of the world's largest game expos—to continue building bridges for Vietnamese developers, not through hype, but through consistency, context, and collaboration.</p>
+      `,
+      speakersList: [
+        { name: 'Jihoon Boon (Johnny)', title: 'Lead of New Business SUPERCENT, former COO 111%' },
+        { name: 'Gokhan', title: 'Ex-Rollic (Zynga), Ludus' },
+        { name: 'Bruce', title: 'Principal for New Business Acquisitions (SEA & AUNZ) at Google' },
+        { name: 'Summer Liu', title: 'CMO at SocialPeta' },
+        { name: 'HAWKIN PHAM', title: 'Director at VNGGames' },
+        { name: 'LE MINH HIEP', title: 'Product Manager at ABI Game Studio' },
+        { name: 'TUAN HOANG', title: 'Head of Vietnam at AppLovin' },
+        { name: 'COOPER PI', title: 'Global Business Head at TopOn' },
+        { name: 'MAX (TUAN LE)', title: 'Gaming & Apps Vertical Lead at TikTok Vietnam' },
+        { name: 'BRIAN TIEN', title: 'Country Manager at Bidroid Vietnam' },
+        { name: 'KHAI LE', title: 'Mobile Growth Strategy Leader at Mintegral' },
+        { name: 'HUY NGUYEN', title: 'Account Manager at Airbridge' },
+        { name: 'EDEN LIU', title: 'Head of Global Business at BIGO Ads' },
+        { name: 'ZEAL TAI', title: 'Business Development Manager, APAC Sellside Monetization, SEA' },
+        { name: 'MARIA ABDULL', title: 'Senior Regional Director for INSEA at Remerge' },
+        { name: 'CHANSUN', title: 'Director of Studio Management at Lion Studios' },
+        { name: 'JAY HEO', title: 'Chief Business Officer at Playio' },
+        { name: 'RICHARD JANG', title: 'CSO at 5minlab' },
+        { name: 'JACKSON NGUYEN', title: 'Solutions Architect at MongoDB' }
+      ]
+    },
+    {
+      slug: 'gamegeek-conference-2025',
+      title: 'GameGeek Conference 2025',
+      date: 'March 15, 2025',
+      location: 'Ho Chi Minh City',
+      image: '/images/blogThumb1_1.jpg',
+      thumb: '/images/blogThumb1_1.jpg',
+      thumb2: '/images/blogThumb1_2.jpg',
+      thumb3: '/images/blogThumb1_1.jpg',
+      thumb4: '/images/blogThumb1_2.jpg',
+      breadcrumbBg: '/images/newsdetail.jpg',
+      sector: 'Gaming Industry',
+      category: 'Conference',
+      type: 'Event'
+    },
+    {
+      slug: 'gaming-industry-summit',
+      title: 'Gaming Industry Summit',
+      date: 'April 20, 2025',
+      location: 'Hanoi',
+      image: '/images/blogThumb1_2.jpg',
+      thumb: '/images/blogThumb1_2.jpg',
+      thumb2: '/images/blogThumb1_1.jpg',
+      thumb3: '/images/blogThumb1_2.jpg',
+      thumb4: '/images/blogThumb1_1.jpg',
+      breadcrumbBg: '/images/newsdetail.jpg',
+      sector: 'Gaming Industry',
+      category: 'Summit',
+      type: 'Event'
+    }
+  ];
+
+  return events.map((event) => ({
+    params: { slug: event.slug },
+    props: event
+  }));
+}
+
+const { slug } = Astro.params;
+const { title, date, time, location, speakers, image, thumb, thumb2, thumb3, thumb4, breadcrumbBg, sector, category, type, description, content, speakersList } = Astro.props;
+---
+
+<LayoutNico title={`${title} - Gamegeek`}>
+  <div>
+    <div class="breadcumb-section fix">
+      <div class="breadcumb-container-wrapper" data-background={thumb} style={`background-image: url('${thumb}'); background-size: cover; background-position: center; background-repeat: no-repeat;`}>
+        <div class="container">
+          <div class="shape1">
+            <img src="/images/introShape1_1.png" alt="shape">
+          </div>
+          <div class="shape2">
+            <img src="/images/introShape1_2.png" alt="shape">
+          </div>
+          <div class="breadcumb-wrapper">
+            <div class="page-heading">
+              <h1>{title}</h1>
+              <div class="links">
+                <a href="/" data-discover="true">Home<span class="slash">/</span></a>{title}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="project-details-section section-padding fix">
+      <div class="project-details-container-wrapper">
+        <div class="container">
+          <div class="project-details-wapper">
+            <div class="row">
+              <div class="col-12">
+                <div class="main-thumb">
+                  <img src={thumb} alt="thumb">
+                </div>
+              </div>
+              <div class="col-xl-4 col-md-6">
+                <div class="fancy-box style4">
+                  <div class="content">
+                    <h5>Date</h5>
+                    <p class="text">{date}{time ? ` • ${time}` : ''}</p>
+                  </div>
+                  <div class="icon-box style2">
+                    <img src="/images/calendar.svg" alt="icon">
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-4 col-md-6">
+                <div class="fancy-box style4">
+                  <div class="content">
+                    <h5>Location</h5>
+                    <p class="text">{location}</p>
+                  </div>
+                  <div class="icon-box style2">
+                    <img src="/images/wcuIcon1_1.svg" alt="icon">
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-4 col-md-6">
+                <div class="fancy-box style4">
+                  <div class="content">
+                    <h5>{speakers ? 'Speakers' : 'Category'}</h5>
+                    <p class="text">{speakers ? `${speakers} Speakers` : category}</p>
+                  </div>
+                  <div class="icon-box style2">
+                    <img src="/images/wcuIcon1_2.svg" alt="icon">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="single-desc">
+                <div class="row gy-5">
+                  <div class="col-12">
+                    <h3 class="single-desc-title">About the Event</h3>
+                    {description && (
+                      <p class="text1 mb-4" style="font-size: 18px; font-weight: 500;">
+                        {description}
+                      </p>
+                    )}
+                    {content ? (
+                      <Fragment set:html={content}></Fragment>
+                    ) : (
+                      <>
+                        <p class="text1">
+                          There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which do not look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there is not anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary.
+                        </p>
+                        <p class="text2">
+                          There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which do not look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there is not anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary.
+                        </p>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              {speakersList && speakersList.length > 0 && (
+                <div class="team-page-section section-padding fix">
+                  <div class="team-page-container-wrapper style1">
+                    <div class="container">
+                      <div class="section-title text-center mxw-685 mx-auto mb-60">
+                        <h3 class="single-desc-title wow fadeInUp" data-wow-delay=".2s">Speakers</h3>
+                      </div>
+                      <div class="team-page-wrapper style1">
+                        <div class="row gy-5">
+                          {speakersList.map((speaker, index) => (
+                            <div class="col-xl-4 col-md-6 wow fadeInUp" data-wow-delay={`${(index % 6) * 0.2 + 0.2}s`}>
+                              <div class="team-card style1">
+                                <div class="team-thumb">
+                                  <img src={speaker.image || '/images/team/anh1.png'} alt={speaker.name}>
+                                </div>
+                                <div class="team-card-content">
+                                  <h3><a href="#" data-discover="true">{speaker.name}</a></h3>
+                                  <p class="designation">{speaker.title}</p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</LayoutNico>
+
+<style>
+  .breadcumb-section {
+    position: relative;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcumb-container-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 400px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcumb-container-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+  }
+
+  .breadcumb-container-wrapper .shape1,
+  .breadcumb-container-wrapper .shape2 {
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .breadcumb-container-wrapper .shape1 {
+    top: 20%;
+    left: 10%;
+  }
+
+  .breadcumb-container-wrapper .shape2 {
+    bottom: 20%;
+    right: 10%;
+  }
+
+  .breadcumb-wrapper {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+  }
+
+  .page-heading h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .page-heading .links {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #ffffff;
+    font-size: 16px;
+  }
+
+  .page-heading .links a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .page-heading .links a:hover {
+    color: #ff6b35;
+  }
+
+  .page-heading .links .slash {
+    margin: 0 5px;
+  }
+
+  .project-details-section {
+    padding: 120px 0;
+  }
+
+  .project-details-wapper .main-thumb {
+    margin-bottom: 40px;
+  }
+
+  .project-details-wapper .main-thumb img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+  }
+
+  .fancy-box.style4 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+
+  .fancy-box.style4 .content h5 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .fancy-box.style4 .content .text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+
+  .fancy-box.style4 .icon-box.style2 {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  .fancy-box.style4 .icon-box.style2 img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .single-desc,
+  .single-desc2 {
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+
+  .single-desc-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 25px;
+  }
+
+  .single-desc .text1,
+  .single-desc .text2,
+  .single-desc2 .text1,
+  .single-desc2 .text2 {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+  .testimonial-wrap {
+    margin: 50px 0;
+  }
+
+  .testimonial-card {
+    background: #f8f9fa;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .testimonial-card .icon {
+    margin-bottom: 20px;
+  }
+
+  .testimonial-card .text3 {
+    font-size: 20px;
+    font-style: italic;
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .testimonial-author {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ff6b35;
+  }
+
+  .slider-area {
+    margin-top: 50px;
+  }
+
+  .project-thumb {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .project-thumb img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  @media (max-width: 767px) {
+    .page-heading h1 {
+      font-size: 2rem;
+    }
+
+    .project-details-section {
+      padding: 60px 0;
+    }
+
+    .fancy-box.style4 {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .fancy-box.style4 .icon-box.style2 {
+      margin-top: 15px;
+    }
+  }
+</style>
+

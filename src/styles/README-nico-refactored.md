@@ -56,7 +56,7 @@ The refactored CSS uses the following main variables:
 
 ```css
 :root {
-  --theme: #7444fd;           /* Primary theme color */
+  --theme: #ff6b35;           /* Primary theme color */
   --theme2: #1ad079;          /* Secondary theme color */
   --theme3: #faf8ff;          /* Light theme color */
   --white: #ffffff;           /* White color */

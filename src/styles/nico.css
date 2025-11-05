@@ -25243,10 +25243,10 @@ input[type=radio]~label:before {
 .fancy-box.style3 .content .text {
     color: var(--text);
     font-family: Urbanist, sans-serif;
-    font-size: 16px;
+    font-size: 12px;
     font-style: normal;
     font-weight: 500;
-    line-height: 28px;
+    line-height: 24px;
     letter-spacing: -.32px
 }
 
@@ -27890,7 +27890,7 @@ input.main-search-input::placeholder {
     content: "";
     width: 25px;
     height: 2px;
-    background-color: #7444fd
+    background-color: #ff6b35
 }
 
 .footer-widgets-wrapper .single-footer-widget .widget-head h3:after {
@@ -28202,7 +28202,7 @@ input.main-search-input::placeholder {
 }
 
 .footer-widgets-wrapper.style1 .single-footer-widget .contact-box .subtitle {
-    color: #5236ff;
+    color: #ffb15c;
     font-family: Nunito, sans-serif;
     font-size: 16px;
     font-style: normal;
@@ -28438,7 +28438,7 @@ input.main-search-input::placeholder {
 .intro-wrapper.style1 {
     position: relative;
     border-radius: 50px;
-    background: #7444fd0f;
+    background: #ff6b350f;
     margin-top: 40px
 }
 
@@ -28502,13 +28502,17 @@ input.main-search-input::placeholder {
     }
 }
 
+.intro-section {
+    padding-top: 80px;
+}
+
 .intro-wrapper.style1 .intro-content .intro-section-title .intro-subtitle {
     display: inline-flex;
     padding: 5px 7px;
     align-items: center;
     gap: 10px;
     border-radius: 30px;
-    background: #7444fd26;
+    background: #ff6b3526;
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
     color: var(--theme);
@@ -28594,13 +28598,13 @@ input.main-search-input::placeholder {
 
 .intro-wrapper.style1 .intro-thumb {
     position: relative;
-    padding: 223px 0 0;
+    padding: 80px 0 0;
     z-index: 3
 }
 
 @media (max-width: 767px) {
     .intro-wrapper.style1 .intro-thumb {
-        padding: 160px 0 0
+        padding: 80px 0 0
     }
 }
 
@@ -28643,7 +28647,7 @@ input.main-search-input::placeholder {
 
 .intro-wrapper.style2 {
     position: relative;
-    background: #7444fd0f
+    background: #ff6b350f
 }
 
 .intro-wrapper.style2 .intro-content {
@@ -28656,8 +28660,8 @@ input.main-search-input::placeholder {
 .intro-wrapper.style2 .intro-content .intro-section-title .intro-subtitle {
     margin-top: 60px;
     margin-bottom: 20px;
-    display: inline-block;
-    padding: 5px 7px;
+    display: inline-flex;
+    padding: 5px 12px;
     align-items: center;
     gap: 10px;
     border-radius: 30px;
@@ -29241,7 +29245,7 @@ input.main-search-input::placeholder {
     align-items: center;
     gap: 10px;
     border-radius: 100px;
-    background: #7444fd26;
+    background: #ff6b3526;
     margin-bottom: 10px
 }
 
@@ -29954,7 +29958,7 @@ input.main-search-input::placeholder {
 .testimonial-wrapper.style1 {
     position: relative;
     border-radius: 50px;
-    background: #7444fd0f
+    background: #ff6b350f
 }
 
 .testimonial-wrapper.style1 .section-title {
@@ -29987,7 +29991,7 @@ input.main-search-input::placeholder {
     position: relative;
     padding: 506px 0 120px;
     border-radius: 50px;
-    background: #7444fd0f
+    background: #ff6b350f
 }
 
 .testimonial-wrapper.style2 .shape1 {
@@ -30384,7 +30388,8 @@ input.main-search-input::placeholder {
 
 .feature-provide-box-items {
     border-radius: 16px;
-    background: #e4e6ff;
+    background: #ffffff;
+    border: 1px solid #000000;
     padding: 40px;
     position: relative;
     transition: all .4s ease-in-out;
@@ -30580,7 +30585,7 @@ input.main-search-input::placeholder {
 
 .pricing-container-wrapper.style3 {
     position: relative;
-    background: #7444fd0f
+    background: #ff6b350f
 }
 
 .pricing-container-wrapper.style3 .shape1 {
@@ -31895,7 +31900,7 @@ input.main-search-input::placeholder {
 
 .service-container-wrapper.style3 {
     position: relative;
-    background: #7444fd0f;
+    background: #ff6b350f;
     padding-top: 300px
 }
 
@@ -34179,7 +34184,7 @@ textarea.is-invalid {
         width: 230px;
         background-color: #fff;
         position: absolute;
-        border-top: 2px solid #7444fd;
+        border-top: 2px solid #ff6b35;
         -webkit-box-shadow: 0px 1px 2px 0px rgba(2, 0, 181, .1);
         box-shadow: 0 1px 2px #0200b51a;
         padding: 10px 0;

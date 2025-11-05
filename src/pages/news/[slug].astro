@@ -1,0 +1,308 @@
+---
+import LayoutNico from '../../layouts/LayoutAbout.astro';
+
+// Get the slug from the URL params
+export async function getStaticPaths() {
+  // Sample news posts data
+  const posts = [
+    {
+      slug: 'vietnam-has-topped-the-world-in-mobile-game-exports-momentum-peaks-at-vietnam-game-connect-2025',
+      title: 'Vietnam Has Topped the World in Mobile Game Exports. Momentum Peaks at Vietnam Game Connect 2025',
+      date: 'August 28, 2025',
+      category: "Vietnam's Game Scene",
+      author: 'Admin',
+      image: '/images/1748226528-4814542829448199111382598292933028175524248n.jpg',
+      thumb: '/images/1748226528-4814542829448199111382598292933028175524248n.jpg',
+      thumb2: '/images/blogThumb1_1.jpg',
+      thumb3: '/images/blogThumb1_2.jpg',
+      breadcrumbBg: '/images/news_bg_sp.png',
+      content: `
+        <p class="mb-3 wow fadeInUp" data-wow-delay=".6s">At Vietnam Game Connect 2025, a Google representative confirmed that the Vietnam's game industry achieved 6.7 billion global downloads in 2024, the highest of any country last year. With this, Vietnam officially surpassed China to become the world's top exporter of mobile games.</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay=".8s">Far from merely following global trends, Vietnamese studios are now competing on the world stage. One standout success is Screwdom by iKame, which has gained traction in the puzzle genre. According to Appmagic, players now spend over 100 minutes per day on the game, outpacing global staples like Candy Crush (~66 minutes) and Royal Match (~88 minutes).</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay="1s">The scoreboard looks good, but the monetization gap tells another story. Vietnam's average revenue per daily active user (excluding IAA) stands at just $0.06, nearly 10 times lower than the global benchmark of $0.70. Clearly, generating installs is only part of the equation. Local studios still fall short when it comes to building high LTV products and driving stronger IAP monetization.</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay="1.2s">To complement this local momentum, VGC 2025 also brought in a global perspective. GameGeek curated a lineup of experts from both Eastern and Western markets, featuring veterans with backgrounds from studios like King, Rollic, Ludus, and Supercent. These voices are helping guide local developers toward deeper design strategies and planning for long-term monetization, moving the focus from downloads to sustainable revenue growth.</p>
+        
+        <h4 class="mt-5 mb-3 wow fadeInUp" data-wow-delay=".4s">Vietnam Game Connect 2025: Building a Global-First Game Industry</h4>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay=".6s">This year, VGC welcomed more than 700 attendees, including Vietnamese studios and international platforms like AWS, Google, TikTok, and AppLovin. Through strategic discussions, attendees explored how data, AI, and user behavior are shaping mobile gaming's next wave.</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay=".8s">A key theme echoed throughout the event: competing at a global scale takes more than just good game design. Reaching hundreds of millions of downloads requires efficient, cost-effective systems, with the goal of automated pipelines over manual work, AI to optimize user acquisition and long-term decision making, this can be done by clean data collection, accurate interpretation, and time to build an inhouse backend.</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay="1s">A prime example came from South Korea's Supercent, developers of the 130‑million‑download hit Snake Clash. Their team shared how they ran 72 rounds of internal testing, which helped reduce CPI from $1.30 to $0.50 and raise day‑1 retention from 35% to 57%. They built and used a proprietary AI-powered backend, noting that off‑the‑shelf AI tools simply didn't offer the necessary precision at scale.</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay="1.2s">Vietnam's top studios are already catching up. iKame demonstrated their in-house BI platform, which leverages gameplay data from the first three days post-launch to predict ROAS for 30-, 180-, and even 365-day spans. Their four-layer tech stack—built on Google Cloud, Looker, Python, Airflow, and integrated app/event data—delivers real-time insights to internal dashboards and APIs. Teams no longer wait weeks for results; decisions can be made today.</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay="1.4s">Still, this level of technical infrastructure currently exists within the top 1% of studios. For Vietnam to build an even stronger ecosystem, such systems must become industry-wide. VGC 2025 not only highlighted success stories, it made those systems and tools visible—equipping more studios to take the next step.</p>
+        
+        <h4 class="mt-5 mb-3 wow fadeInUp" data-wow-delay=".4s">GameGeek: Backing Vietnam's Developers at Home and Abroad</h4>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay=".6s">GameGeek is dedicated to elevating the Vietnamese gaming ecosystem by forging active ties with global hubs like Pocket Gamer (UK), Mobidictum (Turkey), and Gamescom Asia. By engaging with these communities and events, Vietnam is positioning itself as a resource-rich and opportunity-driven destination in the global game market.</p>
+        
+        <p class="mb-3 wow fadeInUp" data-wow-delay=".8s">As the host of VGC, GameGeek is committed to supporting developers who are working with grit, curiosity, and the drive to improve. The mission is straightforward: create meaningful connections, share strategic insights, and help local teams access the knowledge, tools, and venture capital to turn ambition into impact.</p>
+      `
+    },
+    {
+      slug: 'future-of-web-development-2025',
+      title: 'The Future of Web Development: Trends to Watch in 2025',
+      date: 'December 15, 2024',
+      category: 'IT Services',
+      author: 'Admin',
+      image: '/images/testimonialProfileThumb1_1.jpg',
+      thumb: '/images/blogThumb1_1.jpg',
+      thumb2: '/images/blogThumb1_1.jpg',
+      thumb3: '/images/blogThumb1_2.jpg',
+      breadcrumbBg: '/images/newsdetail.jpg'
+    },
+    {
+      slug: 'building-scalable-react-applications',
+      title: 'Building Scalable React Applications',
+      date: 'December 10, 2024',
+      category: 'IT Services',
+      author: 'Admin',
+      image: '/images/testimonialProfileThumb1_2.jpg',
+      thumb: '/images/blogThumb1_1.jpg',
+      thumb2: '/images/blogThumb1_1.jpg',
+      thumb3: '/images/blogThumb1_2.jpg',
+      breadcrumbBg: '/images/newsdetail.jpg'
+    },
+    {
+      slug: 'cross-platform-flutter-development',
+      title: 'Cross-Platform Mobile Development with Flutter',
+      date: 'December 8, 2024',
+      category: 'IT Services',
+      author: 'Admin',
+      image: '/images/testimonialProfileThumb1_3.jpg',
+      thumb: '/images/blogThumb1_2.jpg',
+      thumb2: '/images/blogThumb1_1.jpg',
+      thumb3: '/images/blogThumb1_2.jpg',
+      breadcrumbBg: '/images/newsdetail.jpg'
+    }
+  ];
+
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: post
+  }));
+}
+
+const { slug } = Astro.params;
+const { title, date, category, author, image, thumb, thumb2, thumb3, breadcrumbBg, content } = Astro.props;
+---
+
+<LayoutNico title={`${title} - Gamegeek`}>
+  <div>
+    <!-- Breadcrumb Section -->
+    <div class="breadcumb-section fix">
+      <div class="breadcumb-container-wrapper" style={`background-image: url('${thumb}'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 400px;`}>
+        <div class="container">
+          <div class="shape1"><img src="/images/introShape1_1.png" alt="shape"></div>
+          <div class="shape2"><img src="/images/introShape1_2.png" alt="shape"></div>
+          <div class="breadcumb-wrapper">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- News Standard Section -->
+    <section class="news-standard section-padding fix">
+      <div class="container">
+        <div class="news-details-area">
+          <div class="row g-5">
+            <div class="col-12 col-lg-8">
+              <div class="blog-post-details">
+                <div class="single-blog-post">
+                  <div class="post-content">
+                    <h3 class="wow fadeInUp" data-wow-delay=".4s">{title}</h3>
+                    {content ? (
+                      <Fragment set:html={content}></Fragment>
+                    ) : (
+                      <>
+                        <p class="mb-3 wow fadeInUp" data-wow-delay=".6s">Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore of magna aliqua. Ut enim ad minim veniam, made of owl the quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea dolor commodo consequat. Duis aute irure and dolor in reprehenderit.</p>
+                        <p class="mb-3 wow fadeInUp" data-wow-delay=".8s">The is ipsum dolor sit amet consectetur adipiscing elit. Fusce eleifend porta arcu In hac habitasse the is platea augue thelorem turpoi dictumst. In lacus libero faucibus at malesuada sagittis placerat eros sed istincidunt augue ac ante rutrum sed the is sodales augue consequat.</p>
+                        <p class="wow fadeInUp" data-wow-delay="1s">Nulla facilisi. Vestibulum tristique sem in eros eleifend imperdiet. Donec quis convallis neque. In id lacus pulvinar lacus, eget vulputate lectus. Ut viverra bibendum lorem, at tempus nibh mattis in. Sed a massa eget lacus consequat auctor.</p>
+                        
+                        <div class="hilight-text mt-4 mb-4 wow fadeInUp" data-wow-delay=".8s">
+                          <p>Pellentesque sollicitudin congue dolor non aliquam. Morbi volutpat, nisi vel ultricies urnacondimentum, sapien neque lobortis tortor, quis efficitur mi ipsum eu metus. Praesent eleifend orci sit amet est vehicula.</p>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+                            <path d="M7.71428 20.0711H0.5V5.64258H14.9286V20.4531L9.97665 30.3568H3.38041L8.16149 20.7947L8.5233 20.0711H7.71428Z" stroke="#ff6b35"></path>
+                            <path d="M28.2846 20.0711H21.0703V5.64258H35.4989V20.4531L30.547 30.3568H23.9507L28.7318 20.7947L29.0936 20.0711H28.2846Z" stroke="#ff6b35"></path>
+                          </svg>
+                        </div>
+                        
+                        <p class="mt-4 mb-5 wow fadeInUp" data-wow-delay="1s">Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna interdum eu. Curabitur pellentesque nibh nibh, at maximus ante fermentum sit amet. Pellentesque commodo lacus at sodales sodales. Quisque sagittis orci ut diam condimentum, vel euismod erat placerat. In iaculis arcu eros.</p>
+                        
+                        <div class="row g-4 wow fadeInUp" data-wow-delay="1s">
+                          <div class="col-lg-6">
+                            <div class="details-image">
+                              <img src={thumb2} alt="img">
+                            </div>
+                          </div>
+                          <div class="col-lg-6">
+                            <div class="details-image">
+                              <img src={thumb3} alt="img">
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <p class="pt-5 wow fadeInUp" data-wow-delay="1.2s">Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore of magna aliqua. Ut enim ad minim veniam, made of owl the quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea dolor commodo consequat. Duis aute irure and dolor in reprehenderit.Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore of magna aliqua. Ut enim ad minim veniam, made of owl the quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea dolor commodo consequat. Duis aute irure and dolor in reprehenderit.</p>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <!-- Tags and Share -->
+                <div class="row tag-share-wrap mt-4 mb-30 wow fadeInUp" data-wow-delay=".8s">
+                  <div class="col-lg-8 col-12">
+                    <div class="tagcloud">
+                      <h6 class="d-inline me-2">Tags: </h6>
+                      <a href="#">News</a>
+                      <a href="#">business</a>
+                      <a href="#">marketing</a>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-12 mt-3 mt-lg-0 text-lg-end wow fadeInUp" data-wow-delay="1.2s">
+                    <div class="social-share">
+                      <span class="me-3">Share:</span>
+                      <a href="#"><i class="bi bi-facebook"></i></a>
+                      <a href="#"><i class="bi bi-twitter"></i></a>
+                      <a href="#"><i class="bi bi-linkedin"></i></a>
+                      <a href="#"><i class="bi bi-pinterest"></i></a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Related Articles -->
+                <div class="related-articles mt-5 wow fadeInUp" data-wow-delay="1.2s">
+                  <div class="section-heading mb-4">
+                    <h3>Related Articles</h3>
+                  </div>
+                  <div class="row g-4">
+                    <div class="col-lg-4 col-md-6">
+                      <article class="blog-card">
+                        <div class="blog-thumb mb-3">
+                          <img src="/images/blogThumb1_1.jpg" alt="Article" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="blog-meta text-sm text-gray-500 mb-2">
+                          <span>December 10, 2024</span>
+                        </div>
+                        <h5><a href="/news/building-scalable-react-applications" class="text-gray-900 hover:text-primary-600 transition-colors">Building Scalable React Applications</a></h5>
+                      </article>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                      <article class="blog-card">
+                        <div class="blog-thumb mb-3">
+                          <img src="/images/blogThumb1_2.jpg" alt="Article" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="blog-meta text-sm text-gray-500 mb-2">
+                          <span>December 8, 2024</span>
+                        </div>
+                        <h5><a href="/news/cross-platform-flutter-development" class="text-gray-900 hover:text-primary-600 transition-colors">Cross-Platform Flutter Development</a></h5>
+                      </article>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                      <article class="blog-card">
+                        <div class="blog-thumb mb-3">
+                          <img src="/images/blogThumb1_1.jpg" alt="Article" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+                        </div>
+                        <div class="blog-meta text-sm text-gray-500 mb-2">
+                          <span>December 5, 2024</span>
+                        </div>
+                        <h5><a href="/news" class="text-gray-900 hover:text-primary-600 transition-colors">Design Systems Guide</a></h5>
+                      </article>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-12 col-lg-4">
+              <div class="main-sidebar">
+                <!-- Search Widget -->
+                <div class="single-sidebar-widget wow fadeInUp" data-wow-delay=".2s">
+                  <div class="wid-title"><h3>Search</h3></div>
+                  <div class="search-widget">
+                    <form action="#">
+                      <input type="text" placeholder="Search here">
+                      <button type="submit"><i class="bi bi-search"></i></button>
+                    </form>
+                  </div>
+                </div>
+
+                <!-- Categories Widget -->
+                <div class="single-sidebar-widget wow fadeInUp" data-wow-delay=".4s">
+                  <div class="wid-title"><h3>Categories</h3></div>
+                  <div class="news-widget-categories">
+                    <ul>
+                      <li><a href="/news" data-discover="true">Database Security <span>(08)</span></a></li>
+                      <li><a href="/news" data-discover="true">IT Consultancy <span>(11)</span></a></li>
+                      <li class="active"><a href="/news" data-discover="true">App Development <span>(12)</span></a></li>
+                      <li><a href="/news" data-discover="true">UI/UX Design <span>(18)</span></a></li>
+                      <li><a href="/news" data-discover="true">Cyber Security <span>(07)</span></a></li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Recent Post Widget -->
+                <div class="single-sidebar-widget wow fadeInUp" data-wow-delay=".6s">
+                  <div class="wid-title"><h3>Recent Post</h3></div>
+                  <div class="recent-post-area">
+                    <div class="recent-items">
+                      <div class="recent-thumb"><img src="/images/blogThumb1_1.jpg" alt="img"></div>
+                      <div class="recent-content">
+                        <ul>
+                          <li><img src="/images/calendar.svg" alt="icon">18 Dec, 2024</li>
+                        </ul>
+                        <h6><a href="/news/future-of-web-development-2025" data-discover="true">Keep Your Business Safe & <br>Endure High Availability</a></h6>
+                      </div>
+                    </div>
+                    <div class="recent-items">
+                      <div class="recent-thumb"><img src="/images/blogThumb1_2.jpg" alt="img"></div>
+                      <div class="recent-content">
+                        <ul>
+                          <li><img src="/images/calendar.svg" alt="icon">18 Dec, 2024</li>
+                        </ul>
+                        <h6><a href="/news/cross-platform-flutter-development" data-discover="true">Tacking the Changes of <br>Retail Industry</a></h6>
+                      </div>
+                    </div>
+                    <div class="recent-items">
+                      <div class="recent-thumb"><img src="/images/blogThumb1_1.jpg" alt="img"></div>
+                      <div class="recent-content">
+                        <ul>
+                          <li><img src="/images/calendar.svg" alt="icon">18 Dec, 2024</li>
+                        </ul>
+                        <h6><a href="/news/building-scalable-react-applications" data-discover="true">What's the Holding Back <br>the It Solution</a></h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Tags Widget -->
+                <div class="single-sidebar-widget wow fadeInUp" data-wow-delay=".9s">
+                  <div class="wid-title"><h3>Tags</h3></div>
+                  <div class="news-widget-categories">
+                    <div class="tagcloud">
+                      <a href="#">Security</a>
+                      <a href="#">Business</a>
+                      <a href="#">Digital</a>
+                      <a href="#">Technology</a>
+                      <a href="#">Change</a>
+                      <a href="#">Video</a>
+                      <a href="#">UI/UX Desing</a>
+                      <a href="#">Startup</a>
+                      <a href="#">Services</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</LayoutNico>
+
