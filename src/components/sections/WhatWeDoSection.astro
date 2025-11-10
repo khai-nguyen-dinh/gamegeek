@@ -3,6 +3,10 @@
 ---
 
 <section class="what-we-do-section fix section-padding">
+  <!-- Left Shape Image -->
+  <div class="left-shape-image">
+    <img src="/images/left-shape.png" alt="left shape">
+  </div>
   <div class="container mxw-1450">
     <div class="what-we-wrapper">
       <div class="row g-4">
@@ -59,4 +63,31 @@
     </div>
   </div>
 </section>
+
+<style>
+  .what-we-do-section {
+    position: relative;
+  }
+
+  .left-shape-image {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .left-shape-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  @media (max-width: 1199px) {
+    .left-shape-image {
+      display: none;
+    }
+  }
+</style>
 
