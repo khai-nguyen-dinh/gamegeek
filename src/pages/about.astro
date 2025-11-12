@@ -285,7 +285,60 @@ import TeamSection from '../components/sections/TeamSection.astro';
   }
 
   .about-content-section.style2 {
-        background: url(/images/hero-bg.jpg);
+    position: relative;
+    background-image: url('/images/speaker-3-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    overflow: hidden;
+  }
+
+  .about-content-section.style2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: linear-gradient(90deg, #f6730d 0%, #d90845 100%);
+    opacity: 0.8;
+    z-index: 0;
+  }
+
+  .about-content-section.style2 .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .about-content-section.style2 .about-content-wrapper .title {
+    color: #ffffff;
+  }
+
+  .about-content-section.style2 .about-content-wrapper .section-desc {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .about-content-section.style2 .about-content-wrapper .section-desc p {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .about-content-section.style2 .subtitle {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .about-content-section.style2 .feature-provide-box-items {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .about-content-section.style2 .feature-provide-box-items h3 {
+    color: #ffffff;
+  }
+
+  .about-content-section.style2 .feature-provide-box-items p {
+    color: rgba(255, 255, 255, 0.9);
   }
 
   .about-content-wrapper {
@@ -347,6 +400,17 @@ import TeamSection from '../components/sections/TeamSection.astro';
     background-position: center bottom;
     background-repeat: no-repeat;
     overflow: hidden;
+  }
+
+  .about-numbers-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(217, 8, 69, 0.1) 100%);
+    z-index: 1;
   }
 
   .about-numbers-container {
@@ -427,7 +491,7 @@ import TeamSection from '../components/sections/TeamSection.astro';
     text-align: center;
     position: relative;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(138, 43, 226, 0.2);
+    border: 1px solid rgba(255, 107, 53, 0.3);
   }
 
   .number-box .number-value {
@@ -455,15 +519,15 @@ import TeamSection from '../components/sections/TeamSection.astro';
   }
 
   .avatar-1 {
-    background: linear-gradient(135deg, #8a2be2, #9370db);
+    background: linear-gradient(135deg, #ff6b35, #f6730d);
   }
 
   .avatar-2 {
-    background: linear-gradient(135deg, #ff1493, #ff69b4);
+    background: linear-gradient(135deg, #f6730d, #d90845);
   }
 
   .avatar-3 {
-    background: linear-gradient(135deg, #4169e1, #6495ed);
+    background: linear-gradient(135deg, #ff6b35, #d90845);
   }
 
   .about-numbers-button-wrapper {
@@ -473,20 +537,20 @@ import TeamSection from '../components/sections/TeamSection.astro';
   .about-numbers-button {
     display: inline-block;
     padding: 16px 40px;
-    background: #ff1493;
+    background: #ff6b35;
     color: #ffffff;
     font-size: 1rem;
     font-weight: 600;
     border-radius: 50px;
     text-decoration: none;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(255, 20, 147, 0.4);
+    box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
   }
 
   .about-numbers-button:hover {
-    background: #ff69b4;
+    background: #f6730d;
     transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(255, 20, 147, 0.6);
+    box-shadow: 0 6px 25px rgba(255, 107, 53, 0.6);
   }
 
   @media (max-width: 991px) {
@@ -505,6 +569,10 @@ import TeamSection from '../components/sections/TeamSection.astro';
 
     .about-content-section {
       padding: 60px 0;
+    }
+
+    .about-content-section.style2 {
+      background-attachment: scroll;
     }
 
     .about-content-wrapper .title {

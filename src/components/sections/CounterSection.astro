@@ -12,7 +12,7 @@
             <div class="col-xl-3 col-md-6 d-flex justify-content-center">
               <div class="counter-box style1 wow fadeInUp" data-wow-delay=".2s">
                 <div class="counter">
-                  <span class="counter-number">56</span> 
+                  <span class="counter-number" data-target="56">0</span> 
                   <span class="plus">+</span>
                 </div>
                 <p class="text">Customers visit app every months</p>
@@ -21,7 +21,7 @@
             <div class="col-xl-3 col-md-6 d-flex justify-content-center">
               <div class="counter-box style1 wow fadeInUp" data-wow-delay=".4s">
                 <div class="counter">
-                  <span class="counter-number">32</span> 
+                  <span class="counter-number" data-target="32">0</span> 
                   <span class="plus">+</span>
                 </div>
                 <p class="text">Total downloaded of our app</p>
@@ -30,7 +30,7 @@
             <div class="col-xl-3 col-md-6 d-flex justify-content-center">
               <div class="counter-box style1 wow fadeInUp" data-wow-delay=".6s">
                 <div class="counter">
-                  <span class="counter-number">156</span> 
+                  <span class="counter-number" data-target="156">0</span> 
                   <span class="plus">k</span>
                 </div>
                 <p class="text">Total Members of App Users</p>
@@ -39,7 +39,7 @@
             <div class="col-xl-3 col-md-6 d-flex justify-content-center">
               <div class="counter-box style1 wow fadeInUp" data-wow-delay=".8s">
                 <div class="counter">
-                  <span class="counter-number">42</span> 
+                  <span class="counter-number" data-target="42">0</span> 
                   <span class="plus">+</span>
                 </div>
                 <p class="text">Satisfaction rate from our customers.</p>
@@ -86,3 +86,52 @@
     background-image: none !important;
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const counterNumbers = document.querySelectorAll('.counter-section .counter-number');
+    let hasAnimated = false;
+
+    // Function to animate counter
+    function animateCounter(element, target, duration = 2000) {
+      const start = 0;
+      const increment = target / (duration / 16); // 60fps
+      let current = start;
+
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        element.textContent = Math.floor(current);
+      }, 16);
+    }
+
+    // Intersection Observer to trigger animation when section is visible
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !hasAnimated) {
+          hasAnimated = true;
+          
+          counterNumbers.forEach((counter, index) => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            if (target) {
+              // Add delay for each counter
+              setTimeout(() => {
+                animateCounter(counter, target);
+              }, index * 200);
+            }
+          });
+        }
+      });
+    }, {
+      threshold: 0.3 // Trigger when 30% of section is visible
+    });
+
+    const counterSection = document.querySelector('.counter-section');
+    if (counterSection) {
+      observer.observe(counterSection);
+    }
+  });
+</script>

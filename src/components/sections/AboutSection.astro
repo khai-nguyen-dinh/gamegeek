@@ -17,6 +17,171 @@
     display: flex;
     align-items: flex-start;
   }
+
+  /* Collage Layout */
+  .about-thumb-collage {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .collage-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #ffffff;
+    z-index: 0;
+  }
+
+  .collage-image {
+    position: absolute;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    z-index: 2;
+  }
+
+  .collage-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .image-large {
+    top: 30px;
+    left: 30px;
+    width: 280px;
+    height: 380px;
+    max-width: 45%;
+  }
+
+  .image-medium-top {
+    top: 30px;
+    right: 30px;
+    width: 240px;
+    height: 160px;
+    max-width: 45%;
+  }
+
+  .image-medium-bottom {
+    bottom: 30px;
+    right: 30px;
+    width: 240px;
+    height: 160px;
+    max-width: 45%;
+  }
+
+  /* Abstract Shapes */
+  .abstract-shape {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .shape-blue {
+    top: 10px;
+    left: 10px;
+    width: 200px;
+    height: 4px;
+    background: #3b82f6;
+    transform: rotate(45deg);
+    transform-origin: left center;
+  }
+
+  .shape-orange {
+    top: 15%;
+    right: 15%;
+    width: 150px;
+    height: 60px;
+    background: repeating-linear-gradient(
+      45deg,
+      #f97316,
+      #f97316 10px,
+      #fb923c 10px,
+      #fb923c 20px
+    );
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    transform: rotate(-20deg);
+  }
+
+  .shape-magenta {
+    bottom: 10%;
+    right: 5%;
+    width: 0;
+    height: 0;
+    border-left: 60px solid transparent;
+    border-right: 60px solid transparent;
+    border-bottom: 100px solid #ec4899;
+    background: repeating-linear-gradient(
+      45deg,
+      #ec4899,
+      #ec4899 8px,
+      #f472b6 8px,
+      #f472b6 16px
+    );
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  }
+
+  @media (max-width: 1199px) {
+    .about-thumb-collage {
+      height: 500px;
+    }
+
+    .image-large {
+      width: 240px;
+      height: 320px;
+      max-width: 48%;
+    }
+
+    .image-medium-top,
+    .image-medium-bottom {
+      width: 200px;
+      height: 140px;
+      max-width: 48%;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .about-thumb-collage {
+      height: 400px;
+      padding: 20px;
+    }
+
+    .image-large {
+      top: 20px;
+      left: 20px;
+      width: 180px;
+      height: 240px;
+      max-width: 50%;
+    }
+
+    .image-medium-top {
+      top: 20px;
+      right: 20px;
+      width: 150px;
+      height: 100px;
+      max-width: 50%;
+    }
+
+    .image-medium-bottom {
+      bottom: 20px;
+      right: 20px;
+      width: 150px;
+      height: 100px;
+      max-width: 50%;
+    }
+
+    .abstract-shape {
+      display: none;
+    }
+  }
 </style>
 
 <section class="about-section fix">
@@ -25,25 +190,24 @@
       <div class="about-wrapper style1">
         <div class="row gy-5 gx-60">
           <div class="col-xl-6">
-            <div class="about-thumb">
-              <div class="bg"></div>
-              <div class="thumbShape1 d-none d-xxl-block cir36">
-                <img src="/images/aboutThumbShape1_1.png" alt="shape">
+            <div class="about-thumb-collage">
+              <!-- Background -->
+              <div class="collage-background"></div>
+              
+              <!-- Abstract Shapes -->
+              <div class="abstract-shape shape-blue"></div>
+              <div class="abstract-shape shape-orange"></div>
+              <div class="abstract-shape shape-magenta"></div>
+              
+              <!-- Images -->
+              <div class="collage-image image-large">
+                <img src="/images/aboutThumb1_1.png" alt="Event 1">
               </div>
-              <div class="thumbShape2 d-none d-xxl-block cir36">
-                <img src="/images/aboutThumbShape1_2.png" alt="shape">
+              <div class="collage-image image-medium-top">
+                <img src="/images/aboutThumb1_2.png" alt="Event 2">
               </div>
-              <div class="thumbShape3 d-none d-xxl-block cir36 float-bob-y">
-                <img src="/images/aboutThumbShape1_3.png" alt="shape">
-              </div>
-              <div class="thumbShape4 d-none d-xxl-block cir36">
-                <img src="/images/aboutThumbShape1_4.png" alt="shape">
-              </div>
-              <div class="main-thumb">
-                <img src="/images/aboutThumb1_1.png" alt="thumb">
-              </div>
-              <div class="absolute-thumb float-bob-x">
-                <img src="/images/aboutThumb1_2.png" alt="thumb">
+              <div class="collage-image image-medium-bottom">
+                <img src="/images/aboutThumb1_1.png" alt="Event 3">
               </div>
             </div>
           </div>

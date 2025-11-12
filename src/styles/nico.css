@@ -22553,8 +22553,8 @@ input[type=radio]~label:before {
 .theme-btn.style2 {
     display: inline-block;
     background: transparent;
-    border: 1px solid var(--border-5);
-    color: var(--title)
+    border: 1px solid #ffffff;
+    color: #fff
 }
 
 .theme-btn.style2 i,
@@ -24887,8 +24887,8 @@ input[type=radio]~label:before {
     padding: 4px 10px;
     align-items: center;
     gap: 10px;
-    background: #ffca69;
-    color: #282c32;
+    background: #cd9838;
+    color: #fff;
     font-family: Urbanist, sans-serif;
     font-size: 16px;
     font-style: normal;
@@ -28437,9 +28437,7 @@ input.main-search-input::placeholder {
 
 .intro-wrapper.style1 {
     position: relative;
-    border-radius: 50px;
     background: #ff6b350f;
-    margin-top: 40px
 }
 
 @media (max-width: 767px) {
@@ -28541,7 +28539,7 @@ input.main-search-input::placeholder {
 }
 
 .intro-wrapper.style1 .intro-content .intro-section-title .intro-title {
-    color: var(--title);
+    color: #ffffff;
     font-family: Urbanist, sans-serif;
     font-size: 45px;
     font-style: normal;
@@ -28572,7 +28570,7 @@ input.main-search-input::placeholder {
 }
 
 .intro-wrapper.style1 .intro-content .intro-section-title .intro-desc {
-    color: var(--title);
+    color: #fff;
     font-family: Urbanist, sans-serif;
     font-size: 16px;
     font-style: normal;
@@ -29199,7 +29197,7 @@ input.main-search-input::placeholder {
 }
 
 .about-section {
-    padding-top: 50px;
+    padding-top: 120px;
     padding-bottom: 50px;
 }
 

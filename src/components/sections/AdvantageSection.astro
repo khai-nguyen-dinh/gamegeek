@@ -2,7 +2,17 @@
 // Advantage Section Component
 ---
 
-<section class="advantage-section fix">
+<section class="advantage-section fix section-padding">
+  <!-- Left Shape Image -->
+  <div class="advantage-left-shape">
+    <img src="/images/left-shape.png" alt="left shape">
+  </div>
+  
+  <!-- Drive Image -->
+  <div class="advantage-drive-image">
+    <img src="/images/drive.png" alt="drive">
+  </div>
+  
   <div class="advantage-container-wrapper style1">
     <div class="container">
       <div class="advantage-wrapper style1 section-padding">
@@ -76,3 +86,52 @@
     </div>
   </div>
 </section>
+
+<style>
+  .advantage-section {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .advantage-left-shape {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .advantage-left-shape img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .advantage-drive-image {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.3;
+  }
+
+  .advantage-drive-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .advantage-container-wrapper {
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (max-width: 1199px) {
+    .advantage-left-shape,
+    .advantage-drive-image {
+      display: none;
+    }
+  }
+</style>
