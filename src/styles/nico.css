@@ -29541,7 +29541,7 @@ input.main-search-input::placeholder {
 
 .wcu-wrapper.style1 .wcu-thumb .shape {
     position: absolute;
-    bottom: -20px;
+    bottom: 120px;
     max-width: 100%;
     z-index: 1
 }
