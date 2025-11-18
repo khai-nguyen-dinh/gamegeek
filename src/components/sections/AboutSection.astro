@@ -18,16 +18,16 @@
     align-items: flex-start;
   }
 
-  /* Collage Layout */
+  /* Collage Layout - 3 vertical images */
   .about-thumb-collage {
     position: relative;
     width: 100%;
-    height: 600px;
     background: #ffffff;
     padding: 0;
     border-radius: 20px;
     overflow: hidden;
     display: flex;
+    flex-direction: column;
     gap: 20px;
   }
 
@@ -39,6 +39,15 @@
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    position: relative;
+    width: 100%;
+    height: 300px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .collage-image:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
   }
 
   .collage-image img {
@@ -49,49 +58,42 @@
   }
 
   .image-large {
-    flex: 1;
-    height: 100%;
-  }
-
-  .image-right-wrapper {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    height: 350px;
   }
 
   .image-medium-top,
   .image-medium-bottom {
-    flex: 1;
-    height: calc(50% - 10px);
+    height: 300px;
   }
 
 
   @media (max-width: 1199px) {
     .about-thumb-collage {
-      height: 500px;
       gap: 15px;
+    }
+    
+    .image-large {
+      height: 300px;
+    }
+    
+    .image-medium-top,
+    .image-medium-bottom {
+      height: 250px;
     }
   }
 
   @media (max-width: 767px) {
     .about-thumb-collage {
-      height: 400px;
-      flex-direction: column;
       gap: 15px;
     }
 
     .image-large {
-      height: 200px;
-    }
-
-    .image-right-wrapper {
-      height: 185px;
+      height: 250px;
     }
 
     .image-medium-top,
     .image-medium-bottom {
-      height: calc(50% - 7.5px);
+      height: 200px;
     }
   }
 </style>
@@ -103,19 +105,19 @@
         <div class="row gy-5 gx-60">
           <div class="col-xl-6">
             <div class="about-thumb-collage">
-              <!-- Large Image Left -->
+              <!-- Top Image - Event/Conference -->
               <div class="collage-image image-large">
-                <img src="/images/index_about_1.jpg" alt="About GameGeek 1">
+                <img src="/images/index_about_1.jpg" alt="GameGeek Event - Connecting the Gaming Community">
               </div>
               
-              <!-- Right Side - 2 Equal Images -->
-              <div class="image-right-wrapper">
-                <div class="collage-image image-medium-top">
-                  <img src="/images/index_about_2.jpg" alt="About GameGeek 2">
-                </div>
-                <div class="collage-image image-medium-bottom">
-                  <img src="/images/index_about_3.jpg" alt="About GameGeek 3">
-                </div>
+              <!-- Middle Image - Partnership/Networking -->
+              <div class="collage-image image-medium-top">
+                <img src="/images/index_about_2.jpg" alt="GameGeek Partnership - Global Opportunities">
+              </div>
+              
+              <!-- Bottom Image - Workshop/Collaboration -->
+              <div class="collage-image image-medium-bottom">
+                <img src="/images/index_about_3.jpg" alt="GameGeek Workshop - Empowering Growth">
               </div>
             </div>
           </div>
@@ -130,23 +132,13 @@
                   GameGeek – Vietnam’s Game Industry Hub Reimagined
                 </h2>
                 <p class="section-desc wow fadeInUp" data-wow-delay=".6s">
-                  stablished in 2014, GameGeek connects every corner of Vietnam’s gaming ecosystem — from studios, publishers, media providers to investors. Our mission is to empower collaboration, fuel innovation, and accelerate the industry’s growth through data, insights, and community
+                  Founded in 2016, GameGeek is Vietnam's gaming central hub and trusted gateway that connecting local talent and resources to global opportunities. We unite studios, publishers, service providers, and investors in a collaborative ecosystem that accelerates innovation, empowers growth, and positions Vietnam as a regional powerhouse with global reach in gaming.
+                </p>
+                <p class="section-desc wow fadeInUp" data-wow-delay=".7s" style="margin-top: 20px;">
+                  We connect Vietnam's game ecosystem with the world and turn connections into real outcomes for our partners.
                 </p>
               </div>
-              <ul class="checklist style1 wow fadeInUp" data-wow-delay=".2s">
-                <li>
-                  <img src="/images/checkmarkIcon.svg" alt="icon"> 
-                  With our ecosystem-driven insights and industry connections.
-                </li>
-                <li>
-                  <img src="/images/checkmarkIcon.svg" alt="icon"> 
-                  We are trusted by leading studios and partners across Asia.
-                </li>
-                <li>
-                  <img src="/images/checkmarkIcon.svg" alt="icon"> 
-                  Join GameGeek and shape the next chapter of Vietnam’s game industry!
-                </li>
-              </ul>
+              
               <a class="theme-btn wow fadeInUp" data-wow-delay=".2s" href="/about" data-discover="true">
                 Discover More
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">

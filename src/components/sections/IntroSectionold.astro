@@ -1,0 +1,564 @@
+---
+// Intro Section Component with Slideshow
+---
+
+<section class="intro-section">
+  <div class="intro-container-wrapper style1">
+    <div class="container">
+      <div class="intro-wrapper style1 fix">
+        <div class="shape1">
+          <img src="/images/introShape1_1.png" alt="shape">
+        </div>
+        <div class="shape2">
+          <img src="/images/introShape1_2.png" alt="shape">
+        </div>
+        <div class="shape3 d-none d-xxl-block cir36">
+          <img src="/images/introShape1_3.png" alt="shape">
+        </div>
+        <div class="shape4 d-none d-xxl-block cir36">
+          <img src="/images/introShape1_4.png" alt="shape">
+        </div>
+        <div class="shape5 d-none d-xxl-block cir36">
+          <img src="/images/introShape1_5.png" alt="shape">
+        </div>
+        
+        <!-- Slideshow Container -->
+        <div class="intro-slideshow-container">
+          <div class="intro-slideshow-wrapper">
+            <!-- Slide 1: Original Content -->
+            <div class="intro-slide intro-slide-1 active">
+              <div class="container">
+                <div class="row">
+                  <div class="col-xl-7 order-2 order-xl-1">
+                    <div class="intro-content">
+                      <div class="intro-section-title">
+                        <div class="intro-subtitle">
+                          <span>News!</span>Find Your Solution 
+                          <img src="/images/icon_title.png" alt="icon">
+                        </div>
+                        <h1 class="intro-title wow fadeInUp" data-wow-delay=".2s">
+                          CENTRAL HUB
+                        </h1>
+                        <p class="intro-desc wow fadeInUp" data-wow-delay=".4s">
+                          We drive Vietnam's rise in the global gaming world — growing our community and creating real opportunities for partners worldwide.
+                        </p>
+                      </div>
+                      <div class="btn-wrapper style1 wow fadeInUp" data-wow-delay=".6s">
+                        <a class="theme-btn" href="/contact" data-discover="true">
+                          Let's talk
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <g clip-path="url(#clip0_11_22)">
+                              <path d="M11.6118 3.61182L10.8991 4.32454L14.0706 7.49603H0V8.50398H14.0706L10.8991 11.6754L11.6118 12.3882L16 7.99997L11.6118 3.61182Z" fill="white"></path>
+                            </g>
+                            <defs>
+                              <clipPath id="clip0_11_22">
+                                <rect width="16" height="16" fill="white"></rect>
+                              </clipPath>
+                            </defs>
+                          </svg>
+                        </a>
+                        <a class="theme-btn style2 wow fadeInUp" data-wow-delay=".2s" href="/about" data-discover="true">
+                          Learn More
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <g clip-path="url(#clip0_11_27)">
+                              <path d="M11.6118 3.61182L10.8991 4.32454L14.0706 7.49603H0V8.50398H14.0706L10.8991 11.6754L11.6118 12.3882L16 7.99997L11.6118 3.61182Z" fill="white"></path>
+                            </g>
+                            <defs>
+                              <clipPath id="clip0_11_27">
+                                <rect width="16" height="16" fill="white"></rect>
+                              </clipPath>
+                            </defs>
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xl-5 order-1 order-xl-2">
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+ <!-- Slide 2: Image slide1.png -->
+            <div class="intro-slide">
+              <div class="intro-slide-image-wrapper">
+                <img src="/images/slide1.jpg" alt="Slide 1" class="intro-slide-image">
+              </div>
+            </div>
+
+            <!-- Slide 3: Image slide2.png -->
+            <div class="intro-slide">
+              <div class="intro-slide-image-wrapper">
+                <img src="/images/slide2.png" alt="Slide 2" class="intro-slide-image">
+              </div>
+            </div>
+          </div>
+
+            
+
+          <!-- Navigation Arrows -->
+          <button class="intro-slide-nav intro-slide-prev" aria-label="Previous slide">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
+          </button>
+          <button class="intro-slide-nav intro-slide-next" aria-label="Next slide">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </button>
+
+          <!-- Navigation Dots -->
+          <div class="intro-slide-dots">
+            <button class="intro-slide-dot active" data-slide="0" aria-label="Go to slide 1"></button>
+            <button class="intro-slide-dot" data-slide="1" aria-label="Go to slide 2"></button>
+            <button class="intro-slide-dot" data-slide="2" aria-label="Go to slide 3"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- White curved shape at bottom -->
+  <div class="shape-svg">
+    <svg id="svg" viewBox="0, 0, 400,27.708333333333336">
+      <g id="svgg">
+        <path id="path0" d="M0.000 13.854 L 0.000 27.708 200.000 27.708 L 400.000 27.708 400.000 14.216 L 400.000 0.725 395.573 1.822 C 322.012 20.064,241.242 29.243,178.709 26.467 C 123.876 24.033,57.451 14.315,4.123 0.926 C 2.094 0.417,0.336 0.000,0.217 0.000 C 0.069 0.000,0.000 4.399,0.000 13.854" stroke="none" fill="#fff" fill-rule="evenodd"></path>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<style>
+  .intro-section {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    overflow: hidden;
+  }
+
+  .intro-container-wrapper.style1 {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  .intro-container-wrapper.style1 .container {
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0;
+  }
+
+  .shape-svg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: auto;
+    z-index: 10;
+    pointer-events: none;
+    line-height: 0;
+  }
+
+  .shape-svg svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .intro-slideshow-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .intro-slideshow-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .intro-slide {
+    display: none;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
+    height: 1000px;
+    overflow: hidden;
+    padding-bottom: 60px;
+  }
+
+  .intro-slide.active {
+    display: block;
+    opacity: 1;
+  }
+
+  .intro-slide-1 {
+    position: relative;
+    background-image: url('/images/hero-6.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .intro-slide-1::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-image: linear-gradient(-180deg, #442f1f 0%, #3e252d 100%);
+    opacity: 0.6;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  .intro-slide-1 > .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .intro-slide > .container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0;
+    padding-bottom: 0;
+    max-width: 100%;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  @media (min-width: 768px) {
+    .intro-slide > .container {
+      padding-left: 60px;
+      padding-right: 60px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .intro-slide > .container {
+      padding-left: 120px;
+      padding-right: 120px;
+    }
+  }
+
+  @media (min-width: 1400px) {
+    .intro-slide > .container {
+      padding-left: 150px;
+      padding-right: 150px;
+    }
+  }
+
+  .intro-slide > .container > .row {
+    align-items: center;
+    width: 80%;
+    margin: 0;
+    height: 100%;
+  }
+
+  .intro-slide > .container > .row > [class*="col-"] {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  .intro-slide .intro-content {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .intro-slide .intro-section-title {
+    margin-bottom: 25px;
+  }
+
+  .intro-slide .intro-title {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-bottom: 15px;
+  }
+
+  .intro-slide .intro-desc {
+    margin-bottom: 25px;
+    font-size: 1rem;
+  }
+
+  .intro-slide .btn-wrapper {
+    margin-top: 0;
+  }
+
+  .intro-slide .intro-thumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    position: relative;
+  }
+
+  @media (max-width: 1200px) {
+    .intro-slide .intro-title {
+      font-size: 2rem;
+    }
+  }
+
+  .intro-slide-image-wrapper {
+    width: 100%;
+    height: 1000px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 60px;
+  }
+
+  .intro-slide-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .intro-slide-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .intro-slide-nav:hover {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .intro-slide-prev {
+    left: 20px;
+  }
+
+  .intro-slide-next {
+    right: 20px;
+  }
+
+  .intro-slide-nav svg {
+    width: 24px;
+    height: 24px;
+    color: #282C32;
+  }
+
+  .intro-slide-dots {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 10;
+  }
+
+  .intro-slide-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+
+  .intro-slide-dot.active,
+  .intro-slide-dot:hover {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 255, 255, 1);
+  }
+
+  @media (max-width: 768px) {
+    .intro-slide {
+      height: 400px;
+    }
+
+    .intro-slide > .container {
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+
+    .intro-slide > .container > .row > [class*="col-"] {
+      height: auto;
+      min-height: auto;
+    }
+
+    .intro-slide .intro-content {
+      justify-content: flex-start;
+    }
+
+    .intro-slide .intro-title {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .intro-slide .intro-desc {
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+    }
+
+    .intro-slide .intro-section-title {
+      margin-bottom: 15px;
+    }
+
+    .intro-slide .btn-wrapper {
+      margin-top: 15px;
+    }
+
+    .intro-slide .intro-thumb {
+      margin-top: 20px;
+      height: auto;
+    }
+
+    .intro-slide-image-wrapper {
+      height: 400px;
+    }
+
+    .intro-slide-nav {
+      width: 40px;
+      height: 40px;
+    }
+
+    .intro-slide-prev {
+      left: 10px;
+    }
+
+    .intro-slide-next {
+      right: 10px;
+    }
+
+    .intro-slide-dots {
+      bottom: 20px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const slides = document.querySelectorAll('.intro-slide');
+    const dots = document.querySelectorAll('.intro-slide-dot');
+    const prevBtn = document.querySelector('.intro-slide-prev');
+    const nextBtn = document.querySelector('.intro-slide-next');
+    let currentSlide = 0;
+    let autoPlayInterval = null;
+
+    function showSlide(index) {
+      // Remove active class from all slides and dots
+      slides.forEach(slide => slide.classList.remove('active'));
+      dots.forEach(dot => dot.classList.remove('active'));
+
+      // Add active class to current slide and dot
+      if (slides[index]) {
+        slides[index].classList.add('active');
+      }
+      if (dots[index]) {
+        dots[index].classList.add('active');
+      }
+
+      currentSlide = index;
+    }
+
+    function nextSlide() {
+      const nextIndex = (currentSlide + 1) % slides.length;
+      showSlide(nextIndex);
+    }
+
+    function prevSlide() {
+      const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(prevIndex);
+    }
+
+    function startAutoPlay() {
+      // Clear any existing interval first
+      if (autoPlayInterval) {
+        clearInterval(autoPlayInterval);
+      }
+      // Set interval to 5 seconds (5000ms)
+      autoPlayInterval = setInterval(() => {
+        nextSlide();
+      }, 5000);
+    }
+
+    function stopAutoPlay() {
+      if (autoPlayInterval) {
+        clearInterval(autoPlayInterval);
+        autoPlayInterval = null;
+      }
+    }
+
+    // Event listeners
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        stopAutoPlay();
+        nextSlide();
+        // Restart with delay to ensure full 5 seconds
+        setTimeout(() => {
+          startAutoPlay();
+        }, 100);
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        stopAutoPlay();
+        prevSlide();
+        // Restart with delay to ensure full 5 seconds
+        setTimeout(() => {
+          startAutoPlay();
+        }, 100);
+      });
+    }
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        stopAutoPlay();
+        showSlide(index);
+        // Restart with delay to ensure full 5 seconds
+        setTimeout(() => {
+          startAutoPlay();
+        }, 100);
+      });
+    });
+
+    // Pause on hover
+    const slideshowContainer = document.querySelector('.intro-slideshow-container');
+    if (slideshowContainer) {
+      slideshowContainer.addEventListener('mouseenter', stopAutoPlay);
+      slideshowContainer.addEventListener('mouseleave', () => {
+        // Restart after a short delay when mouse leaves
+        setTimeout(() => {
+          startAutoPlay();
+        }, 100);
+      });
+    }
+
+    // Initialize first slide
+    showSlide(0);
+    
+    // Start auto-play after a short delay to ensure page is fully loaded
+    setTimeout(() => {
+      startAutoPlay();
+    }, 500);
+  });
+</script>

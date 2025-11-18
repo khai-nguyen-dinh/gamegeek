@@ -32,7 +32,7 @@
 }
 
 body {
-  font-family: 'Urbanist', sans-serif;
+  font-family: 'Inter', sans-serif;
   line-height: 1.6;
   color: var(--text);
   background-color: var(--white);
@@ -42,7 +42,7 @@ body {
    TYPOGRAPHY
    ======================================== */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Urbanist', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
   line-height: 1.2;
   color: var(--title);
@@ -104,7 +104,7 @@ a:hover {
   padding: 12px 30px;
   border: none;
   border-radius: 5px;
-  font-family: 'Urbanist', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   text-align: center;
   text-decoration: none;
@@ -182,7 +182,7 @@ a:hover {
   padding: 15px 20px;
   border: 1px solid var(--border);
   border-radius: 5px;
-  font-family: 'Urbanist', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 16px;
   transition: border-color 0.3s ease;
 }

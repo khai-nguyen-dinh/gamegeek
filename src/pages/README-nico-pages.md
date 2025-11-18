@@ -9,7 +9,7 @@ This document describes the new pages created to showcase the refactored Nico CS
 - **Purpose**: Alternative layout using the refactored Nico CSS instead of global.css
 - **Key Features**:
   - Imports `nico-refactored.css` instead of `global.css`
-  - Uses Urbanist font family (matching the CSS framework)
+  - Uses Inter font family (matching the CSS framework)
   - Same structure as original Layout.astro but with Nico CSS
 
 ### 2. **Demo Page** (`src/pages/demo-nico.astro`)
@@ -75,7 +75,7 @@ import LayoutNico from '../layouts/LayoutNico.astro';
 
 #### **Font Family**
 - **Original**: Inter font
-- **Nico**: Urbanist font (matches the CSS framework)
+- **Nico**: Inter font (matches the CSS framework)
 
 #### **File Size**
 - **Original**: ~25KB (global.css)
