@@ -1866,7 +1866,7 @@ body {
   transform: translateX(-50%);
 }
 .hero-area.style-three .hero-bg {
-  background-image: url(renius/image/hero-bg-1.jpg);
+  background-image: url(/renius/image/hero-bg-1.jpg);
   background-size: cover;
   background-attachment: fixed;
   background-repeat: no-repeat;
@@ -1928,7 +1928,7 @@ body {
   left: -18px;
   font-size: 17.2vw;
   line-height: 0.85;
-  background-image: url("renius/image/hero-bg-2.jpg");
+  background-image: url("/renius/image/hero-bg-2.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -1945,13 +1945,13 @@ body {
   padding: 36px 25px 30px;
 }
 .hero-slider-one .hero-slide-item.bg-1 {
-  background-image: url(renius/image/hero-slide-1.jpg);
+  background-image: url(/renius/image/hero-slide-1.jpg);
 }
 .hero-slider-one .hero-slide-item.bg-2 {
-  background-image: url(renius/image/hero-slide-2.jpg);
+  background-image: url(/renius/image/hero-slide-2.jpg);
 }
 .hero-slider-one .hero-slide-item.bg-3 {
-  background-image: url(renius/image/hero-slide-3.jpg);
+  background-image: url(/renius/image/hero-slide-3.jpg);
 }
 .hero-slider-one .hero-slide-item:after {
   position: absolute;
@@ -2544,7 +2544,7 @@ body {
   margin-bottom: 10px;
 }
 .feature-card.style-five {
-  background-image: url(renius/image/feature-img-3.jpg);
+  background-image: url(/renius/image/feature-img-3.jpg);
   height: 510px;
   padding: 34px 20px 35px;
 }
@@ -3004,16 +3004,16 @@ body {
   transition: var(--transition);
 }
 .project-card.style-two.bg-1:before, .project-card.style-four.bg-1:before {
-  background-image: url(renius/image/project-bg-1.jpg);
+  background-image: url(/renius/image/project-bg-1.jpg);
 }
 .project-card.style-two.bg-2:before, .project-card.style-four.bg-2:before {
-  background-image: url(renius/image/project-bg-2.jpg);
+  background-image: url(/renius/image/project-bg-2.jpg);
 }
 .project-card.style-two.bg-3:before, .project-card.style-four.bg-3:before {
-  background-image: url(renius/image/project-bg-3.jpg);
+  background-image: url(/renius/image/project-bg-3.jpg);
 }
 .project-card.style-two.bg-4:before, .project-card.style-four.bg-4:before {
-  background-image: url(renius/image/project-bg-4.jpg);
+  background-image: url(/renius/image/project-bg-4.jpg);
 }
 .project-card.style-two .project-counter, .project-card.style-four .project-counter {
   font-size: 128px;
@@ -3076,16 +3076,16 @@ body {
   transition: var(--transition);
 }
 .project-card.style-three.bg-1 {
-  background-image: url(renius/image/project-bg-5.jpg);
+  background-image: url(/renius/image/project-bg-5.jpg);
 }
 .project-card.style-three.bg-2 {
-  background-image: url(renius/image/project-bg-6.jpg);
+  background-image: url(/renius/image/project-bg-6.jpg);
 }
 .project-card.style-three.bg-3 {
-  background-image: url(renius/image/project-bg-7.jpg);
+  background-image: url(/renius/image/project-bg-7.jpg);
 }
 .project-card.style-three.bg-4 {
-  background-image: url(renius/image/project-bg-8.jpg);
+  background-image: url(/renius/image/project-bg-8.jpg);
 }
 .project-card.style-three .project-counter {
   position: absolute;
@@ -3431,7 +3431,7 @@ body {
 }
 
 .cta-area.style-one {
-  background-image: url(renius/image/cta-bg-1.jpg);
+  background-image: url(/renius/image/cta-bg-1.jpg);
   padding: 80px 0;
 }
 .cta-area.style-one .section-shape {
@@ -3459,7 +3459,7 @@ body {
   transform: translate(-50%, -50%);
 }
 .cta-area.style-two {
-  background-image: url(renius/image/cta-bg-2.jpg);
+  background-image: url(/renius/image/cta-bg-2.jpg);
   padding: 80px 0;
 }
 .cta-area.style-two .section-shape {
@@ -3499,7 +3499,7 @@ body {
   transform: translate(-50%, -50%);
 }
 .cta-area.style-three {
-  background-image: url(renius/image/cta-bg-3.jpg);
+  background-image: url(/renius/image/cta-bg-3.jpg);
   padding: 235px 0 125px;
   margin-top: -110px;
   border-radius: 0 0 45px 45px;
@@ -3541,7 +3541,7 @@ body {
   transform: translate(-50%, -50%);
 }
 .cta-area.style-four {
-  background-image: url(renius/image/cta-bg-3.jpg);
+  background-image: url(/renius/image/cta-bg-3.jpg);
   padding: 135px 0 125px;
   border-radius: 0 0 45px 45px;
 }
