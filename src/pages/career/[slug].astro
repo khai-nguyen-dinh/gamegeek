@@ -1,0 +1,484 @@
+---
+import LayoutRenius from '../../layouts/LayoutRenius.astro';
+import Navbar from '../../components/Navbar.astro';
+
+// Get the slug from the URL params
+export async function getStaticPaths() {
+  // Sample career posts data
+  const careers = [
+    {
+      slug: 'construction-project-manager',
+      title: 'Construction Project Manager',
+      location: 'Ha Noi',
+      type: 'Full-Time',
+      experience: '2+ Years',
+      deadline: 'May 12, 2025',
+      salary: 'UP TO 20,000,000',
+      description: 'Renius Real Estate & Construction Group, we believe in building more than just properties—we build careers with purpose. Whether you\'re a seasoned engineer, an aspiring architect, or a driven real estate professional, Renius offers a platform for growth, leadership, and innovation.',
+      responsibilities: [
+        'Assist clients in buying, selling, or renting properties.',
+        'Conduct property evaluations and market research.',
+        'Collaborate with other team members to achieve sales goals.',
+        'Ensure compliance with industry standards and legal requirements.',
+        'Maintain strong client relationships and address inquiries promptly.'
+      ],
+      qualifications: [
+        'Bachelor\'s degree in  or equivalent experience.',
+        '10 years of experience',
+        'Strong skills in communication, negotiation, customer service',
+        'Proficiency in specific tools/software, if needed',
+        'Knowledge of industry-specific standards or regulations'
+      ],
+      offers: [
+        'Competitive salary and bonus structure.',
+        'Opportunities for career growth and development.',
+        'Comprehensive health and wellness benefits.',
+        'Flexible work environment.',
+        'Supportive and inclusive company culture.'
+      ]
+    },
+    {
+      slug: 'real-estate-sales-associates',
+      title: 'Real Estate Sales Associates',
+      location: 'Ha Noi',
+      type: 'Full-Time',
+      experience: '4+ Years',
+      deadline: 'June 15, 2025',
+      salary: 'UP TO 25,000,000',
+      description: 'We are looking for experienced Real Estate Sales Associates to join our team. You will be responsible for helping clients buy, sell, and rent properties while maintaining excellent customer relationships.',
+      responsibilities: [
+        'Assist clients in buying, selling, or renting properties.',
+        'Conduct property evaluations and market research.',
+        'Collaborate with other team members to achieve sales goals.',
+        'Ensure compliance with industry standards and legal requirements.',
+        'Maintain strong client relationships and address inquiries promptly.'
+      ],
+      qualifications: [
+        'Bachelor\'s degree in Real Estate or related field.',
+        '4+ years of experience in real estate sales',
+        'Strong skills in communication, negotiation, customer service',
+        'Proficiency in CRM software and real estate tools',
+        'Valid real estate license'
+      ],
+      offers: [
+        'Competitive salary and bonus structure.',
+        'Opportunities for career growth and development.',
+        'Comprehensive health and wellness benefits.',
+        'Flexible work environment.',
+        'Supportive and inclusive company culture.'
+      ]
+    },
+    {
+      slug: 'architectural-assistant',
+      title: 'Architectural Assistant',
+      location: 'Ha Noi',
+      type: 'Full-Time',
+      experience: '5+ Years',
+      deadline: 'July 20, 2025',
+      salary: 'UP TO 30,000,000',
+      description: 'Join our architectural team as an Architectural Assistant. You will work closely with senior architects to develop design concepts and create detailed architectural drawings.',
+      responsibilities: [
+        'Assist in developing architectural designs and concepts.',
+        'Create detailed architectural drawings and specifications.',
+        'Collaborate with project teams and clients.',
+        'Ensure designs meet building codes and regulations.',
+        'Participate in site visits and project meetings.'
+      ],
+      qualifications: [
+        'Bachelor\'s degree in Architecture or related field.',
+        '5+ years of experience in architectural design',
+        'Proficiency in AutoCAD, Revit, and other design software',
+        'Strong design and technical skills',
+        'Knowledge of building codes and regulations'
+      ],
+      offers: [
+        'Competitive salary and bonus structure.',
+        'Opportunities for career growth and development.',
+        'Comprehensive health and wellness benefits.',
+        'Flexible work environment.',
+        'Supportive and inclusive company culture.'
+      ]
+    }
+  ];
+
+  return careers.map((career) => ({
+    params: { slug: career.slug },
+    props: career
+  }));
+}
+
+const { slug } = Astro.params;
+const { title, location, type, experience, deadline, salary, description, responsibilities, qualifications, offers } = Astro.props;
+---
+
+<LayoutRenius title={`${title} | GameGeek`}>
+
+<style>
+  /* Use Inter font for entire page */
+  body {
+    font-family: 'Inter', sans-serif !important;
+  }
+
+  /* Ensure RemixIcon uses correct font - must be after body rule */
+  [class^="ri-"], [class*=" ri-"], i[class^="ri-"], i[class*=" ri-"] {
+    font-family: 'remixicon' !important;
+    font-style: normal !important;
+  }
+
+  /* Limit game controller icon size and change color to orange */
+  img[src*="game-controller-svgrepo-com.svg"] {
+    height: 12px !important;
+    width: auto !important;
+    max-width: none !important;
+    object-fit: contain;
+    vertical-align: middle;
+    display: inline-block;
+    /* Convert to orange color #FF5E14 */
+    filter: brightness(0) saturate(100%) invert(48%) sepia(100%) saturate(2000%) hue-rotate(0deg) brightness(1.05) contrast(1.1);
+  }
+
+  /* Compact menu when scrolled */
+  #navbar.navbar-compact {
+    padding: 12px 0;
+  }
+
+  #navbar.navbar-compact .navbar-brand,
+  #navbar.navbar-compact .other-options {
+    display: none !important;
+  }
+
+  #navbar.navbar-compact .menu-area {
+    flex: 1 !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  #navbar.navbar-compact .menu-section {
+    display: flex !important;
+    align-items: center !important;
+    gap: 2px !important;
+    background: #4a4a4a !important;
+    border-radius: 50px !important;
+    padding: 6px 18px !important;
+    margin: 0 auto !important;
+    list-style: none !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2) !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    height: auto !important;
+  }
+
+  #navbar.navbar-compact .menu-section li {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+  }
+
+  #navbar.navbar-compact .menu-section li a {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    padding: 8px 18px !important;
+    display: block !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+    border-radius: 25px !important;
+    white-space: nowrap !important;
+    background: transparent !important;
+    line-height: 1.5 !important;
+    letter-spacing: 0.3px !important;
+  }
+
+  #navbar.navbar-compact .menu-section li a:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 991px) {
+    #navbar.navbar-compact {
+      padding: 10px 0;
+    }
+
+    #navbar.navbar-compact .menu-section {
+      padding: 5px 14px !important;
+      gap: 1px !important;
+    }
+
+    #navbar.navbar-compact .menu-section li a {
+      padding: 7px 14px !important;
+      font-size: 13px !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    #navbar.navbar-compact {
+      padding: 8px 0;
+    }
+
+    #navbar.navbar-compact .menu-section {
+      padding: 4px 12px !important;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1px !important;
+      border-radius: 30px !important;
+    }
+
+    #navbar.navbar-compact .menu-section li a {
+      padding: 6px 12px !important;
+      font-size: 12px !important;
+    }
+  }
+
+  /* Job meta info icons */
+  .job-metainfo li {
+    position: relative;
+    padding-left: 0 !important;
+  }
+
+  .job-metainfo li i {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    margin-right: 8px;
+    color: var(--primaryColor);
+    font-size: 18px;
+    vertical-align: middle;
+    display: inline-block;
+  }
+
+  /* Job description styling */
+  .job-desc .single-img {
+    min-height: 0;
+    margin-bottom: 0;
+  }
+
+  .job-desc .single-para {
+    margin-bottom: 30px;
+  }
+
+  .job-desc .single-para:last-of-type {
+    margin-bottom: 0;
+  }
+
+  /* Job brief sidebar */
+  .job-brief li {
+    padding: 20px 25px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .job-brief li:last-child {
+    border-bottom: none;
+  }
+
+  /* Footer large text - adjust font size to prevent overflow */
+  .footer-large-text {
+    font-size: clamp(60px, 12vw, 180px) !important;
+    line-height: 1 !important;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    width: 100%;
+    overflow: hidden;
+    text-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .footer-large-text span {
+    display: inline-block;
+    text-align: center;
+  }
+
+  @media (max-width: 1200px) {
+    .footer-large-text {
+      font-size: clamp(50px, 10vw, 150px) !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .footer-large-text {
+      font-size: clamp(40px, 8vw, 100px) !important;
+    }
+  }
+</style>
+
+<!-- Custom Cursor -->
+<div class="cursor"><span class="cursor-text"></span></div>
+<div class="cursor-inner"></div>
+
+<div id="smooth-wrapper">
+  <div id="smooth-content">
+    <!-- Navbar Start -->
+    <Navbar variant="white" />
+    <!-- Navbar End -->
+
+    <!-- Breadcrumb Section Start -->
+    <div class="breadcrumb-area position-relative z-1">
+      <img src="/renius/image/br-line-shape.png" alt="Shape" class="br-line-shape position-absolute top-0 start-0 w-100 h-100 z-n1">
+      <img src="/renius/image/br-shape-1.png" alt="Shape" class="br-shape-one position-absolute z-n1 bounce">
+      <img src="/renius/image/br-shape-2.png" alt="Shape" class="br-shape-two position-absolute bottom-0 z-n1 moveHorizontal">
+      <div class="container-fluid px-xxl-5">
+        <div class="row">
+          <div class="col-md-10 offset-md-1 text-center">
+            <h2 class="section-title style-one fw-black text-title">CAREER INFO</h2>
+            <ul class="br-menu list-unstyled">
+              <li><a href="/"><img src="/renius/image/home-icon.svg" alt="Icon">HOME</a></li>
+              <li><a href="/career">CAREERS</a></li>
+              <li>CAREER INFO</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Career Info Section Start -->
+    <div class="container ptb-120">
+      <div class="row">
+        <div class="col-xl-8 pe-xxl-4">
+          <div class="job-desc">
+            <div class="single-img round-10 position-relative">
+              <!-- Image can be added here if needed -->
+            </div>
+            <div class="single-job-title position-relative z-1 bg-white round-10">
+              <h1 class="fs-24 fw-bold text-title">{title}</h1>
+              <ul class="job-metainfo list-unstyled">
+                <li class="position-relative"><i class="ri-map-pin-line"></i><span class="fw-medium text-title me-1">Location:</span> {location}</li>
+                <li class="position-relative"><i class="ri-briefcase-line"></i><span class="fw-medium text-title me-1">Type:</span> {type}</li>
+                <li class="position-relative"><i class="ri-user-line"></i><span class="fw-medium text-title me-1">Experience:</span> {experience}</li>
+              </ul>
+            </div>
+            <div class="single-para">
+              <h6 class="fs-20 fw-bold">Job Description</h6>
+              <p>{description}</p>
+            </div>
+            <div class="single-para">
+              <h6 class="fs-20 fw-bold mb-15">Responsibilities:</h6>
+              <ul class="feature-list style-two list-unstyled mb-0">
+                {responsibilities.map((item) => (
+                  <li class="position-relative">{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div class="single-para">
+              <h6 class="fs-20 fw-bold mb-15">Qualifications:</h6>
+              <ul class="feature-list style-two list-unstyled mb-0">
+                {qualifications.map((item) => (
+                  <li class="position-relative">{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div class="single-para">
+              <h6 class="fs-20 fw-bold mb-15">What We Offer:</h6>
+              <ul class="feature-list style-two list-unstyled mb-30">
+                {offers.map((item) => (
+                  <li class="position-relative">{item}</li>
+                ))}
+              </ul>
+              <button class="btn style-one d-inline-flex flex-wrap align-items-center p-0"><span class="btn-text d-inline-block fw-semibold position-relative transition">Apply For This job</span><span class="btn-icon position-relative d-flex flex-column align-items-center justify-content-center rounded-circle transition"><i class="ri-arrow-right-up-line"></i></span></button>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-4 ps-xxl-5">
+          <div class="sidebar me-xxl-3 mt-lg-50">
+            <div class="sidebar-widget bg-gray round-10 p-0">
+              <ul class="job-brief list-unstyled">
+                <li>
+                  <span class="text-title fw-semibold d-block mb-1 lh-1">Deadline For Job Application</span>
+                  {deadline}
+                </li>
+                <li>
+                  <span class="text-title fw-semibold d-block mb-1 lh-1">Salary Range</span>{salary}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Career Info Section End -->
+
+    <!-- Footer Section Start -->
+    <footer class="footer-area style-two bg-optional position-relative z-1 pt-120">
+      <div class="container">
+        <div class="row justify-content-center pb-90">
+          <div class="col-lg-3 col-md-6">
+            <div class="footer-widget mb-30" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+              <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">Quick Links</h4>
+              <ul class="footer-menu style-one list-unstyled mb-0">
+                <li><a href="services.html">Service</a></li>
+                <li><a href="pricing-plan.html">Pricing</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="about.html">About</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 ps-xxl-5">
+            <div class="footer-widget mb-30" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 180ms; animation-direction: normal; animation-fill-mode: both;">
+              <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">Explore</h4>
+              <ul class="footer-menu style-one list-unstyled mb-0">
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-conditions.html">Terms of Service</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="careers.html">Careers</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 ps-xxl-5">
+            <div class="footer-widget mb-30 ps-xxl-4" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 360ms; animation-direction: normal; animation-fill-mode: both;">
+              <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">Company</h4>
+              <ul class="footer-menu style-one list-unstyled mb-0">
+                <li><a href="location.html">Location</a></li>
+                <li><a href="projects.html">Works</a></li>
+                <li><a href="projects.html">Studio</a></li>
+                <li><a href="blog-right-sidebar.html">News</a></li>
+                <li><a href="properties.html">Categories</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 ps-xxl-5">
+            <div class="footer-widget mb-30 ps-xxl-5" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 540ms; animation-direction: normal; animation-fill-mode: both;">
+              <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">Address</h4>
+              <ul class="contact-info-list list-unstyled mb-0">
+                <li><span class="fw-bold text-white me-1">Address:</span> NIC Building, No 6 Lane 7 Ton That Thuyet, Cau Giay, Hanoi</li>
+                <li><span class="fw-bold text-white me-1">Email:</span><a href="mailto:support@gamegeek.asia">support@gamegeek.asia</a></li>
+                <li><span class="fw-bold text-white me-1">Phone:</span><a href="tel:+84902122120">(+84) 902 122 120</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="footer-large-text font-optional fw-black round-10">
+              <span>GAMEGEEK</span>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="social-share d-flex flex-wrap align-items-center justify-content-md-start justify-content-center mb-sm-10">
+              <span class="text-alto fw-semibold me-2">Follow Us: </span>
+              <ul class="social-profile style-two list-unstyled mb-0">
+                <li><a href="https://www.facebook.com/" target="_blank" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-facebook-fill"></i></a></li>
+                <li><a href="https://x.com/?lang=en" target="_blank" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-twitter-x-line"></i></a></li>
+                <li><a href="https://www.instagram.com/" target="_blank" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-instagram-line"></i></a></li>
+                <li><a href="https://www.linkedin.com/" target="_blank" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-linkedin-fill"></i></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-7 text-md-end text-center">
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- Footer End -->
+
+  </div>
+</div>
+
+</LayoutRenius>
+

@@ -1,0 +1,206 @@
+---
+interface Props {
+    variant?: 'white' | 'black';
+}
+
+const { variant = 'black' } = Astro.props;
+const textColor = variant === 'white' ? 'text-title' : 'text-white';
+---
+
+<style>
+    /* Compact menu when scrolled */
+    #navbar.navbar-compact {
+        padding: 12px 0;
+    }
+
+    #navbar.navbar-compact .navbar-brand,
+    #navbar.navbar-compact .other-options {
+        display: none !important;
+    }
+
+    #navbar.navbar-compact .menu-area {
+        flex: 1 !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+
+    #navbar.navbar-compact .menu-section {
+        display: flex !important;
+        align-items: center !important;
+        gap: 2px !important;
+        background: #4a4a4a !important;
+        border-radius: 50px !important;
+        padding: 6px 18px !important;
+        margin: 0 auto !important;
+        list-style: none !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2) !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        height: auto !important;
+    }
+
+    #navbar.navbar-compact .menu-section li {
+        margin: 0 !important;
+        padding: 0 !important;
+        list-style: none !important;
+    }
+
+    #navbar.navbar-compact .menu-section li a {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        padding: 8px 18px !important;
+        display: block !important;
+        text-decoration: none !important;
+        transition: all 0.3s ease !important;
+        border-radius: 25px !important;
+        white-space: nowrap !important;
+        background: transparent !important;
+        line-height: 1.5 !important;
+        letter-spacing: 0.3px !important;
+    }
+
+    /* Override inline styles when compact - ensure white text for all variants */
+    #navbar.navbar-compact .menu-section li a[style*="color"] {
+        color: #ffffff !important;
+    }
+
+    #navbar.navbar-compact .menu-section li a:hover {
+        background: rgba(255, 255, 255, 0.15) !important;
+        color: #ffffff !important;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 991px) {
+        #navbar.navbar-compact {
+            padding: 10px 0;
+        }
+
+        #navbar.navbar-compact .menu-section {
+            padding: 5px 14px !important;
+            gap: 1px !important;
+        }
+
+        #navbar.navbar-compact .menu-section li a {
+            padding: 7px 14px !important;
+            font-size: 13px !important;
+        }
+    }
+
+    @media (max-width: 767px) {
+        #navbar.navbar-compact {
+            padding: 8px 0;
+        }
+
+        #navbar.navbar-compact .menu-section {
+            padding: 4px 12px !important;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1px !important;
+            border-radius: 30px !important;
+        }
+
+        #navbar.navbar-compact .menu-section li a {
+            padding: 6px 12px !important;
+            font-size: 12px !important;
+        }
+    }
+</style>
+
+<!-- Navbar Start -->
+<div class="navbar-area style-three position-relative sticky" id="navbar" data-variant={variant}>
+    <div class="container-fluid">
+        <div class="navbar-wrapper d-flex justify-content-between align-items-center">
+            <a href="/" class="navbar-brand">
+                <img src="/images/logo.png" alt="Logo">
+            </a>
+            <div class="menu-area" style="flex: 1; display: flex; justify-content: center;">
+                <div class="overlay"></div>
+                <nav class="menu">
+                    <div class="menu-mobile-header">
+                        <button type="button" class="menu-mobile-arrow bg-transparent border-0"><i class="ri-arrow-left-s-line"></i></button>
+                        <div class="menu-mobile-title"></div>
+                        <button type="button" class="menu-mobile-close bg-transparent border-0"><i class="ri-close-line"></i></button>
+                    </div>
+                    <ul class="menu-section p-0 mb-0 lh-1" style="display: flex; justify-content: center; align-items: center; gap: 30px; list-style: none; flex-wrap: wrap;">
+                        <li>
+                            <a href="/" class={`${textColor} fw-semibold`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px; ${variant === 'white' ? 'color: #000000 !important;' : 'color: #ffffff !important;'}`}>HOME</a>
+                        </li>
+                        <li>
+                            <a href="/about" class={`${textColor} fw-semibold`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px; ${variant === 'white' ? 'color: #000000 !important;' : 'color: #ffffff !important;'}`}>ABOUT</a>
+                        </li>
+                        <li>
+                            <a href="/solution" class={`${textColor} fw-semibold`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px; ${variant === 'white' ? 'color: #000000 !important;' : 'color: #ffffff !important;'}`}>SOLUTION</a>
+                        </li>
+                        <li>
+                            <a href="/news" class={`${textColor} fw-semibold`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px; ${variant === 'white' ? 'color: #000000 !important;' : 'color: #ffffff !important;'}`}>NEWS</a>
+                        </li>
+                        <li>
+                            <a href="/program" class={`${textColor} fw-semibold`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px; ${variant === 'white' ? 'color: #000000 !important;' : 'color: #ffffff !important;'}`}>PROGRAMS</a>
+                        </li>
+                        <li>
+                            <a href="/career" class={`${textColor} fw-semibold`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px; ${variant === 'white' ? 'color: #000000 !important;' : 'color: #ffffff !important;'}`}>CAREER</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="other-options d-flex flex-wrap align-items-center justify-content-end">
+                <div class="option-item d-lg-block d-none">
+                    <a href="/contact" class="btn style-two d-inline-flex flex-wrap align-items-center p-0"><span class="btn-text d-inline-block fw-semibold position-relative transition">Get Started</span><span class="btn-icon position-relative d-flex flex-column align-items-center justify-content-center rounded-circle transition"><i class="ri-arrow-right-up-line"></i></span></a>
+                </div>
+                <div class="option-item d-lg-none">
+                    <button type="button" class="menu-mobile-trigger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Navbar End -->
+
+<script>
+    // Navbar scroll behavior
+    document.addEventListener('DOMContentLoaded', function() {
+        const navbar = document.getElementById('navbar');
+        
+        if (!navbar) return;
+        
+        const menuLinks = navbar.querySelectorAll('.menu-section li a');
+        const variant = navbar.getAttribute('data-variant') || 'black';
+        
+        function handleScroll() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 100) {
+                // When scrolled, show compact menu
+                navbar.classList.add('navbar-compact');
+                // Force white text color for all menu links when compact (regardless of variant)
+                menuLinks.forEach(link => {
+                    link.style.setProperty('color', '#ffffff', 'important');
+                });
+            } else {
+                // When at top, show full header
+                navbar.classList.remove('navbar-compact');
+                // Restore original color based on variant
+                menuLinks.forEach(link => {
+                    if (variant === 'white') {
+                        link.style.setProperty('color', '#000000', 'important');
+                    } else {
+                        link.style.setProperty('color', '#ffffff', 'important');
+                    }
+                });
+            }
+        }
+
+        // Initial check for scroll position
+        handleScroll();
+        
+        // Add scroll event listener
+        window.addEventListener('scroll', handleScroll, { passive: true });
+    });
+</script>
+

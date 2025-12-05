@@ -1,346 +1,1228 @@
 ---
-import LayoutNico from '../layouts/LayoutAbout.astro';
-import IntroSolutionSection from '../components/sections/IntroSolutionSection.astro';
+import LayoutRenius from '../layouts/LayoutRenius.astro';
+import Navbar from '../components/Navbar.astro';
 ---
 
-<LayoutNico title="Solutions - Gamegeek" description="Discover our comprehensive solutions for your gaming business needs.">
-  <IntroSolutionSection />
-  
-  <section class="strategic-advisory-section">
-    <div class="about-container-wrapper style2">
-      <div class="container">
-        <div class="about-wrapper style2 section-padding fix">
-          <div class="container">
-            <div class="row gy-5 gx-60 d-flex align-items-center">
-              <div class="col-xl-6 order-2 order-xl-1">
-                <div class="about-content">
-                  <div class="section-title">
-                    <div class="subtitle wow fadeInUp" data-wow-delay=".2s">
-                      Global Partners
-                      <img src="/images/fireIcon.svg" alt="icon" class="">
+<LayoutRenius title="GameGeek | Connecting the Game Industry of Vietnam">
+
+    <style>
+        /* Use Inter font for entire page */
+        body {
+            font-family: 'Inter', sans-serif !important;
+        }
+
+        /* Ensure RemixIcon uses correct font - must be after body rule */
+        [class^="ri-"],
+        [class*=" ri-"],
+        i[class^="ri-"],
+        i[class*=" ri-"] {
+            font-family: 'remixicon' !important;
+            font-style: normal !important;
+        }
+
+        /* Limit game controller icon size and change color to orange */
+        img[src*="game-controller-svgrepo-com.svg"] {
+            height: 12px !important;
+            width: auto !important;
+            max-width: none !important;
+            object-fit: contain;
+            vertical-align: middle;
+            display: inline-block;
+            /* Convert to orange color #FF5E14 */
+            filter: brightness(0) saturate(100%) invert(48%) sepia(100%) saturate(2000%) hue-rotate(0deg) brightness(1.05) contrast(1.1);
+        }
+
+        /* Compact menu when scrolled */
+        #navbar.navbar-compact {
+            padding: 12px 0;
+        }
+
+        #navbar.navbar-compact .navbar-brand,
+        #navbar.navbar-compact .other-options {
+            display: none !important;
+        }
+
+        #navbar.navbar-compact .menu-area {
+            flex: 1 !important;
+            display: flex !important;
+            justify-content: center !important;
+        }
+
+        #navbar.navbar-compact .menu-section {
+            display: flex !important;
+            align-items: center !important;
+            gap: 2px !important;
+            background: #4a4a4a !important;
+            border-radius: 50px !important;
+            padding: 6px 18px !important;
+            margin: 0 auto !important;
+            list-style: none !important;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2) !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            height: auto !important;
+        }
+
+        #navbar.navbar-compact .menu-section li {
+            margin: 0 !important;
+            padding: 0 !important;
+            list-style: none !important;
+        }
+
+        #navbar.navbar-compact .menu-section li a {
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            padding: 8px 18px !important;
+            display: block !important;
+            text-decoration: none !important;
+            transition: all 0.3s ease !important;
+            border-radius: 25px !important;
+            white-space: nowrap !important;
+            background: transparent !important;
+            line-height: 1.5 !important;
+            letter-spacing: 0.3px !important;
+        }
+
+        #navbar.navbar-compact .menu-section li a:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            color: #ffffff !important;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 991px) {
+            #navbar.navbar-compact {
+                padding: 10px 0;
+            }
+
+            #navbar.navbar-compact .menu-section {
+                padding: 5px 14px !important;
+                gap: 1px !important;
+            }
+
+            #navbar.navbar-compact .menu-section li a {
+                padding: 7px 14px !important;
+                font-size: 13px !important;
+            }
+        }
+
+        @media (max-width: 767px) {
+            #navbar.navbar-compact {
+                padding: 8px 0;
+            }
+
+            #navbar.navbar-compact .menu-section {
+                padding: 4px 12px !important;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1px !important;
+                border-radius: 30px !important;
+            }
+
+            #navbar.navbar-compact .menu-section li a {
+                padding: 6px 12px !important;
+                font-size: 12px !important;
+            }
+        }
+
+        /* Hero transparent text - keep on one line, larger and spaced */
+        .hero-transparent-text {
+            font-size: clamp(100px, 18vw, 250px) !important;
+            white-space: nowrap !important;
+            flex-wrap: nowrap !important;
+            line-height: 1 !important;
+            overflow: visible !important;
+            width: 100% !important;
+        }
+
+        .hero-transparent-text-wrap {
+            overflow: visible !important;
+            width: 100% !important;
+        }
+
+        .hero-transparent-text span {
+            display: inline-block !important;
+            white-space: nowrap !important;
+            margin: 0 0.06em !important;
+        }
+
+        @media (max-width: 1200px) {
+            .hero-transparent-text {
+                font-size: clamp(80px, 16vw, 200px) !important;
+                letter-spacing: 0.1em !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-transparent-text {
+                font-size: clamp(50px, 12vw, 120px) !important;
+                letter-spacing: 0.06em !important;
+            }
+        }
+
+        /* Counter Section Styles */
+        .counter-box.style-three {
+            padding: 40px 20px;
+        }
+
+        .counter-box.style-three .counter {
+            margin-bottom: 20px;
+        }
+
+        .counter-box.style-three .counter-number {
+            font-size: clamp(60px, 8vw, 100px) !important;
+            line-height: 1;
+            display: inline-block;
+            font-weight: 900 !important;
+            letter-spacing: -2px;
+        }
+
+        .counter-box.style-three .plus {
+            font-size: clamp(45px, 6vw, 70px) !important;
+            margin-left: 8px;
+            font-weight: 700;
+        }
+
+        .counter-box.style-three .text {
+            font-size: 16px;
+            margin-top: 15px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .counter-box.style-three {
+                padding: 30px 15px;
+            }
+
+            .counter-box.style-three .counter-number {
+                font-size: clamp(50px, 10vw, 80px) !important;
+            }
+
+            .counter-box.style-three .plus {
+                font-size: clamp(35px, 8vw, 60px) !important;
+            }
+        }
+
+        /* Blog/News Section - Equal Height Images */
+        .blog-area {
+            padding-top: 100px !important;
+        }
+
+        /* Section title wider and spacing */
+        .blog-area .section-title {
+            max-width: 100% !important;
+            width: 100% !important;
+            margin-bottom: 50px !important;
+        }
+
+        .blog-area .blog-img {
+            height: 280px !important;
+            width: 100%;
+        }
+
+        .blog-area .blog-img img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            object-position: center !important;
+        }
+
+        /* Spacing between image and content */
+        .blog-area .blog-metainfo {
+            margin-top: 50px !important;
+        }
+
+        /* Limit description to 3 lines */
+        .blog-area .blog-card .text-para {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.6;
+            max-height: calc(1.6em * 3);
+        }
+
+        @media (max-width: 991px) {
+            .blog-area .blog-img {
+                height: 250px !important;
+            }
+
+            .blog-area .blog-metainfo {
+                margin-top: 40px !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .blog-area {
+                padding-top: 80px !important;
+            }
+
+            .blog-area .blog-img {
+                height: 220px !important;
+            }
+
+            .blog-area .blog-metainfo {
+                margin-top: 30px !important;
+            }
+        }
+
+        /* Business Matching Image - Fix distortion and add orange overlay */
+        .business-matching-img {
+            overflow: hidden;
+        }
+
+        .business-matching-img img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            object-position: center !important;
+        }
+
+        .business-matching-overlay {
+            background: linear-gradient(135deg, rgba(255, 94, 20, 0.4) 0%, rgba(217, 8, 69, 0.3) 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Services2 image - chỉ hiển thị ở 60% phía dưới thẻ, căn giữa */
+        img[src*="services2.png"] {
+            height: 60% !important;
+            width: auto !important;
+            max-width: 100% !important;
+            bottom: 0 !important;
+            top: auto !important;
+            left: 50% !important;
+            right: auto !important;
+            transform: translateX(-50%) !important;
+            object-fit: contain;
+            object-position: bottom center;
+        }
+
+        /* OUR ADVANTAGE icons - height 64px, color primaryColor */
+        .service-card.style-three img[src*="ecosystem.svg"],
+        .service-card.style-three img[src*="analytic.svg"],
+        .service-card.style-three img[src*="community.svg"],
+        .service-card.style-three img[src*="innovation.svg"] {
+            height: 64px !important;
+            width: auto !important;
+            filter: brightness(0) saturate(100%) invert(48%) sepia(100%) saturate(2000%) hue-rotate(0deg) brightness(1.05) contrast(1.1) !important;
+        }
+
+        /* Footer large text - adjust font size to prevent overflow */
+        .footer-large-text {
+            font-size: clamp(60px, 12vw, 180px) !important;
+            line-height: 1 !important;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            width: 100%;
+            overflow: hidden;
+            text-align: center !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .footer-large-text span {
+            display: inline-block;
+            text-align: center;
+        }
+
+        @media (max-width: 1200px) {
+            .footer-large-text {
+                font-size: clamp(50px, 10vw, 150px) !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-large-text {
+                font-size: clamp(40px, 8vw, 100px) !important;
+            }
+        }
+
+        /* Hero Left Content - CENTRAL HUB and CTA stacked, left aligned, 20% from left */
+        .hero-area.style-three .row.position-relative {
+            min-height: 400px;
+        }
+
+        .hero-left-content {
+            position: absolute;
+            top: 0 !important;
+            z-index: 10 !important;
+            text-align: left !important;
+            max-width: 600px;
+            width: auto;
+            height: auto;
+            min-height: auto;
+        }
+
+        .hero-central-hub {
+            margin-bottom: 40px;
+        }
+
+        .hero-central-hub h1 {
+            font-size: clamp(48px, 6vw, 120px) !important;
+            line-height: 1.2 !important;
+            white-space: nowrap;
+            margin-bottom: 0;
+        }
+
+        .hero-left-content .hero-para {
+            text-align: left;
+        }
+
+        .hero-left-content .hero-para p {
+            color: #fff;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* Add spacing between hero-left-content and hero-transparent-text-wrap */
+        .hero-transparent-text-wrap {
+            padding-top: 40px !important;
+        }
+
+        @media (max-width: 1200px) {
+            .hero-transparent-text-wrap {
+                margin-top: 80px !important;
+                padding-top: 30px !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-transparent-text-wrap {
+                margin-top: 60px !important;
+                padding-top: 20px !important;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .hero-left-content {
+                left: 15% !important;
+                max-width: 500px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-left-content {
+                left: 10% !important;
+                max-width: 90%;
+            }
+
+            .hero-central-hub h1 {
+                font-size: clamp(36px, 8vw, 80px) !important;
+            }
+
+            .hero-left-content .hero-para p {
+                font-size: 16px;
+            }
+        }
+
+        /* Hero Slide Title */
+        .hero-slide-title {
+            padding-top: 40px;
+        }
+
+        .hero-slide-title h2 {
+            background-color: rgba(255, 255, 255, 0.12) !important;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            display: inline-block !important;
+            padding: 20px 50px !important;
+            border-radius: 10px !important;
+            color: #ffffff !important;
+            transition: var(--transition);
+        }
+
+        .hero-slide-title h2:hover {
+            background-color: rgba(67, 67, 67, 0.31);
+        }
+
+        @media (max-width: 768px) {
+            .hero-slide-title {
+                padding-top: 30px;
+                margin-bottom: 30px !important;
+            }
+
+            .hero-slide-title h2 {
+                font-size: 20px !important;
+                padding: 15px 30px !important;
+            }
+        }
+
+        /* Crop project images in OUR PROJECTS section to match project-1.jpg aspect ratio */
+        .project-slider-one .project-card.style-one .project-img {
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+        }
+
+        .project-slider-one .project-card.style-one .project-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* Keep circle-text-icon small and centered in circle */
+        .project-slider-one .project-card.style-one .circle-text-icon {
+            width: 24px !important;
+            height: 24px !important;
+            max-width: 24px !important;
+            max-height: 24px !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+        }
+    </style>
+
+
+    <!-- Custom Cursor -->
+    <div class="cursor"><span class="cursor-text"></span></div>
+    <div class="cursor-inner"></div>
+
+    <div id="smooth-wrapper">
+        <div id="smooth-content">
+
+            <Navbar variant="white" />
+
+            <div class="hero-area style-two position-relative z-1 overflow-hidden">
+                <div class="br-one position-absolute top-0 z-n1"></div>
+                <div class="br-two position-absolute top-0 z-n1"></div>
+                <div class="br-three position-absolute top-0 z-n1"></div>
+                <div class="container-fluid">
+                    <div class="row pb-90 align-items-end">
+                        <div class="col-lg-8 col-md-8">
+                            <div class="hero-content mb-15">
+                                <h6 class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-normal position-relative text_primary mb-15"
+                                    data-cue="slideInUp" data-show="true"
+                                    style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                                    End-to-End Solutions for Global Partners</h6>
+                                <h1 class="font-secondary fw-normal text-title mb-0" data-cue="slideInUp"
+                                    data-delay="300" data-show="true"
+                                    style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">
+                                    One hub for <b class="fw-black">strategy, execution, </b>and <b
+                                        class="fw-black">sustained growth</b><span class="d-md-block"></h1>
+                            </div>
+                        </div>
                     </div>
-                    <h2 class="title wow fadeInUp" data-wow-delay=".4s">
-                       End-to-End Solutions for Global Partners
-                    </h2>
-                     <p class="text">One hub for strategy, execution, and sustained growth</p>                    
-                  </div>
-                  <div class="fancy-box style3 mb-20 wow fadeInUp" data-wow-delay=".2s">
-                    <div class="icon">
-                      <img src="/images/wcuIcon1_1.svg" alt="icon" class="">
+                    <div class="hero-slider-one swiper swiper-fade swiper-initialized swiper-horizontal swiper-autoheight swiper-watch-progress swiper-backface-hidden"
+                        data-cue="slideInUp" data-show="true"
+                        style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                        <div class="swiper-wrapper" style="height: 732px;" id="swiper-wrapper-43c94ed6e5119c65"
+                            aria-live="polite">
+                            <div class="swiper-slide swiper-slide-visible swiper-slide-fully-visible swiper-slide-active"
+                                style="width: 1475px; opacity: 1; transform: translate3d(0px, 0px, 0px);" role="group"
+                                aria-label="1 / 3" data-swiper-slide-index="0">
+                                <div
+                                    class="hero-slide-item bg-1 bg-f d-flex flex-column justify-content-end position-relative overflow-hidden z-1 round-30">
+                                    <div class="hero-slide-title text-center mb-40">
+                                        <h2 class="fs-32 fw-bold text-white">Strategic Advisory</h2>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-4 col-md-6 mb-md-20">
+                                            <div class="hero-feature-card d-flex flex-wrap">
+                                                <span
+                                                    class="feature-icon d-flex flex-column align-items-center justify-content-center rounded-circle bg_primary"><img
+                                                        src="/renius/image/check-white.svg" alt="Icon"></span>
+                                                <div>
+                                                    <h3 class="fs-20 fw-semibold text-white">Market Entry &amp;
+                                                        Go-to-market Strategy</h3>
+                                                    <p class="text-alto">Bespoke roadmaps for global launch and
+                                                        long-term growth</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6 mb-md-20">
+                                            <div class="hero-feature-card d-flex flex-wrap">
+                                                <span
+                                                    class="feature-icon d-flex flex-column align-items-center justify-content-center rounded-circle bg_primary"><img
+                                                        src="/renius/image/check-white.svg" alt="Icon"></span>
+                                                <div>
+                                                    <h3 class="fs-20 fw-semibold text-white">Market Intelligence &amp;
+                                                        Trend Analysis</h3>
+                                                    <p class="text-alto">Providing data-driven insights to inform your
+                                                        strategic decisions</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6 mb-md-20">
+                                            <div class="hero-feature-card d-flex flex-wrap">
+                                                <span
+                                                    class="feature-icon d-flex flex-column align-items-center justify-content-center rounded-circle bg_primary"><img
+                                                        src="/renius/image/check-white.svg" alt="Icon"></span>
+                                                <div>
+                                                    <h3 class="fs-20 fw-semibold text-white">Regulatory Compliance &amp;
+                                                        Guidance</h3>
+                                                    <p class="text-alto">Ensuring your business navigates the local
+                                                        legal framework with confidence</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide swiper-slide-next"
+                                style="width: 1475px; opacity: 0; transform: translate3d(-1475px, 0px, 0px);"
+                                role="group" aria-label="2 / 3" data-swiper-slide-index="1">
+                                <div
+                                    class="hero-slide-item bg-2 bg-f d-flex flex-column justify-content-end position-relative overflow-hidden z-1 round-30">
+                                    <div class="hero-slide-title text-center mb-40">
+                                        <h2 class="fs-32 fw-bold text-white">Market Execution &amp; Operations</h2>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-4 col-md-6 mb-md-20">
+                                            <div class="hero-feature-card d-flex flex-wrap">
+                                                <span
+                                                    class="feature-icon d-flex flex-column align-items-center justify-content-center rounded-circle bg_primary"><img
+                                                        src="/renius/image/check-white.svg" alt="Icon"></span>
+                                                <div>
+                                                    <h3 class="fs-20 fw-semibold text-white">Alliances &amp; Partnering
+                                                    </h3>
+                                                    <p class="text-alto">Curated local partners for operations,
+                                                        publishing, and UA</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6 mb-md-20">
+                                            <div class="hero-feature-card d-flex flex-wrap">
+                                                <span
+                                                    class="feature-icon d-flex flex-column align-items-center justify-content-center rounded-circle bg_primary"><img
+                                                        src="/renius/image/check-white.svg" alt="Icon"></span>
+                                                <div>
+                                                    <h3 class="fs-20 fw-semibold text-white">Brand Establishment &amp;
+                                                        Growth</h3>
+                                                    <p class="text-alto">Building a powerful brand presence through
+                                                        targeted marketing and community engagement</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6 mb-md-20">
+                                            <div class="hero-feature-card d-flex flex-wrap">
+                                                <span
+                                                    class="feature-icon d-flex flex-column align-items-center justify-content-center rounded-circle bg_primary"><img
+                                                        src="/renius/image/check-white.svg" alt="Icon"></span>
+                                                <div>
+                                                    <h3 class="fs-20 fw-semibold text-white">Talent Acquisition &amp;
+                                                        Team Building</h3>
+                                                    <p class="text-alto">Accessing the right talent to build a
+                                                        high-performing local team</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide" role="group" aria-label="3 / 3"
+                                style="width: 1475px; opacity: 0; transform: translate3d(-2950px, 0px, 0px);"
+                                data-swiper-slide-index="2">
+                                <div
+                                    class="hero-slide-item bg-3 bg-f d-flex flex-column justify-content-end position-relative overflow-hidden z-1 round-30">
+                                    <div class="hero-slide-title text-center mb-40">
+                                        <h2 class="fs-32 fw-bold text-white">Growth &amp; Expansion</h2>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-4 col-md-6 mb-md-20">
+                                            <div class="hero-feature-card d-flex flex-wrap">
+                                                <span
+                                                    class="feature-icon d-flex flex-column align-items-center justify-content-center rounded-circle bg_primary"><img
+                                                        src="/renius/image/check-white.svg" alt="Icon"></span>
+                                                <div>
+                                                    <h3 class="fs-20 fw-semibold text-white">Revenue Acceleration &amp;
+                                                        Monetization</h3>
+                                                    <p class="text-alto">Optimizing your game's performance and
+                                                        maximizing profitability in the local market</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6 mb-md-20">
+                                            <div class="hero-feature-card d-flex flex-wrap">
+                                                <span
+                                                    class="feature-icon d-flex flex-column align-items-center justify-content-center rounded-circle bg_primary"><img
+                                                        src="/renius/image/check-white.svg" alt="Icon"></span>
+                                                <div>
+                                                    <h3 class="fs-20 fw-semibold text-white">Capital &amp; Investment
+                                                        Opportunities</h3>
+                                                    <p class="text-alto">Facilitating connections for fundraising and
+                                                        strategic investments</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6 mb-md-20">
+                                            <div class="hero-feature-card d-flex flex-wrap">
+                                                <span
+                                                    class="feature-icon d-flex flex-column align-items-center justify-content-center rounded-circle bg_primary"><img
+                                                        src="/renius/image/check-white.svg" alt="Icon"></span>
+                                                <div>
+                                                    <h3 class="fs-20 fw-semibold text-white">M&amp;A and Strategic
+                                                        Ventures</h3>
+                                                    <p class="text-alto">Identifying and advising on high-value merger,
+                                                        acquisition, and partnership deals</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="hero-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal">
+                            <span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0"
+                                aria-current="true" title="Strategic Advisory">01</span><span
+                                class="swiper-pagination-bullet" tabindex="0"
+                                title="Market Execution & Operations">02</span><span class="swiper-pagination-bullet"
+                                tabindex="0" title="Growth & Expansion">03</span>
+                        </div>
+                        <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
                     </div>
-                    <div class="content">
-                      <h4>Strategic advisory</h4>
-                      <p class="text">Market Entry & Go-to-market Strategy: Bespoke roadmaps for global launch and long-term growth </p>
-                      <p class="text">Market Intelligence & Trend Analysis: Providing data-driven insights to inform your strategic decisions </p>
-                      <p class="text">Regulatory Compliance & Guidance: Ensuring your business navigates the local legal framework with confidence.</p>
-                    
-                    </div>
-                  </div>
-                  <div class="fancy-box style3 wow fadeInUp" data-wow-delay=".4s">
-                    <div class="icon">
-                      <img src="/images/wcuIcon1_2.svg" alt="icon" class="">
-                    </div>
-                    <div class="content">
-                      <h4>Market Execution & Operations</h4>
-                      <p class="text">Alliances & Partnering: Curated local partners for operations, publishing, and UA.</p>
-                       <p class="text">Brand Establishment & Growth: Building a powerful brand presence through targeted marketing and community engagement</p>
-                        <p class="text">Talent Acquisition & Team Building: Accessing the right talent to build a high-performing local team.</p>
-                    </div>
-                  </div>
-                   <div class="fancy-box style3 wow fadeInUp" data-wow-delay=".4s">
-                    <div class="icon">
-                      <img src="/images/wcuIcon1_2.svg" alt="icon" class="">
-                    </div>
-                    <div class="content">
-                      <h4>Growth & Expansion</h4>
-                      <p class="text">Revenue Acceleration & Monetization: Optimizing your game's performance and maximizing profitability in the local market.</p>
-                       <p class="text">Capital & Investment Opportunities: Facilitating connections for fundraising and strategic investments.</p>
-                        <p class="text">M&A and Strategic Ventures: Identifying and advising on high-value merger, acquisition, and partnership deals.</p>
-                    </div>
-                  </div>
                 </div>
-              </div>
-              <div class="col-xl-6 order-1 order-xl-2">
-                <div class="about-thumb">
-                  <img class="img-custom-anim-left wow fadeInUp" data-wow-delay=".4s" src="/images/aboutThumb1_1.png" alt="thumb">
-                  <div class="absolute-thumb">
-                    <img src="/images/aboutThumb1_2.png" alt="thumb" class="">
-                  </div>
+                <div class="move-text-wrapper overflow-hidden mb-120">
+                    <div class="move-text style-two position-relative z-1">
+                        <ul class="list-unstyled mb-0">
+                            <li class="position-relative font-secondary">PROJECT TIMELINE GUARANTEE</li>
+                            <li class="position-relative font-secondary">SATISFACTION-FIRST APPROACH</li>
+                            <li class="position-relative font-secondary">LICENSED &amp; INSURED EXPERTS</li>
+                            <li class="position-relative font-secondary">PROJECT TIMELINE GUARANTEE</li>
+                            <li class="position-relative font-secondary">SATISFACTION-FIRST APPROACH</li>
+                            <li class="position-relative font-secondary">LICENSED &amp; INSURED EXPERTS</li>
+                            <li class="position-relative font-secondary">PROJECT TIMELINE GUARANTEE</li>
+                            <li class="position-relative font-secondary">SATISFACTION-FIRST APPROACH</li>
+                            <li class="position-relative font-secondary">LICENSED &amp; INSURED EXPERTS</li>
+                        </ul>
+                    </div>
                 </div>
-              </div>
+                <div class="post-share d-flex flex-wrap align-items-center justify-content-md-end">
+                    <span class="text-title fw-semibold">Follow Us:</span>
+                    <ul class="social-profile style-three list-unstyled mb-0">
+                        <li><a href="https://www.facebook.com/" target="_blank"
+                                class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                                    class="ri-facebook-fill"></i></a></li>
+                        <li><a href="https://x.com/?lang=en" target="_blank"
+                                class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                                    class="ri-twitter-x-line"></i></a></li>
+                        <li><a href="https://www.instagram.com/" target="_blank"
+                                class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                                    class="ri-instagram-line"></i></a></li>
+                        <li><a href="https://www.linkedin.com/" target="_blank"
+                                class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                                    class="ri-linkedin-fill"></i></a></li>
+                    </ul>
+                </div>
             </div>
-          </div>
+            <div class="service-area ptb-120">
+                <div class="container">
+                    <div class="row align-items-end mb-40">
+                        <div class="col-xl-6 col-md-8 pe-xxl-5 mb-sm-20">
+                            <h6 class="section-subtitle style-two fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-16"
+                                data-cue="slideInUp" data-show="true"
+                                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                                OUR SERVICES
+                            </h6>
+                            <h2 class="section-title style-one fw-normal text-title mb-40" data-cue="slideInUp"
+                                data-delay="300" data-astro-cid-ovoygtpk=""
+                                data-astro-source-file="C:/Workspace/gamegeek/src/pages/solution2.astro"
+                                data-astro-source-loc="842:130" data-show="true"
+                                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">
+                                Connect and scale faster in <span class="fw-black" data-astro-cid-ovoygtpk=""
+                                    data-astro-source-file="C:/Workspace/gamegeek/src/pages/solution2.astro"
+                                    data-astro-source-loc="842:181">Vietnam's game industry</span></h2>
+                        </div>
+                        <div class="col-xl-6 col-md-4">
+                            <div class="slider-btn style-one d-flex flex-wrap justify-content-md-end">
+                                <button
+                                    class="prev-btn service-prev border-0 d-flex flex-column align-items-center justify-content-center rounded-circle me-2"
+                                    tabindex="0" aria-label="Previous slide"
+                                    aria-controls="swiper-wrapper-f2b154c8424bc842"><img
+                                        src="/renius/image/left-long-arrow-orange.svg" alt="Icon"></button>
+                                <button
+                                    class="next-btn service-next border-0 d-flex flex-column align-items-center justify-content-center rounded-circle ms-2"
+                                    tabindex="0" aria-label="Next slide"
+                                    aria-controls="swiper-wrapper-f2b154c8424bc842"><img
+                                        src="/renius/image/right-long-arrow-orange.svg" alt="Icon"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-slider-one swiper swiper-initialized swiper-horizontal swiper-autoheight swiper-backface-hidden"
+                        data-cue="slideInUp" data-show="true"
+                        style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                        <div class="swiper-wrapper" id="swiper-wrapper-f2b154c8424bc842" aria-live="polite"
+                            style="height: 416px;">
+                            <div class="swiper-slide swiper-slide-active" style="width: 282.75px; margin-right: 55px;"
+                                role="group" aria-label="1 / 8" data-swiper-slide-index="0">
+                                <div class="service-card style-two">
+                                    <div class="service-img semiround-left transition">
+                                        <img src="/renius/image/service-1.jpg" alt="Service" class="transition">
+                                    </div>
+                                    <h3><a href="/solution"
+                                            class="text-title link-hover-primary transition">BUSINESS MATCHING</a></h3>
+                                    <p class="mb-12">Expand your reach in Vietnam's game ecosystem with us as your trusted bridge.</p>
+                                </div>
+                            </div>
+                            <div class="swiper-slide swiper-slide-next" style="width: 282.75px; margin-right: 55px;"
+                                role="group" aria-label="2 / 8" data-swiper-slide-index="1">
+                                <div class="service-card style-two">
+                                    <div class="service-img rounded-corner transition">
+                                        <img src="/renius/image/service-2.jpg" alt="Service" class="transition">
+                                    </div>
+                                    <h3><a href="/program"
+                                            class="text-title link-hover-primary transition">GAME EVENT ORGANIZATION</a></h3>
+                                    <p>Build lasting connections through our curated meetings, workshops, and webinars.</p>
+                                </div>
+                            </div>
+                            <div class="swiper-slide" style="width: 282.75px; margin-right: 55px;" role="group"
+                                aria-label="3 / 8" data-swiper-slide-index="2">
+                                <div class="service-card style-two">
+                                    <div class="service-img semiround-right transition">
+                                        <img src="/renius/image/service-3.jpg" alt="Service" class="transition">
+                                    </div>
+                                    <h3><a href="/about"
+                                            class="text-title link-hover-primary transition">INVESTMENT CONNECTION</a></h3>
+                                    <p>Use our network to find the right investment partners and save valuable time.</p>
+                                </div>
+                            </div>
+                            <div class="swiper-slide" style="width: 282.75px; margin-right: 55px;" role="group"
+                                aria-label="4 / 8" data-swiper-slide-index="3">
+                                <div class="service-card style-two">
+                                    <div class="service-img rounded-circle transition">
+                                        <img src="/renius/image/service-4.jpg" alt="Service"
+                                            class="rounded-circle transition">
+                                    </div>
+                                    <h3><a href="/solution"
+                                            class="text-title link-hover-primary transition">DIRECT REFERRAL</a></h3>
+                                    <p>Boost local sales fast with our experienced, on-ground team.</p>
+                                </div>
+                            </div>
+                            <div class="swiper-slide" style="width: 282.75px; margin-right: 55px;" role="group"
+                                aria-label="5 / 8" data-swiper-slide-index="4">
+                                <div class="service-card style-two">
+                                    <div class="service-img rounded-corner transition">
+                                        <img src="/renius/image/service-5.jpg" alt="Service" class="transition">
+                                    </div>
+                                    <h3><a href="/program"
+                                            class="text-title link-hover-primary transition">LOCAL REPRESENTATIVE</a></h3>
+                                    <p>We represent your brand locally and ensure seamless client support.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+                    </div>
+                </div>
+            </div>
+          
+            <div class="move-text-wrapper overflow-hidden mb-120" data-astro-cid-oxmbmq65=""
+                data-astro-source-file="C:/Workspace/gamegeek/src/pages/index3.astro" data-astro-source-loc="707:71">
+                <div class="move-text style-two position-relative z-1" data-astro-cid-oxmbmq65=""
+                    data-astro-source-file="C:/Workspace/gamegeek/src/pages/index3.astro"
+                    data-astro-source-loc="708:76">
+                    <ul class="list-unstyled mb-0" data-astro-cid-oxmbmq65=""
+                        data-astro-source-file="C:/Workspace/gamegeek/src/pages/index3.astro"
+                        data-astro-source-loc="709:56">
+                        <li class="position-relative font-secondary" data-astro-cid-oxmbmq65=""
+                            data-astro-source-file="C:/Workspace/gamegeek/src/pages/index3.astro"
+                            data-astro-source-loc="710:74">SATISFACTION-FIRST APPROACH</li>
+                        <li class="position-relative font-secondary" data-astro-cid-oxmbmq65=""
+                            data-astro-source-file="C:/Workspace/gamegeek/src/pages/index3.astro"
+                            data-astro-source-loc="711:74">PROJECT TIMELINE GUARANTEE </li>
+                        <li class="position-relative font-secondary" data-astro-cid-oxmbmq65=""
+                            data-astro-source-file="C:/Workspace/gamegeek/src/pages/index3.astro"
+                            data-astro-source-loc="712:74">LICENSED &amp; INSURED EXPERTS</li>
+                        <li class="position-relative font-secondary" data-astro-cid-oxmbmq65=""
+                            data-astro-source-file="C:/Workspace/gamegeek/src/pages/index3.astro"
+                            data-astro-source-loc="713:74">SATISFACTION-FIRST APPROACH</li>
+                        <li class="position-relative font-secondary" data-astro-cid-oxmbmq65=""
+                            data-astro-source-file="C:/Workspace/gamegeek/src/pages/index3.astro"
+                            data-astro-source-loc="714:74">PROJECT TIMELINE GUARANTEE </li>
+                        <li class="position-relative font-secondary" data-astro-cid-oxmbmq65=""
+                            data-astro-source-file="C:/Workspace/gamegeek/src/pages/index3.astro"
+                            data-astro-source-loc="715:74">LICENSED &amp; INSURED EXPERTS</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Feature Section Start -->
+            <div class="wh-area style-one position-relative z-1 ptb-120">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 mb-md-30">
+                            <div class="wh-content">
+                                <h6 class="section-subtitle style-one d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_secondary mb-20"
+                                    data-cue="slideInUp" data-show="true"
+                                    style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                                    LOCAL PARTNERS
+                                </h6>
+                                <h2 class="section-title style-one text-white mb-12" data-cue="slideInUp"
+                                    data-delay="300" data-show="true"
+                                    style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">
+                                    Leading teams from <span class="fw-black">different regions </span>in the <span class="fw-black">game industry</span></h2>
+                                <p class="pe-xxl-5 me-xxl-5 mb-25" data-cue="slideInUp" data-show="true"
+                                    style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                                    We provide you with unique insights shared among top executives in the local market.</p>
+                                <div class="row gx-md-5 pe-xxl-5 me-xxl-4">
+                                    <div class="col-md-6" data-cue="slideInUp" data-show="true"
+                                        style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                                        <div class="feature-item d-flex flex-wrap align-items-center mb-35">
+                                            <img src="/renius/image/feature-icon-7.png" alt="Icon">
+                                            <h3 class="fs-18 fw-semibold text-alto mb-0">Corporate Responsibility</h3>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" data-cue="slideInUp" data-show="true"
+                                        style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 180ms; animation-direction: normal; animation-fill-mode: both;">
+                                        <div class="feature-item d-flex flex-wrap align-items-center mb-35">
+                                            <img src="/renius/image/feature-icon-7.png" alt="Icon">
+                                            <h3 class="fs-18 fw-semibold text-alto mb-0">Experts With Team Spirit</h3>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" data-cue="slideInUp" data-show="true"
+                                        style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                                        <div class="feature-item d-flex flex-wrap align-items-center mb-35">
+                                            <img src="/renius/image/feature-icon-7.png" alt="Icon">
+                                            <h3 class="fs-18 fw-semibold text-alto mb-0">Diversity, Equity &amp;
+                                                Inclusion</h3>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" data-cue="slideInUp" data-show="true"
+                                        style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 180ms; animation-direction: normal; animation-fill-mode: both;">
+                                        <div class="feature-item d-flex flex-wrap align-items-center mb-35">
+                                            <img src="/renius/image/feature-icon-7.png" alt="Icon">
+                                            <h3 class="fs-18 fw-semibold text-alto mb-0">Trusted &amp; Transparent</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="about.html"
+                                    class="btn style-one d-inline-flex flex-wrap align-items-center p-0"
+                                    data-cue="slideInUp" data-show="true"
+                                    style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;"><span
+                                        class="btn-text d-inline-block fw-semibold position-relative transition">More
+                                        About Us</span><span
+                                        class="btn-icon position-relative d-flex flex-column align-items-center justify-content-center rounded-circle transition"><i
+                                            class="ri-arrow-right-up-line"></i></span></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="wh-img-wrap position-relative z-1" data-cue="slideInUp" data-show="true"
+                                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                                <img src="/images/whatwedo.jpg" alt="Image"
+                                    class="wh-img d-block mx-auto round-10">
+                                <img src="/renius/image/wh-thumb-3.jpg" alt="Image"
+                                    class="wh-thumb position-absolute start-0 bottom-0 round-10 move-top"
+                                    style="translate: none; rotate: none; scale: none; transform: translate(0%, 50%);">
+                                <div class="rating-box position-absolute end-0 text-center d-flex flex-column align-items-center justify-content-center round-10 move-left"
+                                    style="translate: none; rotate: none; scale: none; transform: translate(50%, 0%);">
+                                    <h2 class="font-secondary fw-black position-relative text-white mb-0">4.9</h2>
+                                    <div>
+                                        <ul class="rating list-unstyled">
+                                            <li><img src="/renius/image/star.svg" alt="Icon"></li>
+                                            <li><img src="/renius/image/star.svg" alt="Icon"></li>
+                                            <li><img src="/renius/image/star.svg" alt="Icon"></li>
+                                            <li><img src="/renius/image/star.svg" alt="Icon"></li>
+                                            <li><img src="/renius/image/star.svg" alt="Icon"></li>
+                                        </ul>
+                                        <p class="fs-xxl-18 fw-medium text-alto mb-0"><span
+                                                class="text-white fw-bold">3K+</span> Satisfied Customers</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Service Section End -->
+
+            <!-- About Section Start -->
+            <div class="container pt-120">
+                <div class="row">
+                    <div class="col-xl-8 offset-xl-2 col-md-10 offset-md-1 text-center px-xxl-5">
+                        <h6 class="section-subtitle style-one d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20"
+                            data-cue="slideInUp" data-show="true"
+                            style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                            OUR PROJECTS</h6>
+                        <h2 class="section-title style-one text-title px-xxl-5 mb-40" data-cue="slideInUp"
+                            data-delay="300" data-show="true"
+                            style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">
+                            From <span class="fw-black">Beautiful-Finished </span> Project</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="project-slider-one swiper pb-120 swiper-initialized swiper-horizontal swiper-backface-hidden"
+                data-cue="slideInUp" data-show="true"
+                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                <div class="swiper-wrapper" id="swiper-wrapper-c54e319b08b11b36" aria-live="off"
+                    style="transition-duration: 0ms; transform: translate3d(-630.182px, 0px, 0px); transition-delay: 0ms;">
+
+
+
+                    <div class="swiper-slide swiper-slide-prev" style="width: 757.727px; margin-right: 30px;"
+                        role="group" aria-label="2 / 3" data-swiper-slide-index="1">
+                        <div class="project-card style-one d-flex flex-wrap align-items-center">
+                            <div class="project-img position-relative z-1 round-10">
+                                <img src="/images/service1.png" alt="Image" class="round-10">
+                                <a href="project-single.html"
+                                    class="circle-text-wrap position-absolute d-flex flex-column align-items-center justify-content-center rounded-circle transition">
+                                    <img src="/renius/image/circle-text.png" alt="Circle text"
+                                        class="d-block mx-auto rotate">
+                                    <img src="/renius/image/up-right-arrow-yellow.svg" alt="Icon"
+                                        class="circle-text-icon position-absolute">
+                                </a>
+                            </div>
+                            <div class="project-info">
+                                <span class="project-counter font-secondary fw-black d-block">02</span>
+                                <h3 class="fw-bold"><a href="project-single.html"
+                                        class="text-title link-hover-primary transition">Yango Ads</a>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide swiper-slide-active" role="group" aria-label="3 / 3"
+                        data-swiper-slide-index="2" style="width: 757.727px; margin-right: 30px;">
+                        <div class="project-card style-one d-flex flex-wrap align-items-center">
+                            <div class="project-img position-relative z-1 round-10">
+                                <img src="/images/service2.png" alt="Image" class="round-10">
+                                <a href="project-single.html"
+                                    class="circle-text-wrap position-absolute d-flex flex-column align-items-center justify-content-center rounded-circle transition">
+                                    <img src="/renius/image/circle-text.png" alt="Circle text"
+                                        class="d-block mx-auto rotate">
+                                    <img src="/renius/image/up-right-arrow-yellow.svg" alt="Icon"
+                                        class="circle-text-icon position-absolute">
+                                </a>
+                            </div>
+                            <div class="project-info">
+                                <span class="project-counter font-secondary fw-black d-block">03</span>
+                                <h3 class="fw-bold"><a href="project-single.html"
+                                        class="text-title link-hover-primary transition">Playable Labs (Exclusive in VN)</a></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide swiper-slide-next" style="width: 757.727px; margin-right: 30px;"
+                        role="group" aria-label="1 / 3" data-swiper-slide-index="0">
+                        <div class="project-card style-one d-flex flex-wrap align-items-center">
+                            <div class="project-img position-relative z-1 round-10">
+                                <img src="/images/service3.png" alt="Image" class="round-10">
+                                <a href="project-single.html"
+                                    class="circle-text-wrap position-absolute d-flex flex-column align-items-center justify-content-center rounded-circle transition">
+                                    <img src="/renius/image/circle-text.png" alt="Circle text"
+                                        class="d-block mx-auto rotate">
+                                    <img src="/renius/image/up-right-arrow-yellow.svg" alt="Icon"
+                                        class="circle-text-icon position-absolute">
+                                </a>
+                            </div>
+                            <div class="project-info">
+                                <span class="project-counter font-secondary fw-black d-block">01</span>
+                                <h3 class="fw-bold"><a href="project-single.html"
+                                        class="text-title link-hover-primary transition">Appmagic (Exclusive in VN)</a></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+            </div>
+            <!-- About Section End -->
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const aboutServiceSlider = new Swiper('.about-area .service-slider', {
+                        slidesPerView: 1,
+                        spaceBetween: 30,
+                        loop: true,
+                        autoplay: {
+                            delay: 3000,
+                            disableOnInteraction: false,
+                        },
+                        pagination: {
+                            el: '.about-area .swiper-pagination',
+                            clickable: true,
+                        },
+                        breakpoints: {
+                            768: {
+                                slidesPerView: 2,
+                                spaceBetween: 30,
+                            },
+                            1024: {
+                                slidesPerView: 3,
+                                spaceBetween: 30,
+                            },
+                        },
+                    });
+                });
+            </script>
+
+
+            <!-- Footer Section Start -->
+            <footer class="footer-area style-two bg-optional position-relative z-1 pt-120">
+                <div class="container">
+                    <div class="row justify-content-center pb-90">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="footer-widget mb-30" data-cue="slideInUp" data-show="true"
+                                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                                <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">
+                                    Quick Links</h4>
+                                <ul class="footer-menu style-one list-unstyled mb-0">
+                                    <li><a href="services.html">Service</a></li>
+                                    <li><a href="pricing-plan.html">Pricing</a></li>
+                                    <li><a href="projects.html">Projects</a></li>
+                                    <li><a href="team.html">Team</a></li>
+                                    <li><a href="about.html">About</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 ps-xxl-5">
+                            <div class="footer-widget mb-30" data-cue="slideInUp" data-show="true"
+                                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 180ms; animation-direction: normal; animation-fill-mode: both;">
+                                <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">
+                                    Explore</h4>
+                                <ul class="footer-menu style-one list-unstyled mb-0">
+                                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                                    <li><a href="terms-conditions.html">Terms of Service</a></li>
+                                    <li><a href="faq.html">FAQ</a></li>
+                                    <li><a href="careers.html">Careers</a></li>
+                                    <li><a href="contact.html">Contact Us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 ps-xxl-5">
+                            <div class="footer-widget mb-30 ps-xxl-4" data-cue="slideInUp" data-show="true"
+                                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 360ms; animation-direction: normal; animation-fill-mode: both;">
+                                <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">
+                                    Company</h4>
+                                <ul class="footer-menu style-one list-unstyled mb-0">
+                                    <li><a href="location.html">Location</a></li>
+                                    <li><a href="projects.html">Works</a></li>
+                                    <li><a href="projects.html">Studio</a></li>
+                                    <li><a href="blog-right-sidebar.html">News</a></li>
+                                    <li><a href="properties.html">Categories</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 ps-xxl-5">
+                            <div class="footer-widget mb-30 ps-xxl-5" data-cue="slideInUp" data-show="true"
+                                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 540ms; animation-direction: normal; animation-fill-mode: both;">
+                                <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">
+                                    Address</h4>
+                                <ul class="contact-info-list list-unstyled mb-0">
+                                    <li><span class="fw-bold text-white me-1">Address:</span> NIC Building, No 6 Lane 7
+                                        Ton That Thuyet, Cau Giay, Hanoi</li>
+                                    <li><span class="fw-bold text-white me-1">Email:</span><a
+                                            href="mailto:support@gamegeek.asia">support@gamegeek.asia</a></li>
+                                    <li><span class="fw-bold text-white me-1">Phone:</span><a
+                                            href="tel:+84902122120">(+84) 902 122 120</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="footer-large-text font-optional fw-black round-10">
+                                <span>GAMEGEEK</span>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div
+                                class="social-share d-flex flex-wrap align-items-center justify-content-md-start justify-content-center mb-sm-10">
+                                <span class="text-alto fw-semibold me-2">Follow Us: </span>
+                                <ul class="social-profile style-two list-unstyled mb-0">
+                                    <li><a href="https://www.facebook.com/" target="_blank"
+                                            class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                                                class="ri-facebook-fill"></i></a></li>
+                                    <li><a href="https://x.com/?lang=en" target="_blank"
+                                            class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                                                class="ri-twitter-x-line"></i></a></li>
+                                    <li><a href="https://www.instagram.com/" target="_blank"
+                                            class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                                                class="ri-instagram-line"></i></a></li>
+                                    <li><a href="https://www.linkedin.com/" target="_blank"
+                                            class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                                                class="ri-linkedin-fill"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-7 text-md-end text-center">
+                        </div>
+                    </div>
+                </div>
+            </footer>
+            <!-- Footer End -->
+
         </div>
-      </div>
     </div>
-  </section>
-  
-  <section class="localpartner-section section-padding pb-0 fix">
-    <div class="service-container-wrapper style1">
-      <div class="container">
-        <div class="service-wrapper style1">
-          <div class="section-title text-center mxw-685 mx-auto mb-60">
-            <div>
-              <div class="subtitle wow fadeInUp" data-wow-delay=".2s">
-                Local Partners
-                <img src="/images/fireIcon.svg" alt="icon" class="">
-              </div>
-              <h2 class="title wow fadeInUp" data-wow-delay=".4s">We Provide the Best Quality</h2>
-            </div>
-          </div>
-          <div class="row gy-5">
-            <div class="col-xl-4 col-md-6">
-              <div class="service-box style1 wow fadeInUp" data-wow-delay=".2s">
-                <div class="icon-box style1">
-                  <img src="/images/wcuIcon1_1.svg" alt="icon" class="">
-                </div>
-                <div class="content">
-                  <h3>
-                    <a href="/solution/service-details" data-discover="true">Software Features</a>
-                  </h3>
-                  <p class="text">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-4 col-md-6">
-              <div class="service-box style1 wow fadeInUp" data-wow-delay=".2s">
-                <div class="icon-box style1">
-                  <img src="/images/wcuIcon1_2.svg" alt="icon" class="">
-                </div>
-                <div class="content">
-                  <h3>
-                    <a href="/solution/service-details" data-discover="true">Customization Option</a>
-                  </h3>
-                  <p class="text">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-4 col-md-6">
-              <div class="service-box style1 active wow fadeInUp" data-wow-delay=".2s">
-                <div class="icon-box style1">
-                  <img src="/images/wcuIcon1_3.svg" alt="icon" class="">
-                </div>
-                <div class="content">
-                  <h3>
-                    <a href="/solution/service-details" data-discover="true">Subscription Plans</a>
-                  </h3>
-                  <p class="text">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
+    <!-- Back to Top -->
+    <div id="progress-wrap" class="progress-wrap style-one">
+        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+            <path id="progress-path" d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+        </svg>
     </div>
-  </section>
-  
-  <section class="our-service-section section-padding fix">
-    <div class="container">
-      <div class="wp-wrapper style2">
-        <div class="shape">
-          <img src="/images/introShape1_1.png" alt="shape" class="">
-        </div>
-        <div class="row gy-5 gy-md-0 gx-60 d-flex align-items-center">
-          <div class="col-xl-4 order-2 order-xl-1">
-            <div class="wp-content style2">
-              <div class="section-title">
-                <div class="subtitle wow fadeInUp" data-wow-delay=".2s">
-                  Our Service
-                  <img src="/images/fireIcon.svg" alt="icon" class="">
-                </div>
-                <h2 class="title wow fadeInUp" data-wow-delay=".4s">Work smarter with easy access for user..</h2>
-              </div>
-              <div class="wp-accordion">
-                <div class="service-tabs" id="ourServiceAccordion">
-                  <div class="service-tab-item mb-3 wow fadeInUp active" data-wow-delay=".3s">
-                    <button class="service-tab-button active" type="button" data-service-image="/images/service1.png">
-                      <span>Appmagic (Exclusive in VN)</span>
-                      <svg class="arrow-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </button>
-                  </div>
-                  <div class="service-tab-item mb-3 wow fadeInUp" data-wow-delay=".3s">
-                    <button class="service-tab-button" type="button" data-service-image="/images/service2.png">
-                      <span>Yango Ads</span>
-                      <svg class="arrow-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </button>
-                  </div>
-                  <div class="service-tab-item mb-3 wow fadeInUp" data-wow-delay=".3s">
-                    <button class="service-tab-button" type="button" data-service-image="/images/service3.png">
-                      <span>Playable Labs (Exclusive in VN)</span>
-                      <svg class="arrow-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-8 order-1 order-xl-2">
-            <div class="wp-thumb wow fadeInUp" data-wow-delay=".4s">
-              <div class="main-thumb img-custom-anim-right wow">
-                <img id="serviceImage" src="/images/service1.png" alt="thumb" class="">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  
-</LayoutNico>
 
-<style>
-  .strategic-advisory-section .fancy-box.style3 .content {
-    max-width: none !important;
-    flex: 1;
-  }
+    <script>
+        // Navbar scroll behavior
+        document.addEventListener('DOMContentLoaded', function () {
+            const navbar = document.getElementById('navbar');
 
-  .strategic-advisory-section .fancy-box.style3 {
-    align-items: flex-start;
-  }
+            function handleScroll() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-  .strategic-advisory-section .fancy-box.style3 .icon {
-    flex-shrink: 0;
-    margin-top: 5px;
-  }
+                if (scrollTop > 100) {
+                    // When scrolled, show compact menu
+                    navbar.classList.add('navbar-compact');
+                } else {
+                    // When at top, show full header
+                    navbar.classList.remove('navbar-compact');
+                }
+            }
 
-  .service-tabs {
-    display: flex;
-    flex-direction: column;
-  }
+            // Initial check for scroll position
+            handleScroll();
 
-  .service-tab-item {
-    width: 100%;
-    position: relative;
-    z-index: 1;
-    pointer-events: auto;
-  }
-
-  .service-tab-button {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px;
-    background: transparent;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: left;
-    font-size: 16px;
-    font-weight: 500;
-    color: #333;
-    position: relative;
-    z-index: 10;
-    pointer-events: auto;
-    user-select: none;
-  }
-
-  .service-tab-button:hover {
-    border-color: #ff6b35;
-    background: rgba(255, 107, 53, 0.05);
-  }
-
-  .service-tab-button.active {
-    background: #fff;
-    border-color: #ff6b35;
-    color: #ff6b35;
-    font-weight: 600;
-  }
-
-  .service-tab-button .arrow-icon {
-    flex-shrink: 0;
-    margin-left: 12px;
-  }
-
-  .service-tab-button .arrow-icon path {
-    stroke: #999;
-    transition: stroke 0.3s ease;
-  }
-
-  .service-tab-button.active .arrow-icon path {
-    stroke: #ff6b35;
-  }
-
-  .service-tab-button span {
-    flex: 1;
-  }
-
-  #serviceImage {
-    max-height: 400px;
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-  }
-</style>
-
-<script is:inline>
-  (function() {
-    function initServiceTabs() {
-      const accordion = document.getElementById('ourServiceAccordion');
-      const serviceImage = document.getElementById('serviceImage');
-      
-      if (!accordion || !serviceImage) {
-        setTimeout(initServiceTabs, 100);
-        return;
-      }
-      
-      // Use event delegation
-      accordion.addEventListener('click', function(e) {
-        const button = e.target.closest('.service-tab-button');
-        if (!button) return;
-        
-        e.preventDefault();
-        e.stopPropagation();
-        
-        // Remove active class from all buttons
-        const allButtons = accordion.querySelectorAll('.service-tab-button');
-        allButtons.forEach(btn => {
-          btn.classList.remove('active');
-          const item = btn.closest('.service-tab-item');
-          if (item) {
-            item.classList.remove('active');
-          }
+            // Add scroll event listener
+            window.addEventListener('scroll', handleScroll, { passive: true });
         });
-        
-        // Add active class to clicked button
-        button.classList.add('active');
-        const currentItem = button.closest('.service-tab-item');
-        if (currentItem) {
-          currentItem.classList.add('active');
-        }
-        
-        // Change image
-        const imagePath = button.getAttribute('data-service-image');
-        if (imagePath) {
-          serviceImage.src = imagePath;
-        }
-      });
-      
-      // Set initial image on page load
-      const activeButton = accordion.querySelector('.service-tab-button.active');
-      if (activeButton) {
-        const initialImage = activeButton.getAttribute('data-service-image');
-        if (initialImage) {
-          serviceImage.src = initialImage;
-        }
-      }
-    }
-    
-    // Wait for window load to ensure everything is ready
-    if (window.addEventListener) {
-      window.addEventListener('load', initServiceTabs);
-    } else if (window.attachEvent) {
-      window.attachEvent('onload', initServiceTabs);
-    } else {
-      initServiceTabs();
-    }
-  })();
-</script>
 
+        // Counter Animation
+        document.addEventListener('DOMContentLoaded', function () {
+            const counterNumbers = document.querySelectorAll('.feature-area.style-three .counter-number');
+            let hasAnimated = false;
+
+            // Function to animate counter
+            function animateCounter(element, target, duration = 2000) {
+                const start = 0;
+                const increment = target / (duration / 16); // 60fps
+                let current = start;
+
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    element.textContent = Math.floor(current);
+                }, 16);
+            }
+
+            // Intersection Observer to trigger animation when section is visible
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !hasAnimated) {
+                        hasAnimated = true;
+
+                        counterNumbers.forEach((counter, index) => {
+                            const target = parseInt(counter.getAttribute('data-target'));
+                            if (target) {
+                                // Add delay for each counter
+                                setTimeout(() => {
+                                    animateCounter(counter, target);
+                                }, index * 200);
+                            }
+                        });
+                    }
+                });
+            }, {
+                threshold: 0.3 // Trigger when 30% of section is visible
+            });
+
+            const counterSection = document.querySelector('.feature-area.style-three');
+            if (counterSection) {
+                observer.observe(counterSection);
+            }
+        });
+    </script>
+</LayoutRenius>
