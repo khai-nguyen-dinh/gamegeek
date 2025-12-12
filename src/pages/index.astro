@@ -499,6 +499,34 @@ import Navbar from '../components/Navbar.astro';
       font-size: 16px;
     }
   }
+
+  /* Button text color - white by default, black on hover */
+  .btn-text {
+    color: white !important;
+  }
+
+  .btn:hover .btn-text {
+    color: black !important;
+  }
+
+  /* Counter cards equal height */
+  .counter-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .counter-card p {
+    flex-grow: 1;
+  }
+
+  .row.justify-content-center > [class*="col-"] {
+    display: flex;
+  }
+
+  .row.justify-content-center > [class*="col-"] > .counter-card {
+    width: 100%;
+  }
 </style>
 
 
@@ -519,10 +547,10 @@ import Navbar from '../components/Navbar.astro';
                             <!-- CENTRAL HUB and Content - Left aligned, 20% from left -->
                             <div class="hero-left-content">
                                 <div class="hero-central-hub">
-                                    <h1 class="font-secondary fw-normal text-white mb-0" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">CENTRAL <span class="fw-black">HUB</span></h1>
+                                    <h1 class="font-secondary fw-normal text-white mb-0" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">THE GAMING  <span class="fw-black">CENTRAL HUB</span><br>OF VIETNAM</h1>
                                 </div>
                                 <div class="hero-para" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 200ms; animation-direction: normal; animation-fill-mode: both;">
-                                    <p class="mb-35">We drive Vietnam's rise in the global gaming world — growing our community and creating real opportunities for partners worldwide.</p>
+                                    <p class="mb-35">Your entry point to partnerships, investment, and market access across the global gaming ecosystem.</p>
                                     <a href="/contact" class="btn style-one d-inline-flex flex-wrap align-items-center p-0"><span class="btn-text d-inline-block fw-semibold position-relative transition">Let's Talk</span><span class="btn-icon position-relative d-flex flex-column align-items-center justify-content-center rounded-circle transition"><i class="ri-arrow-right-up-line"></i></span></a>
                                 </div>
                             </div>
@@ -561,7 +589,7 @@ import Navbar from '../components/Navbar.astro';
                             <div class="col-xxl-6 offset-xxl-1 col-lg-7 ps-xxl-3 ps-xl-4">
                                 <div class="about-content position-relative">
                                     <h6 class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20">ABOUT US</h6>
-                                    <h2 class="section-title style-one fw-normal text-title">GameGeek – <span class="fw-black">Vietnam's Game Industry Hub</span> Reimagined</h2>
+                                    <h2 class="section-title style-one fw-normal text-title mb-20">GAMEGEEK – <br><span class="fw-black">THE GAMING CENTRAL HUB </span><br> OF VIETNAM</h2>
                                     <p class="mb-28">Founded in 2016, GameGeek is Vietnam's gaming central hub and trusted gateway that connecting local talent and resources to global opportunities. We unite studios, publishers, service providers, and investors in a collaborative ecosystem that accelerates innovation, empowers growth, and positions Vietnam as a regional powerhouse with global reach in gaming.</p>
                                     <p class="mb-28">We connect Vietnam's game ecosystem with the world and turn connections into real outcomes for our partners.</p>
                                  
@@ -593,101 +621,48 @@ import Navbar from '../components/Navbar.astro';
                         <div class="row align-items-end mb-45">
                             <div class="col-xl-8 offset-xl-2 col-md-10 offset-md-1 text-center px-xxl-5">
                                 <h6 class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-25" data-cue="slideInUp">OUR SERVICES</h6>
-                                <h2 class="section-title style-one fw-normal text-title mb-40" data-cue="slideInUp" data-delay="300">Connect and scale faster in <span class="fw-black">Vietnam's game industry</span></h2>
+                                <h2 class="section-title style-one fw-normal text-title mb-40" data-cue="slideInUp" data-delay="300">End-to-End Solutions for <span class="fw-black">Global Partners & Your Bridge </span> to the Global Stage</span></h2>
                             </div>
                         </div>
-                        <div class="service-slider swiper">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide">
-                                    <div class="feature-card style-three position-relative round-20 transition mb-30">
-                                        <div class="br-one position-absolute top-0 start-0"></div>
-                                        <div class="br-two position-absolute bottom-0 start-0"></div>
-                                        <div class="feature-img rounded-circle position-relative z-1 d-block mx-auto business-matching-img">
-                                            <img src="/renius/image/zigzag-shape.svg" alt="Shape" class="position-absolute top-0 start-0 w-100 h-100 z-1">
-                                            <img src="/renius/image/service1.png" alt="Business Matching" class="rounded-circle">
-                                            <div class="business-matching-overlay position-absolute top-0 start-0 w-100 h-100 rounded-circle"></div>
-                                        </div>
-                                        <h3 class="fs-24 font-primary fw-black">BUSINESS MATCHING</h3>
-                                        <p>Expand your reach in Vietnam's game ecosystem with us as your trusted bridge.</p>
-                                        <a href="services.html" class="link style-one fw-semibold">Our Solution <img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6 mb-30">
+                                <div class="feature-card style-four position-relative z-1 overflow-hidden round-20 mb-30">
+                                    <div class="feature-info">
+                                        <h3 class="fs-24 font-primary fw-black">GAME EVENT ORGANIZATION</h3>
+                                        <p>Build lasting connections through our curated meetings, workshops, and webinars.</p>
+                                        <a href="projects.html" class="link style-one fw-semibold">See Our Projects <img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
                                     </div>
+                                    <img src="/renius/image/services2.png" alt="Image" class="position-absolute z-n1 transition services2-image">
                                 </div>
-                                <div class="swiper-slide">
-                                    <div class="feature-card style-four position-relative z-1 overflow-hidden round-20 mb-30">
-                                        <div class="feature-info">
-                                            <h3 class="fs-24 font-primary fw-black">GAME EVENT ORGANIZATION</h3>
-                                            <p>Build lasting connections through our curated meetings, workshops, and webinars.</p>
-                                            <a href="projects.html" class="link style-one fw-semibold">See Our Projects <img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
-                                        </div>
-                                        <img src="/renius/image/services2.png" alt="Image" class="position-absolute z-n1 transition services2-image">
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="feature-card style-five bg-f position-relative overflow-hidden d-flex flex-column align-items-end justify-content-end round-20 z-1 mb-30">
-                                        <div class="feature-info">
-                                            <h3 class="fs-24 font-primary fw-black text-white">INVESTMENT CONNECTION</h3>
-                                            <p class="text-alto">Use our network to find the right investment partners and save valuable time.</p>
-                                            <a href="about.html" class="link style-one fw-semibold">Discover More<img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="feature-card style-three position-relative round-20 transition mb-30">
-                                        <div class="br-one position-absolute top-0 start-0"></div>
-                                        <div class="br-two position-absolute bottom-0 start-0"></div>
-                                        <div class="feature-img rounded-circle position-relative z-1 d-block mx-auto">
-                                            <img src="/renius/image/zigzag-shape.svg" alt="Shape" class="position-absolute top-0 start-0 w-100 h-100 z-1">
-                                            <img src="/renius/image/feature-img-1.jpg" alt="Image" class="rounded-circle">
-                                        </div>
-                                        <h3 class="fs-24 font-primary fw-black">DIRECT REFERRAL</h3>
-                                        <p>Boost local sales fast with our experienced, on-ground team.</p>
-                                        <a href="services.html" class="link style-one fw-semibold">Our Solution <img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="feature-card style-four position-relative z-1 overflow-hidden round-20 mb-30">
-                                        <div class="feature-info">
-                                            <h3 class="fs-24 font-primary fw-black">LOCAL REPRESENTATIVE</h3>
-                                            <p>We represent your brand locally and ensure seamless client support.</p>
-                                            <a href="projects.html" class="link style-one fw-semibold">See Our Projects <img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
-                                        </div>
-                                        <img src="/renius/image/service2.png" alt="Image" class="position-absolute bottom-0 start-0 z-n1 transition">
+                            </div>
+                            <div class="col-lg-4 col-md-6 mb-30">
+                                <div class="feature-card style-five bg-f position-relative overflow-hidden d-flex flex-column align-items-end justify-content-end round-20 z-1 mb-30">
+                                    <div class="feature-info">
+                                        <h3 class="fs-24 font-primary fw-black text-white">INVESTMENT CONNECTION</h3>
+                                        <p class="text-alto">Use our network to find the right investment partners and save valuable time.</p>
+                                        <a href="about.html" class="link style-one fw-semibold">Discover More<img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="swiper-pagination"></div>
+                            <div class="col-lg-4 col-md-6 mb-30">
+                                <div class="feature-card style-three position-relative round-20 transition mb-30">
+                                    <div class="br-one position-absolute top-0 start-0"></div>
+                                    <div class="br-two position-absolute bottom-0 start-0"></div>
+                                    <div class="feature-img rounded-circle position-relative z-1 d-block mx-auto business-matching-img">
+                                        <img src="/renius/image/zigzag-shape.svg" alt="Shape" class="position-absolute top-0 start-0 w-100 h-100 z-1">
+                                        <img src="/renius/image/service1.png" alt="Business Matching" class="rounded-circle">
+                                        <div class="business-matching-overlay position-absolute top-0 start-0 w-100 h-100 rounded-circle"></div>
+                                    </div>
+                                    <h3 class="fs-24 font-primary fw-black">GO TO MARKET SERVICES</h3>
+                                    <p>Boost local sales fast with our experienced on-ground team.</p>
+                                    <a href="services.html" class="link style-one fw-semibold">Our Solution <img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
                 <!-- About Section End -->
-
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        const aboutServiceSlider = new Swiper('.about-area .service-slider', {
-                            slidesPerView: 1,
-                            spaceBetween: 30,
-                            loop: true,
-                            autoplay: {
-                                delay: 3000,
-                                disableOnInteraction: false,
-                            },
-                            pagination: {
-                                el: '.about-area .swiper-pagination',
-                                clickable: true,
-                            },
-                            breakpoints: {
-                                768: {
-                                    slidesPerView: 2,
-                                    spaceBetween: 30,
-                                },
-                                1024: {
-                                    slidesPerView: 3,
-                                    spaceBetween: 30,
-                                },
-                            },
-                        });
-                    });
-                </script>
 
                 <!-- Service Section Start -->
                 <div class="bg-optional pt-120 pb-90 mb-120 position-relative overflow-hidden">
@@ -756,7 +731,7 @@ import Navbar from '../components/Navbar.astro';
                     <div class="row">
                         <div class="col-xl-6 offset-xl-3 text-center">
                             <h6 class="section-subtitle style-two d-inline-block text-center fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-16" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">OUR EVENTS</h6>
-                            <h2 class="section-title style-one fw-normal text-title mb-35" data-cue="slideInUp" data-delay="300" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">From Amazing <span class="fw-black">Events in the Past</span></h2>
+                            <h2 class="section-title style-one fw-normal text-title mb-35" data-cue="slideInUp" data-delay="300" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">UPCOMING <span class="fw-black">EVENTS</span></h2>
                         </div>
                     </div>
                 </div>
@@ -802,7 +777,7 @@ import Navbar from '../components/Navbar.astro';
                 <!-- Project Section End -->
 
                 <!-- Testimonial Section Start -->
-                <div class="container ptb-120">
+                <!-- <div class="container ptb-120">
                     <div class="row align-items-end mb-45">
                         <div class="col-xxl-6 col-lg-7 col-md-8 mb-sm-20">
                             <h6 class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-25" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">TESTIMONIALS</h6>
@@ -886,7 +861,7 @@ import Navbar from '../components/Navbar.astro';
                             <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!-- Testimonial Section End -->
 
                 <!-- Counter Section Start -->
@@ -894,44 +869,78 @@ import Navbar from '../components/Navbar.astro';
                     <div class="container">
                         <div class="row">
                             <div class="col-xl-8 offset-xl-2 col-md-10 offset-md-1 text-center mb-60">
-                                <h6 class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20" data-cue="slideInUp">OUR IMPACT</h6>
-                                <h2 class="section-title style-one fw-normal text-title px-xxl-5 mb-0" data-cue="slideInUp" data-delay="300">GameGeek <span class="fw-black">In Numbers</span></h2>
+                                <h6 class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20" data-cue="slideInUp">VIETNAM GAMING LANDSCAPE</h6>
+                                <h2 class="section-title style-one fw-normal text-title px-xxl-8 mb-0" data-cue="slideInUp" data-delay="300"><span class="fw-black">Why Vietnam</span> Is Regarded as One of <span class="fw-black">The World </span>Fastest-Growing Game Markets ?</h2>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center mb-4">
+                            <div class="col-xl-3 col-lg-6 col-md-6">
+                                <div class="counter-card style-one bg-1 position-relative z-1 round-10">
+                                    <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                                    <h6 class="fs-12 font-primary fw-semibold text-title ls-1">GLOBAL RANKING</h6>
+                                    <h4 class="font-secondary fw-black fs-36 text-title">TOP <span class="counter ls-1 transition">1</span></h4>
+                                    <p class="fw-medium d-block mb-0">Vietnam is currently TOP 1 country globally in Game Downloads</p>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6">
+                                <div class="counter-card style-one bg-2 position-relative z-1 round-10">
+                                    <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                                    <h6 class="fs-12 font-primary fw-semibold text-title ls-1">2024 DOWNLOADS</h6>
+                                    <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">6.1</span>B</h4>
+                                    <p class="fw-medium d-block mb-0">Apps & Games downloads on Google Play in 2024</p>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6">
+                                <div class="counter-card style-one bg-3 position-relative z-1 round-10">
+                                    <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                                    <h6 class="fs-12 font-primary fw-semibold text-title ls-1">H1 2025 DOWNLOADS</h6>
+                                    <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">5.2</span>B</h4>
+                                    <p class="fw-medium d-block mb-0">Downloads from Vietnam in the first half of 2025</p>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6">
+                                <div class="counter-card style-one bg-2 position-relative z-1 round-10">
+                                    <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                                    <h6 class="fs-12 font-primary fw-semibold text-title ls-1">ARPU/YEAR</h6>
+                                    <h4 class="font-secondary fw-black fs-36 text-title">$<span class="counter ls-1 transition">12</span></h4>
+                                    <p class="fw-medium d-block mb-0">~10x India's $1.85/year, ~2x Indonesia's $7.82/year; the highest among Tier 3 countries</p>
+                                </div>
                             </div>
                         </div>
                         <div class="row justify-content-center">
-                                            <div class="col-xl-3 col-lg-6 col-md-6">
-                                                <div class="counter-card style-one bg-1 position-relative z-1 round-10">
-                                                    <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                                                    <h6 class="fs-12 font-primary fw-semibold text-title ls-1">GLOBAL REACH</h6>
-                                                    <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">85</span>+</h4>
-                                                    <p class="fw-medium d-block mb-0">Offices Worldwide</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-3 col-lg-6 col-md-6">
-                                                <div class="counter-card style-one bg-2 position-relative z-1 round-10">
-                                                    <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                                                    <h6 class="fs-12 font-primary fw-semibold text-title ls-1">LOCAL EXPERTISE</h6>
-                                                    <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">3000</span>+</h4>
-                                                    <p class="fw-medium d-block mb-0">Employees</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-3 col-lg-6 col-md-6">
-                                                <div class="counter-card style-one bg-3 position-relative z-1 round-10">
-                                                    <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                                                    <h6 class="fs-12 font-primary fw-semibold text-title ls-1">OUR IMPACT</h6>
-                                                    <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">3</span>K+</h4>
-                                                    <p class="fw-medium d-block mb-0">Projects Done</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-3 col-lg-6 col-md-6">
-                                                <div class="counter-card style-one bg-2 position-relative z-1 round-10">
-                                                    <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                                                    <h6 class="fs-12 font-primary fw-semibold text-title ls-1">LOCAL EXPERTISE</h6>
-                                                    <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">3000</span>+</h4>
-                                                    <p class="fw-medium d-block mb-0">Employees</p>
-                                                </div>
-                                            </div>
-                                        </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6">
+                                <div class="counter-card style-one bg-2 position-relative z-1 round-10">
+                                    <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                                    <h6 class="fs-12 font-primary fw-semibold text-title ls-1">MARKET SHARE</h6>
+                                    <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">37.3</span>%</h4>
+                                    <p class="fw-medium d-block mb-0">Global market share in downloads (Google & Sensor Tower, GameVerse 2025)</p>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6">
+                                <div class="counter-card style-one bg-1 position-relative z-1 round-10">
+                                    <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                                    <h6 class="fs-12 font-primary fw-semibold text-title ls-1">PER MINUTE</h6>
+                                    <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">11.6</span>K</h4>
+                                    <p class="fw-medium d-block mb-0">Apps & Games download on Google Play per minute in 2024</p>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6">
+                                <div class="counter-card style-one bg-2 position-relative z-1 round-10">
+                                    <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                                    <h6 class="fs-12 font-primary fw-semibold text-title ls-1">2025 PROJECTION</h6>
+                                    <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">10.3</span>B</h4>
+                                    <p class="fw-medium d-block mb-0">Projected 2025 total: 10.3B downloads (+7.7% YoY)</p>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6">
+                                <div class="counter-card style-one bg-3 position-relative z-1 round-10">
+                                    <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                                    <h6 class="fs-12 font-primary fw-semibold text-title ls-1">AD REVENUE GROWTH</h6>
+                                    <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">30</span>%</h4>
+                                    <p class="fw-medium d-block mb-0">Ad revenue growing annually; Players are increasingly open to in-game ads</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- Counter Section End -->
@@ -942,7 +951,7 @@ import Navbar from '../components/Navbar.astro';
                     <div class="container">
                         <div class="row align-items-center">
                             <div class="col-lg-6 col-md-7 mb-sm-20">
-                                <h2 class="section-title style-two fw-normal text-white mb-0">Your Next Big Event Starts Here – <span class="fw-black">Let's Make It Extraordinary!</span></h2>
+                                <h2 class="section-title style-two fw-normal text-white mb-0">Vietnam - A Rising Hub for <span class="fw-black">Game Production</span> in Asia</h2>
                             </div>
                             <div class="col-lg-6 col-md-5">
                                 <div class="circle-text-wrap position-relative bg-transparent rounded-circle overflow-hidden z-1 ms-md-auto me-md-0 ms-auto me-auto">
@@ -957,7 +966,14 @@ import Navbar from '../components/Navbar.astro';
                 <!-- CTA Section End -->
 
                   <!-- Brand Partner Start -->
-                <div class="brand-slider swiper ptb-120">
+                  <div class="container pt-120">
+                      <div class="row">
+                          <div class="col-xl-8 offset-xl-2 col-md-10 offset-md-1 text-center mb-60">
+                              <h2 class="section-title style-one fw-normal text-title px-xxl-8 mb-0" data-cue="slideInUp" data-delay="300" data-astro-cid-j7pv25f6="" data-astro-source-file="C:/Workspace/gamegeek/src/pages/index.astro" data-astro-source-loc="873:143" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;"> Our <span class="fw-black" data-astro-cid-j7pv25f6="" data-astro-source-file="C:/Workspace/gamegeek/src/pages/index.astro" data-astro-source-loc="873:229">Network </span></h2>
+                          </div>
+                      </div>
+                  </div>
+                <div class="brand-slider swiper pb-120">
                     <div class="swiper-wrapper align-items-center">
                         <div class="swiper-slide">
                             <div class="brand-logo">
@@ -1039,7 +1055,7 @@ import Navbar from '../components/Navbar.astro';
                 <!-- Brand Partner End -->
 
                 <!-- What We Do Section Start -->
-                <div class="wh-area style-three bg-optional ptb-120 round-20 position-relative overflow-hidden">
+                <!-- <div class="wh-area style-three bg-optional ptb-120 round-20 position-relative overflow-hidden">
                     <img src="/renius/image/shape-11.png" alt="Image" class="wh-shape-img position-absolute" data-cue="slideInleft" data-delay="300" data-show="true" style="animation-name: slideInleft; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both; right: 0; bottom: 0; margin-bottom: 0; z-index: 0;">
                     <div class="container position-relative" style="z-index: 1;">
                         <div class="row align-items-center">
@@ -1090,7 +1106,7 @@ import Navbar from '../components/Navbar.astro';
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!-- What We Do Section End -->
 
               
