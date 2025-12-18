@@ -1,752 +1,525 @@
 ---
-import LayoutRenius from '../layouts/LayoutRenius.astro';
+import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
 ---
 
-<LayoutRenius title="About Us | GameGeek">
-
-<style>
-  /* Use Inter font for entire page */
-  body {
-    font-family: 'Inter', sans-serif !important;
-  }
-
-  /* Ensure RemixIcon uses correct font - must be after body rule */
-  [class^="ri-"], [class*=" ri-"], i[class^="ri-"], i[class*=" ri-"] {
-    font-family: 'remixicon' !important;
-    font-style: normal !important;
-  }
-
-  /* Limit game controller icon size and change color to orange */
-  img[src*="game-controller-svgrepo-com.svg"] {
-    height: 12px !important;
-    width: auto !important;
-    max-width: none !important;
-    object-fit: contain;
-    vertical-align: middle;
-    display: inline-block;
-    /* Convert to orange color #FF5E14 */
-    filter: brightness(0) saturate(100%) invert(48%) sepia(100%) saturate(2000%) hue-rotate(0deg) brightness(1.05) contrast(1.1);
-  }
-
-  /* Compact menu when scrolled */
-  #navbar.navbar-compact {
-    padding: 12px 0;
-  }
-
-  #navbar.navbar-compact .navbar-brand,
-  #navbar.navbar-compact .other-options {
-    display: none !important;
-  }
-
-  #navbar.navbar-compact .menu-area {
-    flex: 1 !important;
-    display: flex !important;
-    justify-content: center !important;
-  }
-
-  #navbar.navbar-compact .menu-section {
-    display: flex !important;
-    align-items: center !important;
-    gap: 2px !important;
-    background: #4a4a4a !important;
-    border-radius: 50px !important;
-    padding: 6px 18px !important;
-    margin: 0 auto !important;
-    list-style: none !important;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2) !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    height: auto !important;
-  }
-
-  #navbar.navbar-compact .menu-section li {
-    margin: 0 !important;
-    padding: 0 !important;
-    list-style: none !important;
-  }
-
-  #navbar.navbar-compact .menu-section li a {
-    color: #ffffff !important;
-    font-weight: 600 !important;
-    font-size: 14px !important;
-    padding: 8px 18px !important;
-    display: block !important;
-    text-decoration: none !important;
-    transition: all 0.3s ease !important;
-    border-radius: 25px !important;
-    white-space: nowrap !important;
-    background: transparent !important;
-    line-height: 1.5 !important;
-    letter-spacing: 0.3px !important;
-  }
-
-  #navbar.navbar-compact .menu-section li a:hover {
-    background: rgba(255, 255, 255, 0.15) !important;
-    color: #ffffff !important;
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 991px) {
-    #navbar.navbar-compact {
-      padding: 10px 0;
-    }
-
-    #navbar.navbar-compact .menu-section {
-      padding: 5px 14px !important;
-      gap: 1px !important;
-    }
-
-    #navbar.navbar-compact .menu-section li a {
-      padding: 7px 14px !important;
-      font-size: 13px !important;
-    }
-  }
-
-  @media (max-width: 767px) {
-    #navbar.navbar-compact {
-      padding: 8px 0;
-    }
-
-    #navbar.navbar-compact .menu-section {
-      padding: 4px 12px !important;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1px !important;
-      border-radius: 30px !important;
-    }
-
-    #navbar.navbar-compact .menu-section li a {
-      padding: 6px 12px !important;
-      font-size: 12px !important;
-    }
-  }
-
-  /* Counter Section Styles */
-  .counter-box.style-three {
-    padding: 40px 20px;
-  }
-
-  .counter-box.style-three .counter {
-    margin-bottom: 20px;
-  }
-
-  .counter-box.style-three .counter-number {
-    font-size: clamp(60px, 8vw, 100px) !important;
-    line-height: 1;
-    display: inline-block;
-    font-weight: 900 !important;
-    letter-spacing: -2px;
-  }
-
-  .counter-box.style-three .plus {
-    font-size: clamp(45px, 6vw, 70px) !important;
-    margin-left: 8px;
-    font-weight: 700;
-  }
-
-  .counter-box.style-three .text {
-    font-size: 16px;
-    margin-top: 15px;
-    line-height: 1.5;
-  }
-
-  @media (max-width: 768px) {
-    .counter-box.style-three {
-      padding: 30px 15px;
-    }
-    
-    .counter-box.style-three .counter-number {
-      font-size: clamp(50px, 10vw, 80px) !important;
-    }
-    
-    .counter-box.style-three .plus {
-      font-size: clamp(35px, 8vw, 60px) !important;
-    }
-  }
-
-  /* Brand Promises Quote Icon */
-  .feature-area.style-four .quote-icon {
-    width: 80px;
-    height: 80px;
-    min-width: 80px;
-  }
-
-  .feature-area.style-four .quote-icon img {
-    width: 40px;
-    height: 40px;
-  }
-
-  @media (max-width: 768px) {
-    .feature-area.style-four .quote-icon {
-      width: 60px;
-      height: 60px;
-      min-width: 60px;
-    }
-
-    .feature-area.style-four .quote-icon img {
-      width: 30px;
-      height: 30px;
-    }
-
-    .feature-area.style-four .section-title[style*="padding-left"] {
-      padding-left: 70px !important;
-    }
-  }
-
-  /* Brand Partner Logo Height */
-  .brand-slider .brand-logo img {
-    height: 120px !important;
-    width: auto !important;
-    object-fit: contain;
-  }
-
-  /* Brand Promises Award Cards */
-  .feature-area.style-four .award-badge {
-    width: 80px;
-    height: 80px;
-    min-width: 80px;
-    flex-shrink: 0;
-  }
-
-  .feature-area.style-four .award-badge span {
-    display: block;
-  }
-
-  .feature-area.style-four .award-title {
-    flex: 1;
-    padding-left: 20px;
-  }
-
-  .feature-area.style-four .award-title p {
-    line-height: 1.6;
-  }
-
-  @media (max-width: 768px) {
-    .feature-area.style-four .award-badge {
-      width: 60px;
-      height: 60px;
-      min-width: 60px;
-    }
-
-    .feature-area.style-four .award-badge .fs-36 {
-      font-size: 24px !important;
-    }
-
-    .feature-area.style-four .award-badge .fs-16 {
-      font-size: 12px !important;
-    }
-
-    .feature-area.style-four .award-title {
-      padding-left: 15px;
-    }
-  }
-</style>
+<Layout title="About Us | GameGeek">
 
   <!-- Custom Cursor -->
   <div class="cursor"><span class="cursor-text"></span></div>
   <div class="cursor-inner"></div>
-  
- <div id="smooth-wrapper">
-            <div id="smooth-content">
 
-                <Navbar variant="black" />
-<div class="hero-area style-one position-relative z-1">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-xl-7 col-lg-7">
-                                <div class="hero-content">
-                                    <h6 class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-normal position-relative text_secondary mb-12" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">THE LOCAL VOICE</h6>
-                                    <h1 class="font-secondary text-white" data-cue="slideInUp" data-delay="300" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;"> The <span class="fw-black">central hub </span> in Vietnam dedicated to the <span class="fw-black">Vietnamese Game Maker </span>Community</h1>
-                                     <a href="services.html" class="btn style-one d-inline-flex flex-wrap align-items-center p-0" data-cue="slideInUp" data-delay="500" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 500ms; animation-direction: normal; animation-fill-mode: both;"><span class="btn-text d-inline-block fw-semibold position-relative transition">Our Services</span><span class="btn-icon position-relative d-flex flex-column align-items-center justify-content-center rounded-circle transition"><i class="ri-arrow-right-up-line"></i></span></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <img src="/renius/image/hero-img-1.png" alt="Image" class="hero-img position-absolute end-0" data-cue="slideInRight" data-delay="300" data-show="true" style="animation-name: slideInRight; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">
-                </div>
-                <!-- Breadcrumb Section Start -->
-                <!-- <div class="breadcrumb-area position-relative z-1">
-                    <img src="/renius/image/br-line-shape.png" alt="Shape" class="br-line-shape position-absolute top-0 start-0 w-100 h-100 z-n1">
-                    <img src="/renius/image/br-shape-1.png" alt="Shape" class="br-shape-one position-absolute z-n1 bounce">
-                    <img src="/renius/image/br-shape-2.png" alt="Shape" class="br-shape-two position-absolute bottom-0 z-n1 moveHorizontal">
-                    <div class="container-fluid px-xxl-5">
-                        <div class="row">
-                            <div class="col-md-10 offset-md-1 text-center">
-                                <h2 class="section-title style-one fw-black text-title">About Us</h2>
-                                <ul class="br-menu list-unstyled">
-                                    <li><a href="/"><img src="/renius/image/home-icon.svg" alt="Icon">HOME</a></li>
-                                    <li>ABOUT US</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-                <!-- Breadcrumb Section End -->
+  <div id="smooth-wrapper">
+    <div id="smooth-content">
 
-                <!-- About Us Section Start -->
-                <div class="about-area style-one ptop-40 pb-120">
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-xl-5 col-lg-6">
-                                <div class="about-img-wrap position-relative pe-xxl-4 mb-md-30">
-                                    <img src="/images/promise.jpg" alt="Image" class="about-img round-10 tilt-img" style="translate: none; rotate: none; scale: none; transform: perspective(2000px);">
-                                    <img src="/images/aboutThumb1_1.png" alt="Image" class="about-thumb move-bottom position-absolute" style="translate: none; rotate: none; scale: none; transform: translate(0px, 0px);">
-                                </div>
-                            </div>
-                            <div class="col-xl-7 col-lg-6 ps-xxl-4">
-                                <div class="about-content">
-                                    <h6 class="section-subtitle style-one d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;"><img src="/renius/image/star-3.svg" alt="Icon">WHO ARE WE?</h6>
-                                    <h2 class="section-title style-one text-title" data-cue="slideInUp" data-delay="300" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">Vietnam's <span class="fw-black">Gaming Central Hub </span></h2>
-                                    <div class="about-subcontent" data-cue="slideInUp" data-delay="400" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 400ms; animation-direction: normal; animation-fill-mode: both;">
-                                        <p class="pe-xxl-5">Founded in 2016, GameGeek is Vietnam's gaming central hub and trusted gateway that connecting local talent and resources to global opportunities. We unite studios, publishers, service providers, and investors in a collaborative ecosystem that accelerates innovation, empowers growth, and positions Vietnam as a regional powerhouse with global reach in gaming.</p>
-                                        <div class="row justify-content-center">
-                                            <div class="col-xl-4 col-lg-6 col-md-6">
-                                                <div class="counter-card style-one bg-1 position-relative z-1 round-10">
-                                                    <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                                                    <h6 class="fs-12 font-primary fw-semibold text-title ls-1">GLOBAL REACH</h6>
-                                                    <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">85</span>+</h4>
-                                                    <p class="fw-medium d-block mb-0">Offices Worldwide</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-4 col-lg-6 col-md-6">
-                                                <div class="counter-card style-one bg-2 position-relative z-1 round-10">
-                                                    <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                                                    <h6 class="fs-12 font-primary fw-semibold text-title ls-1">LOCAL EXPERTISE</h6>
-                                                    <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">3000</span>+</h4>
-                                                    <p class="fw-medium d-block mb-0">Employees</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-4 col-lg-6 col-md-6">
-                                                <div class="counter-card style-one bg-3 position-relative z-1 round-10">
-                                                    <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                                                    <h6 class="fs-12 font-primary fw-semibold text-title ls-1">OUR IMPACT</h6>
-                                                    <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">3</span>K+</h4>
-                                                    <p class="fw-medium d-block mb-0">Projects Done</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- About Us Section End -->
-
-                <!-- Feature Section Start -->
-                <div class="feature-area style-four position-relative z-1 pt-120 pb-90 mx-xxl-4">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-xl-12">
-                                <h6 class="section-subtitle style-two fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20">BRAND PROMISES</h6>
-                                <div class="position-relative">
-                                    <span class="quote-icon bg_secondary d-flex flex-wrap align-items-center justify-content-center rounded-circle position-absolute" style="top: 0; left: 0; z-index: 1;"><img src="/renius/image/quote-large.svg" alt="Icon"></span>
-                                    <h2 class="section-title style-one fw-normal text-title mb-40" style="padding-left: 100px;">We connect Vietnam's game ecosystem with the world and turn connections into <span class="fw-black">real outcomes</span> for our partners.</h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row justify-content-center">
-                        <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
-                            <div class="award-card style-one d-flex flex-wrap align-items-center mb-30 transition">
-                                <div class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
-                                    <span class="fs-36 fw-black text-black">10+</span>
-                                </div>
-                                <div class="award-title">
-                                    <p class="fs-15 text-title mb-0">Supporting PTIT, BUV, HUST, and more with training programs, student clubs, and competitions.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 180ms; animation-direction: normal; animation-fill-mode: both;">
-                            <div class="award-card style-one d-flex flex-wrap align-items-center mb-30 transition">
-                                <div class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
-                                    <span class="fs-36 fw-black text-black">8+</span>
-                                </div>
-                                <div class="award-title">
-                                    <p class="fs-15 text-title mb-0">Student workshops & seminars, co-hosted annually with VGDA, NIC, and FPT across Hanoi and Ho Chi Minh City.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 360ms; animation-direction: normal; animation-fill-mode: both;">
-                            <div class="award-card style-one d-flex flex-wrap align-items-center mb-30 transition">
-                                <div class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
-                                    <span class="fs-36 fw-black text-black">9</span>
-                                </div>
-                                <div class="award-title">
-                                    <p class="fs-15 text-title mb-0">Consecutive years of Global Game Jam bringing Vietnam's developer community together with international game creators.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
-                            <div class="award-card style-one d-flex flex-wrap align-items-center mb-30 transition">
-                                <div class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
-                                    <span class="fs-36 fw-black text-black">3</span>
-                                </div>
-                                <div class="award-title">
-                                    <p class="fs-15 text-title mb-0">Event organizer/partner of GamesForum, Vietnam Game Connect, and Global Game Jam.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 180ms; animation-direction: normal; animation-fill-mode: both;">
-                            <div class="award-card style-one d-flex flex-wrap align-items-center mb-30 transition">
-                                <div class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
-                                    <span class="fs-16 fw-black text-black text-center" style="line-height: 1.2;">STRATEGIC<br>SUPPORT</span>
-                                </div>
-                                <div class="award-title">
-                                    <p class="fs-15 text-title mb-0">Support for studios, providing consulting on publishing, M&A, and international revenue growth.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                        <div class="row justify-content-center mt-4">
-                            <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
-                                <div class="award-card style-one d-flex flex-wrap align-items-center mb-30 transition">
-                                    <div class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
-                                        <span class="fs-36 fw-black text-black">20+</span>
-                                    </div>
-                                    <div class="award-title">
-                                        <p class="fs-15 text-title mb-0">Connected 20+ international partners with the Vietnamese game industry.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 180ms; animation-direction: normal; animation-fill-mode: both;">
-                                <div class="award-card style-one d-flex flex-wrap align-items-center mb-30 transition">
-                                    <div class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
-                                        <span class="fs-36 fw-black text-black">50+</span>
-                                    </div>
-                                    <div class="award-title">
-                                        <p class="fs-15 text-title mb-0">Facilitated 50+ business matching sessions between global partners and local studios.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 360ms; animation-direction: normal; animation-fill-mode: both;">
-                                <div class="award-card style-one d-flex flex-wrap align-items-center mb-30 transition">
-                                    <div class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
-                                        <span class="fs-28 fw-black text-black">1.000+</span>
-                                    </div>
-                                    <div class="award-title">
-                                        <p class="fs-15 text-title mb-0">Provided thousands of consultations for foreign companies entering Vietnam.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-6">
-                                <div class="feature-card style-six d-flex flex-wrap align-items-center bg-white round-10 mb-30">
-                                    <div class="feature-img round-10">
-                                        <img src="/renius/image/about-img-4.png" alt="Image" class="round-10">
-                                    </div>
-                                    <div class="feature-info">
-                                        <h6 class="fs-20 fw-bold text-title">Vision</h6>
-                                        <p>GameGeek envisions Vietnam recognized as a central hub in global gaming, powered by an open, collaborative ecosystem. As the central hub and trusted gateway, GameGeek's vision is a bridge where collaboration turns into measurable outcomes: innovation, jobs, investment, and sustainable growth for Vietnam and the region.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-6">
-                                <div class="feature-card style-six d-flex flex-wrap align-items-center bg-white round-10 mb-30">
-                                    <div class="feature-img round-10">
-                                        <img src="/renius/image/about-img-5.png" alt="Image" class="round-10">
-                                    </div>
-                                    <div class="feature-info">
-                                        <h6 class="fs-20 fw-bold text-title">Mission</h6>
-                                        <p>Our mission is to be the trusted gateway that unites Vietnam's game ecosystem: studios, publishers, platforms, service providers, investors with global world-class resources, empowering talent through education, unlocking business and financial growth, and driving the entire industry to thrive on the global stage.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Feature Section End -->
-
-                <!-- Team Section Start -->
-                <div class="team-area style-one position-relative pb-120">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-xl-8 offset-xl-2 col-md-10 offset-md-1 text-center px-xxl-5">
-                                <h6 class="section-subtitle style-one d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;"><img src="/renius/image/star-3.svg" alt="Icon">MEET THE TEAM</h6>
-                                <h2 class="section-title style-one text-title px-xxl-5 mb-40" data-cue="slideInUp" data-delay="300" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">Connect and scale faster in <span class="fw-black">Vietnam's game industry</span></h2>
-                            </div>
-                        </div>
-                        <div class="team-slider-one swiper swiper-initialized swiper-horizontal swiper-autoheight swiper-backface-hidden">
-                            <div class="swiper-wrapper" id="swiper-wrapper-team" aria-live="polite">
-                                <div class="swiper-slide swiper-slide-active">
-                                    <div class="team-card style-one img-hover-zoom">
-                                        <div class="team-img round-10 img-zoom position-relative overflow-hidden">
-                                            <img src="/images/team/anh1.png" alt="Image" class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
-                                            <img src="/images/team/anh1.png" alt="Image" class="round-10 transition">
-                                        </div>
-                                        <div class="team-info d-flex flex-wrap justify-content-between">
-                                            <div>
-                                                <h3 class="fw-bold mb-1"><a href="team-single.html" class="text-title link-hover-primary transition">Ha Nhu Dong</a></h3>
-                                                <span>Founder</span>
-                                            </div>
-                                            <ul class="social-profile style-two list-unstyled mb-0">
-                                                <li><a href="https://www.facebook.com" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-facebook-fill"></i></a></li>
-                                                <li><a href="https://x.com/" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-twitter-x-line"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide swiper-slide-next">
-                                    <div class="team-card style-one img-hover-zoom">
-                                        <div class="team-img round-10 img-zoom position-relative overflow-hidden">
-                                            <img src="/images/team/anh2.png" alt="Image" class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
-                                            <img src="/images/team/anh2.png" alt="Image" class="round-10 transition">
-                                        </div>
-                                        <div class="team-info d-flex flex-wrap justify-content-between">
-                                            <div>
-                                                <h3 class="fw-bold mb-1"><a href="team-single.html" class="text-title link-hover-primary transition">Hanh Minh Vu</a></h3>
-                                                <span>CEO</span>
-                                            </div>
-                                            <ul class="social-profile style-two list-unstyled mb-0">
-                                                <li><a href="https://www.facebook.com" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-facebook-fill"></i></a></li>
-                                                <li><a href="https://x.com/" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-twitter-x-line"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="team-card style-one img-hover-zoom">
-                                        <div class="team-img round-10 img-zoom position-relative overflow-hidden">
-                                            <img src="/images/team/anh3.png" alt="Image" class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
-                                            <img src="/images/team/anh3.png" alt="Image" class="round-10 transition">
-                                        </div>
-                                        <div class="team-info d-flex flex-wrap justify-content-between">
-                                            <div>
-                                                <h3 class="fw-bold mb-1"><a href="team-single.html" class="text-title link-hover-primary transition">Hai Xuan Trinh</a></h3>
-                                                <span>Head Of Partnership</span>
-                                            </div>
-                                            <ul class="social-profile style-two list-unstyled mb-0">
-                                                <li><a href="https://www.facebook.com" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-facebook-fill"></i></a></li>
-                                                <li><a href="https://x.com/" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-twitter-x-line"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="team-card style-one img-hover-zoom">
-                                        <div class="team-img round-10 img-zoom position-relative overflow-hidden">
-                                            <img src="/images/team/anh4.png" alt="Image" class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
-                                            <img src="/images/team/anh4.png" alt="Image" class="round-10 transition">
-                                        </div>
-                                        <div class="team-info d-flex flex-wrap justify-content-between">
-                                            <div>
-                                                <h3 class="fw-bold mb-1"><a href="team-single.html" class="text-title link-hover-primary transition">Hoa Thai Do</a></h3>
-                                                <span>Business Development</span>
-                                            </div>
-                                            <ul class="social-profile style-two list-unstyled mb-0">
-                                                <li><a href="https://www.facebook.com" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-facebook-fill"></i></a></li>
-                                                <li><a href="https://x.com/" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-twitter-x-line"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="slider-btn style-one d-flex flex-wrap justify-content-md-end">
-                        <button class="prev-btn team-prev border-0 d-flex flex-column align-items-center justify-content-center rounded-circle me-2 z-1" tabindex="0" aria-label="Previous slide" aria-controls="swiper-wrapper-team"><img src="/renius/image/left-long-arrow-orange.svg" alt="Icon"></button>
-                        <button class="next-btn team-next border-0 d-flex flex-column align-items-center justify-content-center rounded-circle ms-2 z-1" tabindex="0" aria-label="Next slide" aria-controls="swiper-wrapper-team"><img src="/renius/image/right-long-arrow-orange.svg" alt="Icon"></button>
-                    </div>
-                </div>
-                <!-- Team Section End -->
-
-                <!-- CTA Section Start -->
-                <div class="cta-area style-one bg-f position-relative overflow-hidden z-1 mx-xxl-4 mx-2 round-40">
-                    <img src="/renius/image/shape-1.png" alt="Shape" class="section-shape position-absolute bottom-0 end-0 z-0">
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-lg-6 col-md-7 mb-sm-20">
-                                <h2 class="section-title style-two fw-normal text-white mb-0">Your Next  <span class="fw-black">Big Event Starts Here </span> – Let's Make It Extraordinary!</h2>
-                            </div>
-                            <div class="col-lg-6 col-md-5">
-                                <div class="circle-text-wrap position-relative bg_primary rounded-circle overflow-hidden z-1 ms-md-auto me-md-0 ms-auto me-auto">
-                                    <img src="/renius/image/circle-text.png" alt="Circle Text" class="rotate position-relative z-1 d-block mx-auto">
-                                    <img src="/renius/image/up-right-arrow-white-small.svg" alt="Icon" class="arrow-icon position-absolute z-n1">
-                                    <a href="/contact" class="position-absolute top-0 start-0 w-100 h-100 z-1"></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- CTA Section End -->
-
-              
-
-                <!-- Brand Partner Start -->
-                <div class="brand-slider swiper ptb-120 swiper-initialized swiper-horizontal">
-                    <div class="swiper-wrapper align-items-center" id="swiper-wrapper-brand" aria-live="off">
-                        <div class="swiper-slide swiper-slide-active">
-                            <div class="brand-logo">
-                                <img src="/partners/partner (1).png" alt="Brand Logo" class="d-block mx-auto">
-                            </div>
-                        </div>
-                        <div class="swiper-slide swiper-slide-next">
-                            <div class="brand-logo">
-                                <img src="/partners/partner (2).png" alt="Brand Logo" class="d-block mx-auto">
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand-logo">
-                                <img src="/partners/partner (3).png" alt="Brand Logo" class="d-block mx-auto">
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand-logo">
-                                <img src="/partners/partner (4).png" alt="Brand Logo" class="d-block mx-auto">
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand-logo">
-                                <img src="/partners/partner (5).png" alt="Brand Logo" class="d-block mx-auto">
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand-logo">
-                                <img src="/partners/partner (6).png" alt="Brand Logo" class="d-block mx-auto">
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand-logo">
-                                <img src="/partners/partner (7).png" alt="Brand Logo" class="d-block mx-auto">
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand-logo">
-                                <img src="/partners/partner (8).png" alt="Brand Logo" class="d-block mx-auto">
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand-logo">
-                                <img src="/partners/partner (9).png" alt="Brand Logo" class="d-block mx-auto">
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand-logo">
-                                <img src="/partners/partner (10).png" alt="Brand Logo" class="d-block mx-auto">
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand-logo">
-                                <img src="/partners/partner (11).png" alt="Brand Logo" class="d-block mx-auto">
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand-logo">
-                                <img src="/partners/partner (12).png" alt="Brand Logo" class="d-block mx-auto">
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand-logo">
-                                <img src="/partners/partner (13).png" alt="Brand Logo" class="d-block mx-auto">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Brand Partner End -->
-
-                <!-- Footer Section Start -->
-                <footer class="footer-area style-two bg-optional position-relative z-1 pt-120">
-                    <div class="container">
-                        <div class="row justify-content-center pb-90">
-                            <div class="col-lg-3 col-md-6">
-                                <div class="footer-widget mb-30" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
-                                    <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">Quick Links</h4>
-                                    <ul class="footer-menu style-one list-unstyled mb-0">
-                                        <li><a href="/solution">Service</a></li>
-                                        <li><a href="pricing-plan.html">Pricing</a></li>
-                                        <li><a href="projects.html">Projects</a></li>
-                                        <li><a href="team.html">Team</a></li>
-                                        <li><a href="/about">About</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                             <div class="col-lg-3 col-md-6 ps-xxl-5">
-                                <div class="footer-widget mb-30" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 180ms; animation-direction: normal; animation-fill-mode: both;">
-                                    <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">Explore</h4>
-                                    <ul class="footer-menu style-one list-unstyled mb-0">
-                                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                                        <li><a href="terms-conditions.html">Terms of Service</a></li>
-                                        <li><a href="faq.html">FAQ</a></li>
-                                        <li><a href="careers.html">Careers</a></li>
-                                        <li><a href="/contact">Contact Us</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                             <div class="col-lg-3 col-md-6 ps-xxl-5">
-                                <div class="footer-widget mb-30 ps-xxl-4" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 360ms; animation-direction: normal; animation-fill-mode: both;">
-                                    <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">Company</h4>
-                                    <ul class="footer-menu style-one list-unstyled mb-0">
-                                        <li><a href="location.html">Location</a></li>
-                                        <li><a href="projects.html">Works</a></li>
-                                        <li><a href="projects.html">Studio</a></li>
-                                        <li><a href="/news">News</a></li>
-                                        <li><a href="properties.html">Categories</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                             <div class="col-lg-3 col-md-6 ps-xxl-5">
-                                <div class="footer-widget mb-30 ps-xxl-5" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 540ms; animation-direction: normal; animation-fill-mode: both;">
-                                    <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">Address</h4>
-                                    <ul class="contact-info-list list-unstyled mb-0">
-                                        <li><span class="fw-bold text-white me-1">Address:</span> NIC Building, No 6 Lane 7 Ton That Thuyet, Cau Giay, Hanoi</li>
-                                        <li><span class="fw-bold text-white me-1">Email:</span><a href="mailto:support@gamegeek.asia">support@gamegeek.asia</a></li>
-                                        <li><span class="fw-bold text-white me-1">Phone:</span><a href="tel:+84902122120">(+84) 902 122 120</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="footer-large-text font-optional fw-black round-10">
-                                    <span>G</span>
-                                    <span>A</span>
-                                    <span>M</span>
-                                    <span>E</span>
-                                    <span>G</span>
-                                    <span>E</span>
-                                    <span>E</span>
-                                    <span>K</span>
-                                </div>
-                            </div>
-                            <div class="col-md-5">
-                                <div class="social-share d-flex flex-wrap align-items-center justify-content-md-start justify-content-center mb-sm-10">
-                                    <span class="text-alto fw-semibold me-2">Follow Us: </span>
-                                    <ul class="social-profile style-two list-unstyled mb-0">
-                                        <li><a href="https://www.facebook.com/" target="_blank" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-facebook-fill"></i></a></li>
-                                        <li><a href="https://x.com/?lang=en" target="_blank" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-twitter-x-line"></i></a></li>
-                                        <li><a href="https://www.instagram.com/" target="_blank" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-instagram-line"></i></a></li>
-                                        <li><a href="https://www.linkedin.com/" target="_blank" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-linkedin-fill"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-md-7 text-md-end text-center">
-                                 </div>
-                        </div>
-                    </div>
-                </footer>
-                <!-- Footer End -->
-
+      <Navbar variant="black" />
+      <div class="hero-area style-one position-relative z-1">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-xl-7 col-lg-7">
+              <div class="hero-content">
+                <h6
+                  class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-normal position-relative text_secondary mb-12"
+                  data-cue="slideInUp" data-show="true"
+                  style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                  THE LOCAL VOICE</h6>
+                <h1 class="font-secondary text-white" data-cue="slideInUp" data-delay="300" data-show="true"
+                  style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">
+                  The <span class="fw-black">central hub </span> in Vietnam dedicated to the <span
+                    class="fw-black">Vietnamese Game Maker </span>Community</h1>
+                <a href="services.html" class="btn style-one d-inline-flex flex-wrap align-items-center p-0"
+                  data-cue="slideInUp" data-delay="500" data-show="true"
+                  style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 500ms; animation-direction: normal; animation-fill-mode: both;"><span
+                    class="btn-text d-inline-block fw-semibold position-relative transition">Our Services</span><span
+                    class="btn-icon position-relative d-flex flex-column align-items-center justify-content-center rounded-circle transition"><i
+                      class="ri-arrow-right-up-line"></i></span></a>
+              </div>
             </div>
+          </div>
         </div>
+        <img src="/renius/image/hero-img-1.png" alt="Image" class="hero-img position-absolute end-0"
+          data-cue="slideInRight" data-delay="300" data-show="true"
+          style="animation-name: slideInRight; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">
+      </div>
+
+      <!-- About Us Section Start -->
+      <div class="about-area style-one ptop-40 pb-120">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-xl-5 col-lg-6">
+              <div class="about-img-wrap position-relative pe-xxl-4 mb-md-30">
+                <img src="/images/promise.jpg" alt="Image" class="about-img round-10 tilt-img"
+                  style="translate: none; rotate: none; scale: none; transform: perspective(2000px);">
+                <img src="/images/aboutThumb1_1.png" alt="Image" class="about-thumb move-bottom position-absolute"
+                  style="translate: none; rotate: none; scale: none; transform: translate(0px, 0px);">
+              </div>
+            </div>
+            <div class="col-xl-7 col-lg-6 ps-xxl-4">
+              <div class="about-content">
+                <h6
+                  class="section-subtitle style-one d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20"
+                  data-cue="slideInUp" data-show="true"
+                  style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                  <img src="/renius/image/star-3.svg" alt="Icon">WHO ARE WE?</h6>
+                <h2 class="section-title style-one text-title" data-cue="slideInUp" data-delay="300" data-show="true"
+                  style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">
+                  Vietnam's <span class="fw-black">Gaming Central Hub </span></h2>
+                <div class="about-subcontent" data-cue="slideInUp" data-delay="400" data-show="true"
+                  style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 400ms; animation-direction: normal; animation-fill-mode: both;">
+                  <p class="pe-xxl-5">Founded in 2016, GameGeek is Vietnam's gaming central hub and trusted gateway that
+                    connecting local talent and resources to global opportunities. We unite studios, publishers, service
+                    providers, and investors in a collaborative ecosystem that accelerates innovation, empowers growth,
+                    and positions Vietnam as a regional powerhouse with global reach in gaming.</p>
+                  <div class="row justify-content-center">
+                    <div class="col-xl-4 col-lg-6 col-md-6">
+                      <div class="counter-card style-one bg-1 position-relative z-1 round-10">
+                        <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                        <h6 class="fs-12 font-primary fw-semibold text-title ls-1">GLOBAL REACH</h6>
+                        <h4 class="font-secondary fw-black fs-36 text-title"><span
+                            class="counter ls-1 transition">85</span>+</h4>
+                        <p class="fw-medium d-block mb-0">Offices Worldwide</p>
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-6">
+                      <div class="counter-card style-one bg-2 position-relative z-1 round-10">
+                        <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                        <h6 class="fs-12 font-primary fw-semibold text-title ls-1">LOCAL EXPERTISE</h6>
+                        <h4 class="font-secondary fw-black fs-36 text-title"><span
+                            class="counter ls-1 transition">3000</span>+</h4>
+                        <p class="fw-medium d-block mb-0">Employees</p>
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-6">
+                      <div class="counter-card style-one bg-3 position-relative z-1 round-10">
+                        <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                        <h6 class="fs-12 font-primary fw-semibold text-title ls-1">OUR IMPACT</h6>
+                        <h4 class="font-secondary fw-black fs-36 text-title"><span
+                            class="counter ls-1 transition">3</span>K+</h4>
+                        <p class="fw-medium d-block mb-0">Projects Done</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- About Us Section End -->
+
+      <!-- Feature Section Start -->
+      <div class="feature-area style-four position-relative z-1 pt-120 pb-90 mx-xxl-4">
+        <div class="container">
+          <div class="row">
+            <div class="col-xl-12">
+              <h6
+                class="section-subtitle style-two fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20">
+                BRAND PROMISES</h6>
+              <div class="position-relative">
+                <span
+                  class="quote-icon bg_secondary d-flex flex-wrap align-items-center justify-content-center rounded-circle position-absolute"
+                  style="top: 0; left: 0; z-index: 1;"><img src="/renius/image/quote-large.svg" alt="Icon"></span>
+                <h2 class="section-title style-one fw-normal text-title mb-40" style="padding-left: 100px;">We connect
+                  Vietnam's game ecosystem with the world and turn connections into <span class="fw-black">real
+                    outcomes</span> for our partners.</h2>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true"
+              style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+              <div class="award-card style-one d-flex flex-wrap align-items-center mb-30 transition">
+                <div
+                  class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
+                  <span class="fs-36 fw-black text-black">10+</span>
+                </div>
+                <div class="award-title">
+                  <p class="fs-15 text-title mb-0">Supporting PTIT, BUV, HUST, and more with training programs, student
+                    clubs, and competitions.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true"
+              style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 180ms; animation-direction: normal; animation-fill-mode: both;">
+              <div class="award-card style-one d-flex flex-wrap align-items-center mb-30 transition">
+                <div
+                  class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
+                  <span class="fs-36 fw-black text-black">8+</span>
+                </div>
+                <div class="award-title">
+                  <p class="fs-15 text-title mb-0">Student workshops & seminars, co-hosted annually with VGDA, NIC, and
+                    FPT across Hanoi and Ho Chi Minh City.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true"
+              style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 360ms; animation-direction: normal; animation-fill-mode: both;">
+              <div class="award-card style-one d-flex flex-wrap align-items-center mb-30 transition">
+                <div
+                  class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
+                  <span class="fs-36 fw-black text-black">9</span>
+                </div>
+                <div class="award-title">
+                  <p class="fs-15 text-title mb-0">Consecutive years of Global Game Jam bringing Vietnam's developer
+                    community together with international game creators.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true"
+              style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+              <div class="award-card style-one d-flex flex-wrap align-items-center mb-30 transition">
+                <div
+                  class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
+                  <span class="fs-36 fw-black text-black">3</span>
+                </div>
+                <div class="award-title">
+                  <p class="fs-15 text-title mb-0">Event organizer/partner of GamesForum, Vietnam Game Connect, and
+                    Global Game Jam.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true"
+              style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 180ms; animation-direction: normal; animation-fill-mode: both;">
+              <div class="award-card style-one d-flex flex-wrap align-items-center mb-30 transition">
+                <div
+                  class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
+                  <span class="fs-16 fw-black text-black text-center"
+                    style="line-height: 1.2;">STRATEGIC<br>SUPPORT</span>
+                </div>
+                <div class="award-title">
+                  <p class="fs-15 text-title mb-0">Support for studios, providing consulting on publishing, M&A, and
+                    international revenue growth.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-center mt-4">
+            <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true"
+              style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+              <div class="award-card style-one d-flex flex-wrap align-items-center mb-30 transition">
+                <div
+                  class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
+                  <span class="fs-36 fw-black text-black">20+</span>
+                </div>
+                <div class="award-title">
+                  <p class="fs-15 text-title mb-0">Connected 20+ international partners with the Vietnamese game
+                    industry.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true"
+              style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 180ms; animation-direction: normal; animation-fill-mode: both;">
+              <div class="award-card style-one d-flex flex-wrap align-items-center mb-30 transition">
+                <div
+                  class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
+                  <span class="fs-36 fw-black text-black">50+</span>
+                </div>
+                <div class="award-title">
+                  <p class="fs-15 text-title mb-0">Facilitated 50+ business matching sessions between global partners
+                    and local studios.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true"
+              style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 360ms; animation-direction: normal; animation-fill-mode: both;">
+              <div class="award-card style-one d-flex flex-wrap align-items-center mb-30 transition">
+                <div
+                  class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
+                  <span class="fs-28 fw-black text-black">1.000+</span>
+                </div>
+                <div class="award-title">
+                  <p class="fs-15 text-title mb-0">Provided thousands of consultations for foreign companies entering
+                    Vietnam.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <div class="feature-card style-six d-flex flex-wrap align-items-center bg-white round-10 mb-30">
+                <div class="feature-img round-10">
+                  <img src="/renius/image/about-img-4.png" alt="Image" class="round-10">
+                </div>
+                <div class="feature-info">
+                  <h6 class="fs-20 fw-bold text-title">Vision</h6>
+                  <p>GameGeek envisions Vietnam recognized as a central hub in global gaming, powered by an open,
+                    collaborative ecosystem. As the central hub and trusted gateway, GameGeek's vision is a bridge where
+                    collaboration turns into measurable outcomes: innovation, jobs, investment, and sustainable growth
+                    for Vietnam and the region.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="feature-card style-six d-flex flex-wrap align-items-center bg-white round-10 mb-30">
+                <div class="feature-img round-10">
+                  <img src="/renius/image/about-img-5.png" alt="Image" class="round-10">
+                </div>
+                <div class="feature-info">
+                  <h6 class="fs-20 fw-bold text-title">Mission</h6>
+                  <p>Our mission is to be the trusted gateway that unites Vietnam's game ecosystem: studios, publishers,
+                    platforms, service providers, investors with global world-class resources, empowering talent through
+                    education, unlocking business and financial growth, and driving the entire industry to thrive on the
+                    global stage.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Feature Section End -->
+
+      <!-- Team Section Start -->
+      <div class="team-area style-one position-relative pb-120">
+        <div class="container">
+          <div class="row">
+            <div class="col-xl-8 offset-xl-2 col-md-10 offset-md-1 text-center px-xxl-5">
+              <h6
+                class="section-subtitle style-one d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20"
+                data-cue="slideInUp" data-show="true"
+                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                <img src="/renius/image/star-3.svg" alt="Icon">MEET THE TEAM</h6>
+              <h2 class="section-title style-one text-title px-xxl-5 mb-40" data-cue="slideInUp" data-delay="300"
+                data-show="true"
+                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">
+                Connect and scale faster in <span class="fw-black">Vietnam's game industry</span></h2>
+            </div>
+          </div>
+          <div
+            class="team-slider-one swiper swiper-initialized swiper-horizontal swiper-autoheight swiper-backface-hidden">
+            <div class="swiper-wrapper" id="swiper-wrapper-team" aria-live="polite">
+              <div class="swiper-slide swiper-slide-active">
+                <div class="team-card style-one img-hover-zoom">
+                  <div class="team-img round-10 img-zoom position-relative overflow-hidden">
+                    <img src="/images/team/anh1.png" alt="Image"
+                      class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
+                    <img src="/images/team/anh1.png" alt="Image" class="round-10 transition">
+                  </div>
+                  <div class="team-info d-flex flex-wrap justify-content-between">
+                    <div>
+                      <h3 class="fw-bold mb-1"><a href="team-single.html"
+                          class="text-title link-hover-primary transition">Ha Nhu Dong</a></h3>
+                      <span>Founder</span>
+                    </div>
+                    <ul class="social-profile style-two list-unstyled mb-0">
+                      <li><a href="https://www.facebook.com"
+                          class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                            class="ri-facebook-fill"></i></a></li>
+                      <li><a href="https://x.com/"
+                          class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                            class="ri-twitter-x-line"></i></a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide swiper-slide-next">
+                <div class="team-card style-one img-hover-zoom">
+                  <div class="team-img round-10 img-zoom position-relative overflow-hidden">
+                    <img src="/images/team/anh2.png" alt="Image"
+                      class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
+                    <img src="/images/team/anh2.png" alt="Image" class="round-10 transition">
+                  </div>
+                  <div class="team-info d-flex flex-wrap justify-content-between">
+                    <div>
+                      <h3 class="fw-bold mb-1"><a href="team-single.html"
+                          class="text-title link-hover-primary transition">Hanh Minh Vu</a></h3>
+                      <span>CEO</span>
+                    </div>
+                    <ul class="social-profile style-two list-unstyled mb-0">
+                      <li><a href="https://www.facebook.com"
+                          class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                            class="ri-facebook-fill"></i></a></li>
+                      <li><a href="https://x.com/"
+                          class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                            class="ri-twitter-x-line"></i></a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="team-card style-one img-hover-zoom">
+                  <div class="team-img round-10 img-zoom position-relative overflow-hidden">
+                    <img src="/images/team/anh3.png" alt="Image"
+                      class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
+                    <img src="/images/team/anh3.png" alt="Image" class="round-10 transition">
+                  </div>
+                  <div class="team-info d-flex flex-wrap justify-content-between">
+                    <div>
+                      <h3 class="fw-bold mb-1"><a href="team-single.html"
+                          class="text-title link-hover-primary transition">Hai Xuan Trinh</a></h3>
+                      <span>Head Of Partnership</span>
+                    </div>
+                    <ul class="social-profile style-two list-unstyled mb-0">
+                      <li><a href="https://www.facebook.com"
+                          class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                            class="ri-facebook-fill"></i></a></li>
+                      <li><a href="https://x.com/"
+                          class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                            class="ri-twitter-x-line"></i></a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="team-card style-one img-hover-zoom">
+                  <div class="team-img round-10 img-zoom position-relative overflow-hidden">
+                    <img src="/images/team/anh4.png" alt="Image"
+                      class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
+                    <img src="/images/team/anh4.png" alt="Image" class="round-10 transition">
+                  </div>
+                  <div class="team-info d-flex flex-wrap justify-content-between">
+                    <div>
+                      <h3 class="fw-bold mb-1"><a href="team-single.html"
+                          class="text-title link-hover-primary transition">Hoa Thai Do</a></h3>
+                      <span>Business Development</span>
+                    </div>
+                    <ul class="social-profile style-two list-unstyled mb-0">
+                      <li><a href="https://www.facebook.com"
+                          class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                            class="ri-facebook-fill"></i></a></li>
+                      <li><a href="https://x.com/"
+                          class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                            class="ri-twitter-x-line"></i></a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slider-btn style-one d-flex flex-wrap justify-content-md-end">
+          <button
+            class="prev-btn team-prev border-0 d-flex flex-column align-items-center justify-content-center rounded-circle me-2 z-1"
+            tabindex="0" aria-label="Previous slide" aria-controls="swiper-wrapper-team"><img
+              src="/renius/image/left-long-arrow-orange.svg" alt="Icon"></button>
+          <button
+            class="next-btn team-next border-0 d-flex flex-column align-items-center justify-content-center rounded-circle ms-2 z-1"
+            tabindex="0" aria-label="Next slide" aria-controls="swiper-wrapper-team"><img
+              src="/renius/image/right-long-arrow-orange.svg" alt="Icon"></button>
+        </div>
+      </div>
+      <!-- Team Section End -->
+
+      <!-- CTA Section Start -->
+      <div class="cta-area style-one bg-f position-relative overflow-hidden z-1 mx-xxl-4 mx-2 round-40">
+        <img src="/renius/image/shape-1.png" alt="Shape" class="section-shape position-absolute bottom-0 end-0 z-0">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-lg-6 col-md-7 mb-sm-20">
+              <h2 class="section-title style-two fw-normal text-white mb-0">Your Next <span class="fw-black">Big Event
+                  Starts Here </span> – Let's Make It Extraordinary!</h2>
+            </div>
+            <div class="col-lg-6 col-md-5">
+              <div
+                class="circle-text-wrap position-relative bg_primary rounded-circle overflow-hidden z-1 ms-md-auto me-md-0 ms-auto me-auto">
+                <img src="/renius/image/circle-text.png" alt="Circle Text"
+                  class="rotate position-relative z-1 d-block mx-auto">
+                <img src="/renius/image/up-right-arrow-white-small.svg" alt="Icon"
+                  class="arrow-icon position-absolute z-n1">
+                <a href="/contact" class="position-absolute top-0 start-0 w-100 h-100 z-1"></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- CTA Section End -->
+
+
+
+      <!-- Brand Partner Start -->
+      <div class="brand-slider swiper ptb-120 swiper-initialized swiper-horizontal">
+        <div class="swiper-wrapper align-items-center" id="swiper-wrapper-brand" aria-live="off">
+          <div class="swiper-slide swiper-slide-active">
+            <div class="brand-logo">
+              <img src="/partners/partner (1).png" alt="Brand Logo" class="d-block mx-auto">
+            </div>
+          </div>
+          <div class="swiper-slide swiper-slide-next">
+            <div class="brand-logo">
+              <img src="/partners/partner (2).png" alt="Brand Logo" class="d-block mx-auto">
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="brand-logo">
+              <img src="/partners/partner (3).png" alt="Brand Logo" class="d-block mx-auto">
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="brand-logo">
+              <img src="/partners/partner (4).png" alt="Brand Logo" class="d-block mx-auto">
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="brand-logo">
+              <img src="/partners/partner (5).png" alt="Brand Logo" class="d-block mx-auto">
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="brand-logo">
+              <img src="/partners/partner (6).png" alt="Brand Logo" class="d-block mx-auto">
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="brand-logo">
+              <img src="/partners/partner (7).png" alt="Brand Logo" class="d-block mx-auto">
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="brand-logo">
+              <img src="/partners/partner (8).png" alt="Brand Logo" class="d-block mx-auto">
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="brand-logo">
+              <img src="/partners/partner (9).png" alt="Brand Logo" class="d-block mx-auto">
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="brand-logo">
+              <img src="/partners/partner (10).png" alt="Brand Logo" class="d-block mx-auto">
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="brand-logo">
+              <img src="/partners/partner (11).png" alt="Brand Logo" class="d-block mx-auto">
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="brand-logo">
+              <img src="/partners/partner (12).png" alt="Brand Logo" class="d-block mx-auto">
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="brand-logo">
+              <img src="/partners/partner (13).png" alt="Brand Logo" class="d-block mx-auto">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Brand Partner End -->
+
+      <!-- Footer Section Start -->
+      <Footer />
+      <!-- Footer End -->
+
+    </div>
+  </div>
 
   <!-- Back to Top -->
   <div id="progress-wrap" class="progress-wrap style-one">
     <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
-      <path id="progress-path" d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+      <path id="progress-path" d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
     </svg>
   </div>
 
   <script>
     // Navbar scroll behavior
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const navbar = document.getElementById('navbar');
-      
+
       function handleScroll() {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
+
         if (scrollTop > 100) {
           // When scrolled, show compact menu
           navbar.classList.add('navbar-compact');
@@ -758,13 +531,13 @@ import Navbar from '../components/Navbar.astro';
 
       // Initial check for scroll position
       handleScroll();
-      
+
       // Add scroll event listener
       window.addEventListener('scroll', handleScroll, { passive: true });
     });
 
     // Counter Animation
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const counterNumbers = document.querySelectorAll('.counter');
       let hasAnimated = false;
 
@@ -789,7 +562,7 @@ import Navbar from '../components/Navbar.astro';
         entries.forEach(entry => {
           if (entry.isIntersecting && !hasAnimated) {
             hasAnimated = true;
-            
+
             counterNumbers.forEach((counter, index) => {
               const target = parseInt(counter.textContent) || 0;
               if (target) {
@@ -813,7 +586,7 @@ import Navbar from '../components/Navbar.astro';
     });
 
     // Team Slider
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const teamSlider = new Swiper('.team-slider-one', {
         slidesPerView: 1,
         spaceBetween: 25,
@@ -844,7 +617,7 @@ import Navbar from '../components/Navbar.astro';
     });
 
     // Testimonial Slider
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const testimonialSlider = new Swiper('.testimonial-slider-one.style-two', {
         slidesPerView: 1,
         spaceBetween: 30,
@@ -865,7 +638,7 @@ import Navbar from '../components/Navbar.astro';
     });
 
     // Brand Slider
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const brandSlider = new Swiper('.brand-slider', {
         slidesPerView: 2,
         spaceBetween: 30,
@@ -891,5 +664,4 @@ import Navbar from '../components/Navbar.astro';
       });
     });
   </script>
-</LayoutRenius>
-
+</Layout>

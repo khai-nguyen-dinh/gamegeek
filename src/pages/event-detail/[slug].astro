@@ -1,5 +1,5 @@
 ---
-import LayoutNico from '../../layouts/LayoutAbout.astro';
+import Layout from '../../layouts/Layout.astro';
 
 // Get the slug from the URL params
 export async function getStaticPaths() {
@@ -115,7 +115,7 @@ const { slug } = Astro.params;
 const { title, date, time, location, speakers, image, thumb, thumb2, thumb3, thumb4, breadcrumbBg, sector, category, type, description, content, speakersList } = Astro.props;
 ---
 
-<LayoutNico title={`${title} - Gamegeek`}>
+<Layout title={`${title} - Gamegeek`}>
   <div>
     <div class="breadcumb-section fix">
       <div class="breadcumb-container-wrapper" data-background={thumb} style={`background-image: url('${thumb}'); background-size: cover; background-position: center; background-repeat: no-repeat;`}>
@@ -243,7 +243,7 @@ const { title, date, time, location, speakers, image, thumb, thumb2, thumb3, thu
       </div>
     </section>
   </div>
-</LayoutNico>
+</Layout>
 
 <style>
   .breadcumb-section {

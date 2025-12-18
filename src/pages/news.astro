@@ -1,180 +1,184 @@
 ---
-import LayoutNico from '../layouts/LayoutNico.astro';
+import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import newsData from '../data/news.json';
+
+// Get posts and categories from JSON
+const { posts, categories } = newsData;
+
+// Map category IDs to category names
+const categoryMap = new Map(categories.map(cat => [cat.id, cat.name]));
+
+// Transform posts to include category name and format date for display
+const transformedPosts = posts.map(post => {
+  const categoryName = categoryMap.get(post.category) || post.category;
+  // Extract day and month from date string (e.g., "August 28, 2025" -> "28" and "Aug")
+  const dateParts = post.date.split(' ');
+  const day = dateParts[1]?.replace(',', '') || '';
+  const month = dateParts[0]?.substring(0, 3) || '';
+  
+  return {
+    ...post,
+    category: categoryName,
+    displayDay: day,
+    displayMonth: month
+  };
+});
+
+// Sort posts by date (newest first) - simple string comparison
+const sortedPosts = [...transformedPosts].sort((a, b) => {
+  return new Date(b.date).getTime() - new Date(a.date).getTime();
+});
+
+// Get recent posts (first 3)
+const recentPosts = sortedPosts.slice(0, 3);
+
+// Count posts per category
+const categoryCounts = new Map();
+posts.forEach(post => {
+  const count = categoryCounts.get(post.category) || 0;
+  categoryCounts.set(post.category, count + 1);
+});
 ---
 
-<LayoutNico title="News - Gamegeek" description="Stay updated with the latest news and insights from GameGeek.">
-  <div>
-    <div class="breadcumb-section fix">
-      <div class="breadcumb-container-wrapper" data-background="/images/news_bg_sp.png" style="background-image: url('/images/news_bg_sp.png'); background-size: cover; background-repeat: no-repeat;">
-        <div class="container">
-          <div class="shape1">
-            <img src="/images/introShape1_1.png" alt="shape">
-          </div>
-          <div class="shape2">
-            <img src="/images/introShape1_2.png" alt="shape">
-          </div>
-          <div class="breadcumb-wrapper">
-            <div class="page-heading">
-              <h1>News and insights</h1>
-              <p>Stay updated with the latest industry insights and discussions</p>
-            </div>
+<Layout title="Blog Left Sidebar | GameGeek">
+
+<!-- Custom Cursor -->
+<div class="cursor"><span class="cursor-text"></span></div>
+<div class="cursor-inner"></div>
+
+<div id="smooth-wrapper">
+  <div id="smooth-content">
+    <!-- Navbar Start -->
+    <Navbar variant="white" />
+    <!-- Navbar End -->
+
+    <!-- Breadcrumb Section Start -->
+    <div class="breadcrumb-area position-relative z-1">
+      <img src="/renius/image/br-line-shape.png" alt="Shape" class="br-line-shape position-absolute top-0 start-0 w-100 h-100 z-n1">
+      <img src="/renius/image/br-shape-1.png" alt="Shape" class="br-shape-one position-absolute z-n1 bounce">
+      <img src="/renius/image/br-shape-2.png" alt="Shape" class="br-shape-two position-absolute bottom-0 z-n1 moveHorizontal">
+      <div class="container-fluid px-xxl-5">
+        <div class="row">
+          <div class="col-md-10 offset-md-1 text-center">
+            <h2 class="section-title style-one fw-black text-title">NEWS & INSIGHTS</h2>
+            <ul class="br-menu list-unstyled">
+              <li><a href="/"><img src="/renius/image/home-icon.svg" alt="Icon">HOME</a></li>
+              <li>BLOG</li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
+    <!-- Breadcrumb Section End -->
 
-    <section class="news-standard fix section-padding">
-      <div class="container">
-        <div class="row g-4">
-          <div class="col-12 col-lg-8">
-            <div class="news-standard-wrapper">
-              <div class="news-standard-items wow fadeInUp" data-wow-delay=".2s">
-                <div class="news-thumb">
-                  <img src="/images/1748226528-4814542829448199111382598292933028175524248n.jpg" alt="img">
-                  <div class="post-date">
-                    <h3>28 <br><span>Aug</span></h3>
+    <!-- Blog Section Start -->
+    <div class="container ptb-120">
+      <div class="row">
+        <div class="col-xl-4 order-xl-1 order-2">
+          <aside class="sidebar mt-lg-50">
+            <div class="sidebar-widget search-widget bg-gray round-10">
+              <form action="#" class="position-relative">
+                <input type="search" placeholder="Search" class="w-100 bg-white border-0 round-10 text-para outline-0">
+                <button class="position-absolute top-0 h-100 bg-transparent border-0"><i class="ri-search-line"></i></button>
+              </form>
+            </div>
+            <div class="sidebar-widget category-widget bg-gray round-10">
+              <h3 class="sidebar-widget-title fs-18 fw-semibold text-title mb-15">Categories</h3>
+              <ul class="list-unstyled mb-0">
+                {categories.map(cat => {
+                  const count = categoryCounts.get(cat.id) || 0;
+                  return (
+                    <li>
+                      <a href={`/news?category=${cat.slug}`} class="position-relative">
+                        <i class="ri-arrow-right-s-line position-absolute"></i>
+                        {cat.name} <span>({count})</span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+            <div class="sidebar-widget category-widget bg-gray round-10">
+              <h3 class="sidebar-widget-title fs-18 fw-semibold text-title mb-15">Recent Posts</h3>
+              <div class="rp-post-wrap">
+                {recentPosts.map(post => (
+                  <div class="rp-post-card d-flex flex-wrap align-items-center">
+                    <div class="rp-post-img">
+                      <img src={post.thumb} alt="Post Thumb">
+                    </div>
+                    <div class="rp-post-info">
+                      <a href={`/news/${post.slug}`} class="fs-15 fw-medium text_primary link-hover-primary d-block mb-1">{post.date}</a>
+                      <h5 class="fs-15 fw-bold mb-0">
+                        <a href={`/news/${post.slug}`} class="text-title hover-text-primary transition">{post.title}</a>
+                      </h5>
+                    </div>
                   </div>
-                </div>
-                <div class="news-content">
-                  <ul>
-                    <li><i class="bi bi-person"></i>By Admin</li>
-                    <li><i class="bi bi-chat"></i>0 Comments</li>
-                  </ul>
-                  <h3><a href="/news/vietnam-has-topped-the-world-in-mobile-game-exports-momentum-peaks-at-vietnam-game-connect-2025" data-discover="true">Vietnam Has Topped the World in Mobile Game Exports. Momentum Peaks at Vietnam Game Connect 2025</a></h3>
-                  <p>At Vietnam Game Connect 2025, a Google representative confirmed that the Vietnam's game industry achieved 6.7 billion global downloads in 2024, the highest of any country last year. With this, Vietnam officially surpassed China to become the world's top exporter of mobile games.</p>
-                  <a class="theme-btn mt-4" href="/news/vietnam-has-topped-the-world-in-mobile-game-exports-momentum-peaks-at-vietnam-game-connect-2025" data-discover="true">Read More<i class="bi bi-arrow-right"></i></a>
-                </div>
-              </div>
-              <div class="news-standard-items wow fadeInUp" data-wow-delay=".4s">
-                <div class="news-thumb">
-                  <img src="/images/blogThumb1_1.jpg" alt="img">
-                  <div class="post-date">
-                    <h3>27 <br><span>Feb</span></h3>
-                  </div>
-                </div>
-                <div class="news-content">
-                  <ul>
-                    <li><i class="bi bi-person"></i>By Admin</li>
-                    <li><i class="bi bi-chat"></i>3 Comments</li>
-                  </ul>
-                  <h3><a href="/news/news-details" data-discover="true">Choose The Best IT Service Company in the City.</a></h3>
-                  <p>Pellentesque egestas rutrum nibh facilisis ultrices. Phasellus in magna ut orci malesuada the sollicitudin. Aenean faucibus scelerisque convallis. Quisque interdum mauris id nunc molestie tincidunt erat gravida. Nullam dui libero, mollis ac quam et, venenatis.</p>
-                  <a class="theme-btn mt-4" href="/news/news-details" data-discover="true">Read More<i class="bi bi-arrow-right"></i></a>
-                </div>
-              </div>
-              <div class="news-standard-items wow fadeInUp" data-wow-delay=".4s">
-                <div class="news-thumb">
-                  <img src="/images/blogThumb1_2.jpg" alt="img">
-                  <div class="post-date">
-                    <h3>19 <br><span>Feb</span></h3>
-                  </div>
-                </div>
-                <div class="news-content">
-                  <ul>
-                    <li><i class="bi bi-person"></i>By Admin</li>
-                    <li><i class="bi bi-chat"></i>2 Comments</li>
-                  </ul>
-                  <h3><a href="/news/news-details" data-discover="true">Keep Your Business Safe Ensure High Availability</a></h3>
-                  <p>Pellentesque egestas rutrum nibh facilisis ultrices. Phasellus in magna ut orci malesuada the sollicitudin. Aenean faucibus scelerisque convallis. Quisque interdum mauris id nunc molestie tincidunt erat gravida. Nullam dui libero, mollis ac quam et, venenatis.</p>
-                  <a class="theme-btn mt-4" href="/news/news-details" data-discover="true">Read More<i class="bi bi-arrow-right"></i></a>
-                </div>
-              </div>
-              <div class="news-standard-items wow fadeInUp" data-wow-delay=".6s">
-                <div class="news-thumb">
-                  <img src="/images/blogThumb1_1.jpg" alt="img">
-                  <div class="post-date">
-                    <h3>28 <br><span>Feb</span></h3>
-                  </div>
-                </div>
-                <div class="news-content">
-                  <ul>
-                    <li><i class="bi bi-person"></i>By Admin</li>
-                    <li><i class="bi bi-chat"></i>0 Comments</li>
-                  </ul>
-                  <h3><a href="/news/news-details" data-discover="true">Tackling the Changes of Retell Industry</a></h3>
-                  <p>Pellentesque egestas rutrum nibh facilisis ultrices. Phasellus in magna ut orci malesuada the sollicitudin. Aenean faucibus scelerisque convallis. Quisque interdum mauris id nunc molestie tincidunt erat gravida. Nullam dui libero, mollis ac quam et, venenatis.</p>
-                  <a class="theme-btn mt-4" href="/news/news-details" data-discover="true">Read More<i class="bi bi-arrow-right"></i></a>
-                </div>
+                ))}
               </div>
             </div>
-          </div>
-          <div class="col-12 col-lg-4">
-            <div class="main-sidebar">
-              <div class="single-sidebar-widget wow fadeInUp" data-wow-delay=".2s">
-                <div class="wid-title"><h3>Search</h3></div>
-                <div class="search-widget">
-                  <form action="#">
-                    <input type="text" placeholder="Search here">
-                    <button type="submit"><i class="bi bi-search"></i></button>
-                  </form>
-                </div>
-              </div>
-              <div class="single-sidebar-widget wow fadeInUp" data-wow-delay=".4s">
-                <div class="wid-title"><h3>Categories</h3></div>
-                <div class="news-widget-categories">
-                  <ul>
-                    <li><a href="/news/news-details" data-discover="true">Database Security <span>(08)</span></a></li>
-                    <li><a href="/news/news-details" data-discover="true">IT Consultancy <span>(11)</span></a></li>
-                    <li class="active"><a href="/news/news-details" data-discover="true">App Development <span>(12)</span></a></li>
-                    <li><a href="/news/news-details" data-discover="true">UI/UX Design <span>(18)</span></a></li>
-                    <li><a href="/news/news-details" data-discover="true">Cyber Security <span>(07)</span></a></li>
-                  </ul>
-                </div>
-              </div>
-              <div class="single-sidebar-widget wow fadeInUp" data-wow-delay=".6s">
-                <div class="wid-title"><h3>Recent Post</h3></div>
-                <div class="recent-post-area">
-                  <div class="recent-items">
-                    <div class="recent-thumb"><img src="/images/blogThumb1_1.jpg" alt="img"></div>
-                    <div class="recent-content">
-                      <ul>
-                        <li><img src="/images/calendar.svg" alt="icon">18 Dec, 2024</li>
-                      </ul>
-                      <h6><a href="/news/news-details" data-discover="true">Keep Your Business Safe & <br>Endure High Availability</a></h6>
-                    </div>
-                  </div>
-                  <div class="recent-items">
-                    <div class="recent-thumb"><img src="/images/blogThumb1_2.jpg" alt="img"></div>
-                    <div class="recent-content">
-                      <ul>
-                        <li><img src="/images/calendar.svg" alt="icon">18 Dec, 2024</li>
-                      </ul>
-                      <h6><a href="/news/news-details" data-discover="true">Tacking the Changes of <br>Retail Industry</a></h6>
-                    </div>
-                  </div>
-                  <div class="recent-items">
-                    <div class="recent-thumb"><img src="/images/blogThumb1_1.jpg" alt="img"></div>
-                    <div class="recent-content">
-                      <ul>
-                        <li><img src="/images/calendar.svg" alt="icon">18 Dec, 2024</li>
-                      </ul>
-                      <h6><a href="/news/news-details" data-discover="true">What's the Holding Back <br>the It Solution</a></h6>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="single-sidebar-widget wow fadeInUp" data-wow-delay=".9s">
-                <div class="wid-title"><h3>Tags</h3></div>
-                <div class="news-widget-categories">
-                  <div class="tagcloud">
-                    <a href="#">Security</a>
-                    <a href="#">Business</a>
-                    <a href="#">Digital</a>
-                    <a href="#">Technology</a>
-                    <a href="#">Change</a>
-                    <a href="#">Video</a>
-                    <a href="#">UI/UX Desing</a>
-                    <a href="#">Startup</a>
-                    <a href="#">Services</a>
-                  </div>
-                </div>
-              </div>
+            <div class="sidebar-widget tags-widget bg-gray round-10">
+              <h3 class="sidebar-widget-title fs-18 fw-semibold text-title mb-15">Tags</h3>
+              <ul class="list-unstyled mb-0">
+                <li><a href="#">Business</a></li>
+                <li><a href="#">Development</a></li>
+                <li><a href="#">Design</a></li>
+                <li><a href="#">Marketing</a></li>
+                <li><a href="#">Real Estate</a></li>
+              </ul>
             </div>
+          </aside>
+        </div>
+
+        <div class="col-xl-8 order-xl-2 order-1">
+          <div class="row justify-content-center">
+            {sortedPosts.map(post => (
+              <div class="col-md-6">
+                <div class="blog-card style-one position-relative mb-30">
+                  <div class="blog-img position-relative overflow-hidden round-20">
+                    <img src={post.thumb} alt="Blog" class="round-20">
+                    <a href={`/news/${post.slug}`} class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10">
+                      <span class="font-secondary fs-24 fw-black d-block">{post.displayDay}</span> {post.displayMonth}
+                    </a>
+                  </div>
+                  <ul class="blog-metainfo list-unstyled">
+                    <li class="fs-15 d-inline-block position-relative">By <a href="#">{post.author}</a></li>
+                    <li class="fs-15 d-inline-block position-relative">{post.category}</li>
+                  </ul>
+                  <h3 class="fs-24 fw-black">
+                    <a href={`/news/${post.slug}`} class="text-title link-hover-primary fw-bold transition">{post.title}</a>
+                  </h3>
+                  <a href={`/news/${post.slug}`} class="link style-one fw-semibold">Read More<img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
+                </div>
+              </div>
+            ))}
           </div>
+          <ul class="page-nav pagination justify-content-center mb-0 mt-lg-4">
+            <li class="page-item">
+              <a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#" aria-label="Previous">
+                <i class="ri-arrow-left-line"></i>
+              </a>
+            </li>
+            <li class="page-item"><a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle active" href="#">01</a></li>
+            <li class="page-item"><a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#">02</a></li>
+            <li class="page-item"><a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#">03</a></li>
+            <li class="page-item">
+              <a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#" aria-label="Next">
+                <i class="ri-arrow-right-line"></i>
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
-    </section>
-  </div>
-</LayoutNico>
+    </div>
+    <!-- Blog Details End -->
 
+    <!-- Footer Section Start -->
+    <Footer />
+    <!-- Footer End -->
+
+  </div>
+</div>
+
+</Layout>

@@ -1,0 +1,98 @@
+{
+  "categories": [
+    {
+      "id": "vietnam-game-scene",
+      "name": "Vietnam's Game Scene",
+      "slug": "vietnam-game-scene"
+    },
+    {
+      "id": "it-services",
+      "name": "IT Services",
+      "slug": "it-services"
+    },
+    {
+      "id": "database-security",
+      "name": "Database Security",
+      "slug": "database-security"
+    },
+    {
+      "id": "it-consultancy",
+      "name": "IT Consultancy",
+      "slug": "it-consultancy"
+    },
+    {
+      "id": "app-development",
+      "name": "App Development",
+      "slug": "app-development"
+    },
+    {
+      "id": "ui-ux-design",
+      "name": "UI/UX Design",
+      "slug": "ui-ux-design"
+    },
+    {
+      "id": "cyber-security",
+      "name": "Cyber Security",
+      "slug": "cyber-security"
+    }
+  ],
+  "posts": [
+    {
+      "id": "1",
+      "slug": "vietnam-has-topped-the-world-in-mobile-game-exports-momentum-peaks-at-vietnam-game-connect-2025",
+      "title": "Vietnam Has Topped the World in Mobile Game Exports. Momentum Peaks at Vietnam Game Connect 2025",
+      "date": "August 28, 2025",
+      "category": "vietnam-game-scene",
+      "author": "Admin",
+      "image": "/images/1748226528-4814542829448199111382598292933028175524248n.jpg",
+      "thumb": "/images/1748226528-4814542829448199111382598292933028175524248n.jpg",
+      "thumb2": "/images/blogThumb1_1.jpg",
+      "thumb3": "/images/blogThumb1_2.jpg",
+      "breadcrumbBg": "/images/news_bg_sp.png",
+      "content": "<p class=\"mb-3 wow fadeInUp\" data-wow-delay=\".6s\">At Vietnam Game Connect 2025, a Google representative confirmed that the Vietnam's game industry achieved 6.7 billion global downloads in 2024, the highest of any country last year. With this, Vietnam officially surpassed China to become the world's top exporter of mobile games.</p><p class=\"mb-3 wow fadeInUp\" data-wow-delay=\".8s\">Far from merely following global trends, Vietnamese studios are now competing on the world stage. One standout success is Screwdom by iKame, which has gained traction in the puzzle genre. According to Appmagic, players now spend over 100 minutes per day on the game, outpacing global staples like Candy Crush (~66 minutes) and Royal Match (~88 minutes).</p><p class=\"mb-3 wow fadeInUp\" data-wow-delay=\"1s\">The scoreboard looks good, but the monetization gap tells another story. Vietnam's average revenue per daily active user (excluding IAA) stands at just $0.06, nearly 10 times lower than the global benchmark of $0.70. Clearly, generating installs is only part of the equation. Local studios still fall short when it comes to building high LTV products and driving stronger IAP monetization.</p><p class=\"mb-3 wow fadeInUp\" data-wow-delay=\"1.2s\">To complement this local momentum, VGC 2025 also brought in a global perspective. GameGeek curated a lineup of experts from both Eastern and Western markets, featuring veterans with backgrounds from studios like King, Rollic, Ludus, and Supercent. These voices are helping guide local developers toward deeper design strategies and planning for long-term monetization, moving the focus from downloads to sustainable revenue growth.</p><h4 class=\"mt-5 mb-3 wow fadeInUp\" data-wow-delay=\".4s\">Vietnam Game Connect 2025: Building a Global-First Game Industry</h4><p class=\"mb-3 wow fadeInUp\" data-wow-delay=\".6s\">This year, VGC welcomed more than 700 attendees, including Vietnamese studios and international platforms like AWS, Google, TikTok, and AppLovin. Through strategic discussions, attendees explored how data, AI, and user behavior are shaping mobile gaming's next wave.</p><p class=\"mb-3 wow fadeInUp\" data-wow-delay=\".8s\">A key theme echoed throughout the event: competing at a global scale takes more than just good game design. Reaching hundreds of millions of downloads requires efficient, cost-effective systems, with the goal of automated pipelines over manual work, AI to optimize user acquisition and long-term decision making, this can be done by clean data collection, accurate interpretation, and time to build an inhouse backend.</p><p class=\"mb-3 wow fadeInUp\" data-wow-delay=\"1s\">A prime example came from South Korea's Supercent, developers of the 130‑million‑download hit Snake Clash. Their team shared how they ran 72 rounds of internal testing, which helped reduce CPI from $1.30 to $0.50 and raise day‑1 retention from 35% to 57%. They built and used a proprietary AI-powered backend, noting that off‑the‑shelf AI tools simply didn't offer the necessary precision at scale.</p><p class=\"mb-3 wow fadeInUp\" data-wow-delay=\"1.2s\">Vietnam's top studios are already catching up. iKame demonstrated their in-house BI platform, which leverages gameplay data from the first three days post-launch to predict ROAS for 30-, 180-, and even 365-day spans. Their four-layer tech stack—built on Google Cloud, Looker, Python, Airflow, and integrated app/event data—delivers real-time insights to internal dashboards and APIs. Teams no longer wait weeks for results; decisions can be made today.</p><p class=\"mb-3 wow fadeInUp\" data-wow-delay=\"1.4s\">Still, this level of technical infrastructure currently exists within the top 1% of studios. For Vietnam to build an even stronger ecosystem, such systems must become industry-wide. VGC 2025 not only highlighted success stories, it made those systems and tools visible—equipping more studios to take the next step.</p><h4 class=\"mt-5 mb-3 wow fadeInUp\" data-wow-delay=\".4s\">GameGeek: Backing Vietnam's Developers at Home and Abroad</h4><p class=\"mb-3 wow fadeInUp\" data-wow-delay=\".6s\">GameGeek is dedicated to elevating the Vietnamese gaming ecosystem by forging active ties with global hubs like Pocket Gamer (UK), Mobidictum (Turkey), and Gamescom Asia. By engaging with these communities and events, Vietnam is positioning itself as a resource-rich and opportunity-driven destination in the global game market.</p><p class=\"mb-3 wow fadeInUp\" data-wow-delay=\".8s\">As the host of VGC, GameGeek is committed to supporting developers who are working with grit, curiosity, and the drive to improve. The mission is straightforward: create meaningful connections, share strategic insights, and help local teams access the knowledge, tools, and venture capital to turn ambition into impact.</p>"
+    },
+    {
+      "id": "2",
+      "slug": "future-of-web-development-2025",
+      "title": "The Future of Web Development: Trends to Watch in 2025",
+      "date": "December 15, 2024",
+      "category": "it-services",
+      "author": "Admin",
+      "image": "/images/testimonialProfileThumb1_1.jpg",
+      "thumb": "/images/blogThumb1_1.jpg",
+      "thumb2": "/images/blogThumb1_1.jpg",
+      "thumb3": "/images/blogThumb1_2.jpg",
+      "breadcrumbBg": "/images/newsdetail.jpg",
+      "content": ""
+    },
+    {
+      "id": "3",
+      "slug": "building-scalable-react-applications",
+      "title": "Building Scalable React Applications",
+      "date": "December 10, 2024",
+      "category": "it-services",
+      "author": "Admin",
+      "image": "/images/testimonialProfileThumb1_2.jpg",
+      "thumb": "/images/blogThumb1_1.jpg",
+      "thumb2": "/images/blogThumb1_1.jpg",
+      "thumb3": "/images/blogThumb1_2.jpg",
+      "breadcrumbBg": "/images/newsdetail.jpg",
+      "content": ""
+    },
+    {
+      "id": "4",
+      "slug": "cross-platform-flutter-development",
+      "title": "Cross-Platform Mobile Development with Flutter",
+      "date": "December 8, 2024",
+      "category": "it-services",
+      "author": "Admin",
+      "image": "/images/testimonialProfileThumb1_3.jpg",
+      "thumb": "/images/blogThumb1_2.jpg",
+      "thumb2": "/images/blogThumb1_1.jpg",
+      "thumb3": "/images/blogThumb1_2.jpg",
+      "breadcrumbBg": "/images/newsdetail.jpg",
+      "content": ""
+    }
+  ]
+}
+
