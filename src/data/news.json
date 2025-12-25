@@ -92,6 +92,62 @@
       "thumb3": "/images/blogThumb1_2.jpg",
       "breadcrumbBg": "/images/newsdetail.jpg",
       "content": ""
+    },
+    {
+      "id": "5",
+      "slug": "database-security-best-practices-2025",
+      "title": "Database Security Best Practices for 2025",
+      "date": "December 5, 2024",
+      "category": "database-security",
+      "author": "Admin",
+      "image": "/images/testimonialProfileThumb1_1.jpg",
+      "thumb": "/images/blogThumb1_1.jpg",
+      "thumb2": "/images/blogThumb1_1.jpg",
+      "thumb3": "/images/blogThumb1_2.jpg",
+      "breadcrumbBg": "/images/newsdetail.jpg",
+      "content": ""
+    },
+    {
+      "id": "6",
+      "slug": "modern-ui-ux-design-principles",
+      "title": "Modern UI/UX Design Principles for Digital Products",
+      "date": "December 3, 2024",
+      "category": "ui-ux-design",
+      "author": "Admin",
+      "image": "/images/testimonialProfileThumb1_2.jpg",
+      "thumb": "/images/blogThumb1_2.jpg",
+      "thumb2": "/images/blogThumb1_1.jpg",
+      "thumb3": "/images/blogThumb1_2.jpg",
+      "breadcrumbBg": "/images/newsdetail.jpg",
+      "content": ""
+    },
+    {
+      "id": "7",
+      "slug": "cyber-security-threats-and-solutions",
+      "title": "Cyber Security Threats and Solutions in Modern Business",
+      "date": "December 1, 2024",
+      "category": "cyber-security",
+      "author": "Admin",
+      "image": "/images/testimonialProfileThumb1_3.jpg",
+      "thumb": "/images/blogThumb1_1.jpg",
+      "thumb2": "/images/blogThumb1_1.jpg",
+      "thumb3": "/images/blogThumb1_2.jpg",
+      "breadcrumbBg": "/images/newsdetail.jpg",
+      "content": ""
+    },
+    {
+      "id": "8",
+      "slug": "it-consultancy-strategic-approaches",
+      "title": "Strategic IT Consultancy Approaches for Business Growth",
+      "date": "November 28, 2024",
+      "category": "it-consultancy",
+      "author": "Admin",
+      "image": "/images/testimonialProfileThumb1_1.jpg",
+      "thumb": "/images/blogThumb1_2.jpg",
+      "thumb2": "/images/blogThumb1_1.jpg",
+      "thumb3": "/images/blogThumb1_2.jpg",
+      "breadcrumbBg": "/images/newsdetail.jpg",
+      "content": ""
     }
   ]
 }

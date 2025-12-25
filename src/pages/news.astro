@@ -34,6 +34,14 @@ const sortedPosts = [...transformedPosts].sort((a, b) => {
 // Get recent posts (first 3)
 const recentPosts = sortedPosts.slice(0, 3);
 
+// Split posts for new layout:
+// - Featured post (News 1): first post
+// - Two rows of 2 posts each (News 2): posts 2-5
+// - Three vertical posts (3): posts 6-8
+const featuredPost = sortedPosts[0];
+const twoByTwoPosts = sortedPosts.slice(1, 5); // Posts 2-5
+const verticalPosts = sortedPosts.slice(5, 8); // Posts 6-8
+
 // Count posts per category
 const categoryCounts = new Map();
 posts.forEach(post => {
@@ -132,28 +140,132 @@ posts.forEach(post => {
         </div>
 
         <div class="col-xl-8 order-xl-2 order-1">
-          <div class="row justify-content-center">
-            {sortedPosts.map(post => (
-              <div class="col-md-6">
-                <div class="blog-card style-one position-relative mb-30">
-                  <div class="blog-img position-relative overflow-hidden round-20">
-                    <img src={post.thumb} alt="Blog" class="round-20">
+          <!-- Featured Post (News 1) - Large Box -->
+          {featuredPost && (
+            <div class="mb-40">
+              <div class="blog-card style-one position-relative">
+                <div class="blog-img position-relative overflow-hidden round-20">
+                  <img src={featuredPost.thumb} alt="Blog" class="round-20 w-100" style="height: 400px; object-fit: cover;">
+                  <a href={`/news/${featuredPost.slug}`} class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10">
+                    <span class="font-secondary fs-24 fw-black d-block">{featuredPost.displayDay}</span> {featuredPost.displayMonth}
+                  </a>
+                </div>
+                <ul class="blog-metainfo list-unstyled mt-3">
+                  <li class="fs-15 d-inline-block position-relative">By <a href="#">{featuredPost.author}</a></li>
+                  <li class="fs-15 d-inline-block position-relative">{featuredPost.category}</li>
+                </ul>
+                <h3 class="fs-28 fw-black mt-2">
+                  <a href={`/news/${featuredPost.slug}`} class="text-title link-hover-primary fw-bold transition">{featuredPost.title}</a>
+                </h3>
+                <a href={`/news/${featuredPost.slug}`} class="link style-one fw-semibold">Read More<img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
+              </div>
+            </div>
+          )}
+
+          <!-- Two Rows of 2 Posts Each (News 2) -->
+          {twoByTwoPosts.length > 0 && (
+            <>
+              {/* First Row - 2 Posts */}
+              <div class="row mb-30">
+                {twoByTwoPosts.slice(0, 2).map(post => (
+                  <div class="col-md-6">
+                    <div class="blog-card style-one position-relative mb-30">
+                      <div class="blog-img position-relative overflow-hidden round-20">
+                        <img src={post.thumb} alt="Blog" class="round-20 w-100" style="height: 280px; object-fit: cover;">
+                        <a href={`/news/${post.slug}`} class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10">
+                          <span class="font-secondary fs-24 fw-black d-block">{post.displayDay}</span> {post.displayMonth}
+                        </a>
+                      </div>
+                      <ul class="blog-metainfo list-unstyled">
+                        <li class="fs-15 d-inline-block position-relative">By <a href="#">{post.author}</a></li>
+                        <li class="fs-15 d-inline-block position-relative">{post.category}</li>
+                      </ul>
+                      <h3 class="fs-24 fw-black">
+                        <a href={`/news/${post.slug}`} class="text-title link-hover-primary fw-bold transition">{post.title}</a>
+                      </h3>
+                      <a href={`/news/${post.slug}`} class="link style-one fw-semibold">Read More<img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Second Row - 2 Posts */}
+              <div class="row mb-30">
+                {twoByTwoPosts.slice(2, 4).map(post => (
+                  <div class="col-md-6">
+                    <div class="blog-card style-one position-relative mb-30">
+                      <div class="blog-img position-relative overflow-hidden round-20">
+                        <img src={post.thumb} alt="Blog" class="round-20 w-100" style="height: 280px; object-fit: cover;">
+                        <a href={`/news/${post.slug}`} class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10">
+                          <span class="font-secondary fs-24 fw-black d-block">{post.displayDay}</span> {post.displayMonth}
+                        </a>
+                      </div>
+                      <ul class="blog-metainfo list-unstyled">
+                        <li class="fs-15 d-inline-block position-relative">By <a href="#">{post.author}</a></li>
+                        <li class="fs-15 d-inline-block position-relative">{post.category}</li>
+                      </ul>
+                      <h3 class="fs-24 fw-black">
+                        <a href={`/news/${post.slug}`} class="text-title link-hover-primary fw-bold transition">{post.title}</a>
+                      </h3>
+                      <a href={`/news/${post.slug}`} class="link style-one fw-semibold">Read More<img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          <!-- Three Vertical Posts (3) - Long Narrow Boxes -->
+          {verticalPosts.length > 0 && (
+            <div class="vertical-posts">
+              {verticalPosts.map(post => (
+                <div class="blog-card style-one position-relative mb-30 d-flex flex-row align-items-center">
+                  <div class="blog-img position-relative overflow-hidden round-20 me-3" style="width: 200px; min-width: 200px; height: 150px;">
+                    <img src={post.thumb} alt="Blog" class="round-20 w-100 h-100" style="object-fit: cover;">
                     <a href={`/news/${post.slug}`} class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10">
-                      <span class="font-secondary fs-24 fw-black d-block">{post.displayDay}</span> {post.displayMonth}
+                      <span class="font-secondary fs-20 fw-black d-block">{post.displayDay}</span> {post.displayMonth}
                     </a>
                   </div>
-                  <ul class="blog-metainfo list-unstyled">
-                    <li class="fs-15 d-inline-block position-relative">By <a href="#">{post.author}</a></li>
-                    <li class="fs-15 d-inline-block position-relative">{post.category}</li>
-                  </ul>
-                  <h3 class="fs-24 fw-black">
-                    <a href={`/news/${post.slug}`} class="text-title link-hover-primary fw-bold transition">{post.title}</a>
-                  </h3>
-                  <a href={`/news/${post.slug}`} class="link style-one fw-semibold">Read More<img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
+                  <div class="blog-content flex-grow-1">
+                    <ul class="blog-metainfo list-unstyled">
+                      <li class="fs-15 d-inline-block position-relative">By <a href="#">{post.author}</a></li>
+                      <li class="fs-15 d-inline-block position-relative">{post.category}</li>
+                    </ul>
+                    <h3 class="fs-20 fw-black mb-2">
+                      <a href={`/news/${post.slug}`} class="text-title link-hover-primary fw-bold transition">{post.title}</a>
+                    </h3>
+                    <a href={`/news/${post.slug}`} class="link style-one fw-semibold">Read More<img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
+
+          <!-- Remaining Posts (if any) -->
+          {sortedPosts.length > 8 && (
+            <div class="row justify-content-center mt-4">
+              {sortedPosts.slice(8).map(post => (
+                <div class="col-md-6">
+                  <div class="blog-card style-one position-relative mb-30">
+                    <div class="blog-img position-relative overflow-hidden round-20">
+                      <img src={post.thumb} alt="Blog" class="round-20">
+                      <a href={`/news/${post.slug}`} class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10">
+                        <span class="font-secondary fs-24 fw-black d-block">{post.displayDay}</span> {post.displayMonth}
+                      </a>
+                    </div>
+                    <ul class="blog-metainfo list-unstyled">
+                      <li class="fs-15 d-inline-block position-relative">By <a href="#">{post.author}</a></li>
+                      <li class="fs-15 d-inline-block position-relative">{post.category}</li>
+                    </ul>
+                    <h3 class="fs-24 fw-black">
+                      <a href={`/news/${post.slug}`} class="text-title link-hover-primary fw-bold transition">{post.title}</a>
+                    </h3>
+                    <a href={`/news/${post.slug}`} class="link style-one fw-semibold">Read More<img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
           <ul class="page-nav pagination justify-content-center mb-0 mt-lg-4">
             <li class="page-item">
               <a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#" aria-label="Previous">
