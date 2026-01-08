@@ -170,7 +170,7 @@ This project is licensed under the MIT License.
 ## 🆘 Support
 
 For support and questions:
-- Email: support@gamegeek.asia
+- Email: team@gamegeek.asia
 - Phone: (+84) 902 122 120
 
 ## 🙏 Acknowledgments

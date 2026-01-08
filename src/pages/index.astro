@@ -11,10 +11,6 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
 <Layout title="GameGeek | Connecting the Game Industry of Vietnam">
 
 
-  <!-- Custom Cursor -->
-  <div class="cursor"><span class="cursor-text"></span></div>
-  <div class="cursor-inner"></div>
-
   <div id="smooth-wrapper">
     <div id="smooth-content">
 
@@ -29,13 +25,13 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
               {slide.type === 'content' ? (
               <>
                 <div class="hero-bg bg-f position-absolute top-0 start-0 w-100 h-100 transition"></div>
-                <div class="container">
+                <div class="">
                   <div class="row align-items-center position-relative">
                     <div class="hero-left-content">
                       <div class="hero-central-hub">
                         <h1 class="font-secondary fw-normal text-white mb-0" data-cue="slideInUp" data-show="true"
-                          style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
-                          THE GAMING <span class="fw-black">CENTRAL HUB</span><br>OF VIETNAM
+                          style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both; word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
+                          THE GAMING <span class="fw-black">CENTRAL HUB</span><br> OF VIETNAM
                         </h1>
                       </div>
                       <div class="hero-para" data-cue="slideInUp" data-show="true"
@@ -57,13 +53,13 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
                   <div class="col-12">
                     <div class="hero-transparent-text-wrap">
                       <h6
-                        class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_secondary mb-18"
+                        class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_secondary mb-18 d-md-block d-none"
                         data-cue="slideInUp" data-delay="400" data-show="true"
                         style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 400ms; animation-direction: normal; animation-fill-mode: both;">
                         {slide.subtitle}
                       </h6>
                       <h2
-                        class="hero-transparent-text font-secondary fw-black mb-0 d-flex flex-wrap align-items-center justify-content-between"
+                        class="hero-transparent-text font-secondary fw-black mb-0 d-flex flex-wrap align-items-center justify-content-center justify-content-md-between"
                         data-cue="slideInUp" data-delay="500" data-show="true"
                         style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 500ms; animation-direction: normal; animation-fill-mode: both;">
                         <span>G</span>
@@ -80,8 +76,7 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
                 </div>
               </>
               ) : (
-                <div class="hero-image-slide" style={`background-image: url('${slide.image}'); background-size: cover; background-position: center; background-repeat: no-repeat; width: 100%; height: 75vh; min-height: 450px;`}>
-                </div>
+                <div class="hero-image-slide" style={`background-image: url('${slide.image}'); background-size: cover; background-position: center; background-repeat: no-repeat; width: 100%; height: 75vh; min-height: 450px;`}></div>
               )}
             </div>
             ))}
@@ -120,12 +115,7 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
                   ABOUT US</h6>
                 <h2 class="section-title style-one fw-normal text-title mb-20">GAMEGEEK – <br><span class="fw-black">THE
                     GAMING CENTRAL HUB </span><br> OF VIETNAM</h2>
-                <p class="mb-28">Founded in 2016, GameGeek is Vietnam's gaming central hub and trusted gateway that
-                  connecting local talent and resources to global opportunities. We unite studios, publishers, service
-                  providers, and investors in a collaborative ecosystem that accelerates innovation, empowers growth,
-                  and positions Vietnam as a regional powerhouse with global reach in gaming.</p>
-                <p class="mb-28">We connect Vietnam's game ecosystem with the world and turn connections into real
-                  outcomes for our partners.</p>
+                <p class="mb-28">Founded in 2016, GameGeek is Vietnam’s central gaming hub. We bridge local talent with global opportunities, uniting studios, publishers, and investors to drive innovation and position Vietnam as a regional powerhouse.</p>
 
                 <a href="about.html" class="btn style-one d-inline-flex flex-wrap align-items-center p-0"><span
                     class="btn-text d-inline-block fw-semibold position-relative transition">More About Us</span><span
@@ -148,11 +138,13 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
               <li class="position-relative font-secondary">INNOVATIVE</li>
               <li class="position-relative font-secondary">TRUSTED</li>
               <li class="position-relative font-secondary">TRANSPARENCY</li>
+              <li class="position-relative font-secondary">EXPERT</li>
               <li class="position-relative font-secondary">VIETNAM GAME CENTRAL HUB</li>
               <li class="position-relative font-secondary">CONNECTED</li>
               <li class="position-relative font-secondary">INNOVATIVE</li>
               <li class="position-relative font-secondary">TRUSTED</li>
               <li class="position-relative font-secondary">TRANSPARENCY</li>
+              <li class="position-relative font-secondary">EXPERT</li>
             </ul>
           </div>
         </div>
@@ -172,9 +164,9 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
               <div class="feature-card style-four position-relative z-1 overflow-hidden round-20 mb-30">
                 <div class="feature-info">
                   <h3 class="fs-24 font-primary fw-black">MARKETING AGENCY</h3>
-                  <p>Event series</p>
-                  <p>Business Match</p>
-                  <p>Media hub / Package - agency for brands</p>
+                  <p>Strategic Event Series</p>
+                  <p>B2B Matchmaking</p>
+                  <p>Integrated Media Solutions</p>
                   <a href="about.html" class="link style-one fw-semibold">Discover More<img
                     src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
                 </div>
@@ -187,9 +179,9 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
                 class="feature-card style-five bg-f position-relative overflow-hidden d-flex flex-column align-items-end justify-content-end round-20 z-1 mb-30">
                 <div class="feature-info">
                   <h3 class="fs-24 font-primary fw-black text-white">GAMING BUSINESS</h3>
-                  <p class="text-alto">M&A games / Co-pub / Invest / Deal broker</p>
-                  <p class="text-alto">Set up business gaming in VN</p>
-                  <p class="text-alto">Accelerator / Incubator</p>
+                  <p class="text-alto">Strategic Representation (AppMagic, Playable Ads, etc)</p>
+                  <p class="text-alto">Tailored GTM Execution</p>
+                  <p class="text-alto">Others: Talent & Education</p>
                   <a href="about.html" class="link style-one fw-semibold">Discover More<img
                       src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
                 </div>
@@ -247,7 +239,7 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
               <h2 class="section-title style-one fw-normal text-white" data-cue="slideInUp" data-delay="400"
                 data-show="true"
                 style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 400ms; animation-direction: normal; animation-fill-mode: both;">
-                Connecting Local Talent with <span class="fw-black">Global Opportunities</span></h2>
+                Best Connector in  <span class="fw-black">Vietnam Market</span></h2>
             </div>
             <div class="col-lg-5 col-md-4 text-md-end">
               <a href="services.html" class="btn style-one d-inline-flex flex-wrap align-items-center p-0"><span
@@ -369,11 +361,13 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
             <li class="position-relative font-secondary">INNOVATIVE</li>
             <li class="position-relative font-secondary">TRUSTED</li>
             <li class="position-relative font-secondary">TRANSPARENCY</li>
+            <li class="position-relative font-secondary">EXPERT</li>
             <li class="position-relative font-secondary">VIETNAM GAME CENTRAL HUB</li>
             <li class="position-relative font-secondary">CONNECTED</li>
             <li class="position-relative font-secondary">INNOVATIVE</li>
             <li class="position-relative font-secondary">TRUSTED</li>
-            <li class="position-relative font-secondary">TRANSPARENCY</li>
+            <li class="position-relative font-secondary">TRANSPARENCY</li>  
+            <li class="position-relative font-secondary">EXPERT</li>
           </ul>
         </div>
       </div>
@@ -465,102 +459,6 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
         <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
       </div>
       <!-- Project Section End -->
-
-      <!-- Counter Section Start -->
-      <div class="feature-area style-three position-relative z-2 pt-120">
-        <div class="container">
-          <div class="row">
-            <div class="col-xl-8 offset-xl-2 col-md-10 offset-md-1 text-center mb-60">
-              <h6
-                class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20"
-                data-cue="slideInUp">VIETNAM GAMING LANDSCAPE</h6>
-              <h2 class="section-title style-one fw-normal text-title px-xxl-8 mb-0" data-cue="slideInUp"
-                data-delay="300"><span class="fw-black">Why Vietnam</span> Is Regarded as One of <span
-                  class="fw-black">The World </span>Fastest-Growing Game Markets ?</h2>
-            </div>
-          </div>
-          <div class="row justify-content-center mb-4">
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="counter-card style-one bg-1 position-relative z-1 round-10">
-                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">GLOBAL RANKING</h6>
-                <h4 class="font-secondary fw-black fs-36 text-title">TOP <span class="counter ls-1 transition">1</span>
-                </h4>
-                <p class="fw-medium d-block mb-0">Vietnam is currently TOP 1 country globally in Game Downloads</p>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="counter-card style-one bg-2 position-relative z-1 round-10">
-                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">2024 DOWNLOADS</h6>
-                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">6.1</span>B
-                </h4>
-                <p class="fw-medium d-block mb-0">Apps & Games downloads on Google Play in 2024</p>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="counter-card style-one bg-3 position-relative z-1 round-10">
-                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">H1 2025 DOWNLOADS</h6>
-                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">5.2</span>B
-                </h4>
-                <p class="fw-medium d-block mb-0">Downloads from Vietnam in the first half of 2025</p>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="counter-card style-one bg-2 position-relative z-1 round-10">
-                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">ARPU/YEAR</h6>
-                <h4 class="font-secondary fw-black fs-36 text-title">$<span class="counter ls-1 transition">12</span>
-                </h4>
-                <p class="fw-medium d-block mb-0">~10x India's $1.85/year, ~2x Indonesia's $7.82/year; the highest among
-                  Tier 3 countries</p>
-              </div>
-            </div>
-          </div>
-          <div class="row justify-content-center">
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="counter-card style-one bg-2 position-relative z-1 round-10">
-                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">MARKET SHARE</h6>
-                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">37.3</span>%
-                </h4>
-                <p class="fw-medium d-block mb-0">Global market share in downloads (Google & Sensor Tower, GameVerse
-                  2025)</p>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="counter-card style-one bg-1 position-relative z-1 round-10">
-                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">PER MINUTE</h6>
-                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">11.6</span>K
-                </h4>
-                <p class="fw-medium d-block mb-0">Apps & Games download on Google Play per minute in 2024</p>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="counter-card style-one bg-2 position-relative z-1 round-10">
-                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">2025 PROJECTION</h6>
-                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">10.3</span>B
-                </h4>
-                <p class="fw-medium d-block mb-0">Projected 2025 total: 10.3B downloads (+7.7% YoY)</p>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="counter-card style-one bg-3 position-relative z-1 round-10">
-                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">AD REVENUE GROWTH</h6>
-                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">30</span>%
-                </h4>
-                <p class="fw-medium d-block mb-0">Ad revenue growing annually; Players are increasingly open to in-game
-                  ads</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Counter Section End -->
 
       <!-- CTA Section Start -->
       <div class="cta-area style-three bg-f position-relative overflow-hidden z-1" data-cue="slideInUp" data-show="true"
@@ -740,9 +638,105 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
 
 
       <!-- Blog Section Start -->
+       
+
+      <!-- Counter Section Start -->
+      <div class="feature-area style-three position-relative z-2 pt-120">
+        <div class="container">
+          <div class="row">
+            <div class="col-xl-8 offset-xl-2 col-md-10 offset-md-1 text-center mb-60">
+              <h6
+                class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20"
+                data-cue="slideInUp">NEWS &amp; INSIGHTS</h6>
+              <h2 class="section-title style-one fw-normal text-title px-xxl-8 mb-0" data-cue="slideInUp"
+                data-delay="300"><span class="fw-black">Vietnam Gaming Landscape</h2>
+            </div>
+          </div>
+          <div class="row justify-content-center mb-4">
+            <div class="col-xl-3 col-lg-6 col-md-6">
+              <div class="counter-card style-one bg-1 position-relative z-1 round-10">
+                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">GLOBAL RANKING</h6>
+                <h4 class="font-secondary fw-black fs-36 text-title">TOP <span class="counter ls-1 transition">1</span>
+                </h4>
+                <p class="fw-medium d-block mb-0">Country globally in Game Downloads & Events organizer in Vietnam</p>
+              </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+              <div class="counter-card style-one bg-2 position-relative z-1 round-10">
+                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">2024 DOWNLOADS</h6>
+                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">6.1</span>B
+                </h4>
+                <p class="fw-medium d-block mb-0">Apps & Games downloads on Google Play in 2024</p>
+              </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+              <div class="counter-card style-one bg-3 position-relative z-1 round-10">
+                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">H1 2025 DOWNLOADS</h6>
+                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">5.2</span>B
+                </h4>
+                <p class="fw-medium d-block mb-0">Downloads from Vietnam in the first half of 2025</p>
+              </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+              <div class="counter-card style-one bg-2 position-relative z-1 round-10">
+                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">ARPU/YEAR</h6>
+                <h4 class="font-secondary fw-black fs-36 text-title">$<span class="counter ls-1 transition">12</span>
+                </h4>
+                <p class="fw-medium d-block mb-0">~10x India's $1.85/year, ~2x Indonesia's $7.82/year; the highest among
+                  Tier 3 countries</p>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-xl-3 col-lg-6 col-md-6">
+              <div class="counter-card style-one bg-2 position-relative z-1 round-10">
+                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">MARKET SHARE</h6>
+                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">37.3</span>%
+                </h4>
+                <p class="fw-medium d-block mb-0">Global market share in downloads (Google & Sensor Tower, GameVerse
+                  2025)</p>
+              </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+              <div class="counter-card style-one bg-1 position-relative z-1 round-10">
+                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">PER MINUTE</h6>
+                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">11.6</span>K
+                </h4>
+                <p class="fw-medium d-block mb-0">Apps & Games download on Google Play per minute in 2024</p>
+              </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+              <div class="counter-card style-one bg-2 position-relative z-1 round-10">
+                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">2025 PROJECTION</h6>
+                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">10.3</span>B
+                </h4>
+                <p class="fw-medium d-block mb-0">Projected 2025 total: 10.3B downloads (+7.7% YoY)</p>
+              </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6">
+              <div class="counter-card style-one bg-3 position-relative z-1 round-10">
+                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">AD REVENUE GROWTH</h6>
+                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">30</span>%
+                </h4>
+                <p class="fw-medium d-block mb-0">Ad revenue growing annually; Players are increasingly open to in-game
+                  ads</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Counter Section End -->
       <div class="blog-area style-two position-relative z-1 round-20">
         <div class="container pb-90">
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-xl-10 offset-xl-1 col-md-10 offset-md-1 text-center">
               <h6
                 class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-25"
@@ -754,7 +748,7 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
                 style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 400ms; animation-direction: normal; animation-fill-mode: both;">
                 Stay updated with the latest <span class="fw-black">industry insights and discussions</span> </h2>
             </div>
-          </div>
+          </div> -->
           <div class="row gx-xxl-25 justify-content-center">
             <div class="col-xl-4 col-md-6">
               <div class="blog-card style-one position-relative mb-30" data-cue="slideInUp" data-show="true"

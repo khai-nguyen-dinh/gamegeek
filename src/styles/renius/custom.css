@@ -26,21 +26,36 @@ img[src*="game-controller-svgrepo-com.svg"] {
   filter: brightness(0) saturate(100%) invert(48%) sepia(100%) saturate(2000%) hue-rotate(0deg) brightness(1.05) contrast(1.1);
 }
 
-/* Compact menu when scrolled - Pill style */
+/* Compact menu when scrolled - Pill style (Desktop only) */
 #navbar.navbar-compact {
   padding: 15px 0 !important;
 }
 
-#navbar.navbar-compact .navbar-brand,
-#navbar.navbar-compact .other-options {
-  display: none !important;
+/* On mobile, always show logo and menu button, don't hide them */
+@media only screen and (max-width: 991px) {
+  #navbar.navbar-compact .navbar-brand,
+  #navbar.navbar-compact .other-options {
+    display: flex !important;
+  }
+
+  #navbar.navbar-compact .menu-area {
+    display: none !important;
+  }
 }
 
-#navbar.navbar-compact .menu-area {
-  flex: 1 !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
+/* Desktop: Compact menu behavior */
+@media only screen and (min-width: 992px) {
+  #navbar.navbar-compact .navbar-brand,
+  #navbar.navbar-compact .other-options {
+    display: none !important;
+  }
+
+  #navbar.navbar-compact .menu-area {
+    flex: 1 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
 }
 
 #navbar.navbar-compact .menu-section {
@@ -420,31 +435,32 @@ img[src*="services2.png"] {
   }
 }
 
-/* Hero Left Content - CENTRAL HUB and CTA stacked, left aligned, 20% from left */
+/* Hero Area - Responsive Styles */
 .hero-area.style-three .row.position-relative {
   min-height: 400px;
 }
 
 .hero-left-content {
   position: absolute;
-  top: 100px !important;
-  z-index: 10 !important;
-  text-align: left !important;
-  max-width: 600px;
+  top: 120px;
+  left: 5%;
+  z-index: 10;
+  text-align: left;
+  max-width: 100%;
   width: auto;
-  height: auto;
-  min-height: auto;
+  padding: 0 20px;
 }
 
 .hero-central-hub {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .hero-central-hub h1 {
-  font-size: clamp(48px, 6vw, 120px) !important;
-  line-height: 1.2 !important;
-  white-space: nowrap;
+  font-size: clamp(32px, 5vw, 120px);
+  line-height: 1.2;
   margin-bottom: 0;
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 .hero-left-content .hero-para {
@@ -455,48 +471,192 @@ img[src*="services2.png"] {
   color: #fff;
   font-size: 18px;
   line-height: 1.6;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
-/* Add spacing between hero-left-content and hero-transparent-text-wrap */
+/* Hero transparent text wrap */
 .hero-transparent-text-wrap {
-  margin-top: 200px !important;
-  padding-top: 40px !important;
+  margin-top: 180px;
+  padding-top: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
-@media (max-width: 1200px) {
-  .hero-transparent-text-wrap {
-    margin-top: 180px !important;
-    padding-top: 30px !important;
-  }
+.hero-transparent-text {
+  font-size: clamp(60px, 12vw, 250px);
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-@media (max-width: 768px) {
-  .hero-transparent-text-wrap {
-    margin-top: 150px !important;
-    padding-top: 20px !important;
-  }
-}
-
+/* Tablet and below */
 @media (max-width: 1200px) {
   .hero-left-content {
-    left: 15% !important;
-    max-width: 500px;
-  }
-}
-
-@media (max-width: 768px) {
-  .hero-left-content {
-    left: 10% !important;
-    max-width: 90%;
+    top: 100px;
+    left: 3%;
+    max-width: 550px;
   }
 
   .hero-central-hub h1 {
-    font-size: clamp(36px, 8vw, 80px) !important;
+    font-size: clamp(28px, 4.5vw, 100px);
+  }
+
+  .hero-left-content .hero-para p {
+    font-size: 17px;
+  }
+
+  .hero-transparent-text-wrap {
+    margin-top: 160px;
+    padding-top: 25px;
+  }
+
+  .hero-transparent-text {
+    font-size: clamp(50px, 10vw, 200px);
+  }
+}
+
+/* Mobile landscape and below */
+@media (max-width: 991px) {
+  .hero-slider {
+    height: 60vh;
+    min-height: 400px;
+  }
+
+  .hero-left-content {
+    position: relative;
+    top: auto;
+    left: auto;
+    max-width: 100%;
+    width: 100%;
+    padding: 80px 20px 20px;
+    text-align: center;
+  }
+
+  .hero-central-hub {
+    margin-bottom: 25px;
+  }
+
+  .hero-central-hub h1 {
+    font-size: clamp(24px, 6vw, 60px);
+    text-align: center;
+  }
+
+  .hero-left-content .hero-para {
+    text-align: center;
   }
 
   .hero-left-content .hero-para p {
     font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .hero-transparent-text-wrap {
+    margin-top: 0;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+  }
+
+  .hero-transparent-text {
+    font-size: clamp(40px, 8vw, 120px);
+    justify-content: center;
+  }
+
+  .hero-slider-nav {
+    bottom: 30px;
+  }
+
+  .hero-slider-prev,
+  .hero-slider-next {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+}
+
+/* Mobile portrait */
+@media (max-width: 768px) {
+  .hero-slider {
+    height: 50vh;
+    min-height: 350px;
+  }
+
+  .hero-area.style-three .row.position-relative {
+    min-height: auto;
+  }
+
+  .hero-left-content {
+    padding: 60px 15px 15px;
+  }
+
+  .hero-central-hub {
+    margin-bottom: 20px;
+  }
+
+  .hero-central-hub h1 {
+    font-size: clamp(20px, 7vw, 48px);
+    line-height: 1.3;
+  }
+
+  .hero-left-content .hero-para p {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  .hero-transparent-text-wrap {
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .hero-transparent-text {
+    font-size: clamp(30px, 10vw, 80px);
+  }
+
+  .hero-transparent-text span {
+    margin: 0 2px;
+  }
+
+  .hero-slider-nav {
+    bottom: 20px;
+    gap: 0.5rem;
+  }
+
+  .hero-slider-prev,
+  .hero-slider-next {
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
+
+  .hero-slider-pagination {
+    bottom: 15px;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .hero-slider {
+    height: 45vh;
+    min-height: 300px;
+  }
+
+  .hero-left-content {
+    padding: 50px 10px 10px;
+  }
+
+  .hero-central-hub h1 {
+    font-size: clamp(18px, 8vw, 40px);
+  }
+
+  .hero-left-content .hero-para p {
+    font-size: 13px;
+  }
+
+  .hero-transparent-text {
+    font-size: clamp(24px, 12vw, 60px);
+  }
+
+  .hero-slider-nav {
+    display: none; /* Hide navigation on very small screens */
   }
 }
 
@@ -533,6 +693,7 @@ img[src*="services2.png"] {
   margin-top: 0 !important;
   padding: 0 !important;
   position: relative;
+  overflow: hidden;
 }
 
 .hero-slider {
@@ -578,6 +739,153 @@ img[src*="services2.png"] {
   position: absolute !important;
   margin: 0 !important;
   padding: 0 !important;
+}
+
+/* Mobile: Navbar always fixed at top */
+@media only screen and (max-width: 991px) {
+  #navbar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: #000000 !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    padding: 10px 0 !important;
+    z-index: 9999 !important;
+  }
+
+  .navbar-area.style-three {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: #000000 !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 9999 !important;
+  }
+
+  .navbar-area.style-three.sticky {
+    position: fixed !important;
+  }
+
+  /* Ensure navbar wrapper has proper padding on mobile */
+  .navbar-area.style-three .container-fluid {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+
+  /* Add padding to body to account for fixed navbar */
+  body {
+    padding-top: 70px;
+  }
+
+  /* Ensure logo and menu button are visible */
+  .navbar-area.style-three .navbar-brand {
+    display: block !important;
+    z-index: 10000;
+    flex-shrink: 0;
+  }
+
+  .navbar-area.style-three .navbar-brand img {
+    max-height: 40px;
+    width: auto;
+  }
+
+  /* Menu mobile trigger - ensure it's visible */
+  .navbar-area.style-three .menu-mobile-trigger {
+    display: block !important;
+    z-index: 10000;
+    flex-shrink: 0;
+    position: relative;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Menu mobile trigger spans - white color for black background */
+  .navbar-area.style-three .menu-mobile-trigger span {
+    background: #ffffff !important;
+  }
+
+  /* Ensure option-item is visible */
+  .navbar-area.style-three .other-options {
+    display: flex !important;
+  }
+
+  .navbar-area.style-three .other-options .option-item.d-lg-none {
+    display: block !important;
+  }
+
+  /* Mobile menu - ensure it's above all content with highest z-index */
+  /* Menu must be outside navbar stacking context */
+  .menu-area .menu {
+    position: fixed !important;
+    z-index: 999999 !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    transform: translate(-100%) !important;
+  }
+
+  .menu-area .menu.active {
+    position: fixed !important;
+    z-index: 999999 !important;
+    transform: translate(0%) !important;
+  }
+
+  /* Overlay for mobile menu - below menu but above everything else */
+  .menu-area .overlay {
+    position: fixed !important;
+    z-index: 999998 !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .menu-area .overlay.active {
+    z-index: 999998 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  /* Menu mobile header - ensure it's visible */
+  .menu .menu-mobile-header {
+    z-index: 1000000 !important;
+    position: sticky !important;
+  }
+
+  /* Ensure navbar doesn't create stacking context that limits menu */
+  .navbar-area.style-three {
+    isolation: auto !important;
+  }
+
+  /* Ensure no other elements can be above menu */
+  .hero-area,
+  .hero-slider,
+  .swiper,
+  .swiper-wrapper,
+  .swiper-slide,
+  .container,
+  .container-fluid {
+    z-index: 1 !important;
+    position: relative !important;
+  }
+
+  /* Ensure menu area doesn't limit z-index */
+  .menu-area {
+    position: static !important;
+    z-index: auto !important;
+  }
+
+  /* Hero area adjustment for fixed navbar on mobile */
+  .hero-area.style-three {
+    padding-top: 70px !important;
+  }
 }
 
 /* Remove any spacing from navbar wrapper */
@@ -671,25 +979,25 @@ img[src*="services2.png"] {
   z-index: 10;
 }
 
-@media (max-width: 768px) {
-  .hero-slider {
-    min-height: 375px;
-  }
-
-  .hero-slider-nav {
-    bottom: 30px;
-  }
-
-  .hero-slider-prev,
-  .hero-slider-next {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-  }
-
+/* About overlap section responsive */
+@media (max-width: 991px) {
   .about-overlap-section {
-    margin-top: -100px;
-    padding-top: 150px;
+    margin-top: -80px;
+    padding-top: 120px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-overlap-section {
+    margin-top: -60px;
+    padding-top: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-overlap-section {
+    margin-top: -40px;
+    padding-top: 80px;
   }
 }
 
@@ -894,8 +1202,10 @@ img[src*="services2.png"] {
 .hero-central-hub h1 {
   font-size: clamp(48px, 6vw, 120px) !important;
   line-height: 1.2 !important;
-  white-space: nowrap;
+  white-space: normal;
   margin-bottom: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .hero-left-content .hero-para {
@@ -986,4 +1296,60 @@ img[src*="services2.png"] {
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
+}
+
+/* Desktop menu link colors */
+.navbar-area.style-three .menu-section > li > a.menu-link {
+  color: #ffffff !important;
+}
+
+.navbar-area.style-three[data-variant="white"] .menu-section > li > a.menu-link {
+  color: #000000 !important;
+}
+
+/* Mobile Menu - Black text and vertical layout */
+@media only screen and (max-width: 991px) {
+  /* Ensure menu section is vertical (flex-direction column) - override inline styles */
+  .menu .menu-section {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 0 !important;
+    flex-wrap: nowrap !important;
+  }
+
+  /* Ensure menu items are block (vertical) */
+  .menu .menu-section > li {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    list-style: none !important;
+  }
+
+  /* Black text color for mobile menu links - always black on mobile */
+  .menu.active .menu-section > li > a.menu-link,
+  .menu .menu-section > li > a.menu-link {
+    color: #000000 !important;
+    font-weight: 600 !important;
+    display: block !important;
+    width: 100% !important;
+    text-align: left !important;
+  }
+
+  /* Override for navbar variants on mobile */
+  .navbar-area.style-one .menu .menu-section > li > a.menu-link,
+  .navbar-area.style-three .menu .menu-section > li > a.menu-link,
+  .navbar-area.style-one .menu.active .menu-section > li > a.menu-link,
+  .navbar-area.style-three .menu.active .menu-section > li > a.menu-link {
+    color: #000000 !important;
+  }
+
+  /* Hover state for mobile menu */
+  .menu .menu-section > li > a.menu-link:hover,
+  .menu .menu-section > li > a.menu-link.active,
+  .menu.active .menu-section > li > a.menu-link:hover,
+  .menu.active .menu-section > li > a.menu-link.active {
+    color: var(--primaryColor) !important;
+  }
 }

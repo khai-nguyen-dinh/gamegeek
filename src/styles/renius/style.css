@@ -1456,79 +1456,44 @@ body {
   }
 }
 /*-------------------------------
-    Custom Cursor CSS
+    Custom Cursor CSS - DISABLED
 -------------------------------*/
 .cursor {
-  width: 35px;
-  height: 35px;
-  border-radius: 100%;
-  transition: all 350ms ease-out;
-  position: fixed;
-  pointer-events: none;
-  left: 0;
-  top: 0;
-  transform: translate(calc(-50% + 15px), -50%);
-  z-index: 999;
-  border: 1px solid var(--primaryColor);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  font-family: sans-serif;
-  color: var(--primaryColor);
-  background-color: transparent;
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .cursor-inner {
-  width: 6px;
-  height: 6px;
-  border-radius: 100%;
-  opacity: 0.9;
-  position: fixed;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  transition: width 0.6s, height 0.6s, opacity 0.6s;
-  background-color: var(--primaryColor);
-  z-index: 999;
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
+
 .cursor-inner.hidden {
-  opacity: 0;
-  transform: scale(0);
-  transition: opacity 0.5s, transform 0.5s;
+  display: none !important;
 }
 
 .hover {
-  border-color: transparent;
-  opacity: 0.8;
-  width: 3px;
-  height: 3px;
-  z-index: 999;
-  background-color: var(--primaryColor);
+  display: none !important;
 }
 
 .cursorinnerhover {
-  width: 15px;
-  height: 15px;
-  opacity: 0.5;
+  display: none !important;
 }
 
 .cursor-text {
-  display: none;
-  pointer-events: none;
+  display: none !important;
 }
 
 .cursor.view {
-  background-color: var(--primaryColor);
-  color: var(--whiteColor);
-  border-color: transparent;
-  width: 120px;
-  height: 120px;
-  font-size: 16px;
-  cursor: pointer;
+  display: none !important;
 }
 
 .cursor.view .cursor-text {
-  display: block;
+  display: none !important;
 }
 
 /*---------------------------------
@@ -1584,7 +1549,7 @@ body {
         Breadcrumb CSS
 -------------------------------*/
 .breadcrumb-area {
-  padding: 250px 0 100px;
+  padding: 250px 0 40px;
   background-color: #F3EAE6;
   margin: -100px 12px 0;
   border-radius: 40px;
@@ -3424,6 +3389,7 @@ body {
   padding: 18px;
   border-radius: 50px;
   border: 1px dashed rgba(0, 0, 0, 0.18);
+  width: 100%;
 }
 .award-card.style-one .award-badge {
   width: 72px;
@@ -3523,7 +3489,7 @@ body {
 .cta-area.style-three {
   background-image: url(/renius/image/cta-bg-3.jpg);
   padding: 235px 0 125px;
-  margin-top: -110px;
+  margin-top: 80px;
   border-radius: 0 0 45px 45px;
 }
 .cta-area.style-three .section-shape {

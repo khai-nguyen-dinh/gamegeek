@@ -25,22 +25,22 @@ const textColor = variant === 'white' ? 'text-title' : 'text-white';
                     </div>
                     <ul class="menu-section p-0 mb-0 lh-1" style="display: flex; justify-content: center; align-items: center; gap: 30px; list-style: none; flex-wrap: wrap;">
                         <li>
-                            <a href="/" class={`${textColor} fw-semibold`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px; ${variant === 'white' ? 'color: #000000 !important;' : 'color: #ffffff !important;'}`}>HOME</a>
+                            <a href="/" class={`${textColor} fw-semibold menu-link`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px;`}>HOME</a>
                         </li>
                         <li>
-                            <a href="/about" class={`${textColor} fw-semibold`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px; ${variant === 'white' ? 'color: #000000 !important;' : 'color: #ffffff !important;'}`}>ABOUT</a>
+                            <a href="/about" class={`${textColor} fw-semibold menu-link`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px;`}>ABOUT</a>
                         </li>
                         <li>
-                            <a href="/services" class={`${textColor} fw-semibold`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px; ${variant === 'white' ? 'color: #000000 !important;' : 'color: #ffffff !important;'}`}>SERVICES</a>
+                            <a href="/services" class={`${textColor} fw-semibold menu-link`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px;`}>SERVICES</a>
                         </li>
                         <li>
-                            <a href="/news" class={`${textColor} fw-semibold`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px; ${variant === 'white' ? 'color: #000000 !important;' : 'color: #ffffff !important;'}`}>NEWS</a>
+                            <a href="/news" class={`${textColor} fw-semibold menu-link`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px;`}>NEWS</a>
                         </li>
                         <li>
-                            <a href="/program" class={`${textColor} fw-semibold`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px; ${variant === 'white' ? 'color: #000000 !important;' : 'color: #ffffff !important;'}`}>PROGRAMS</a>
+                            <a href="/program" class={`${textColor} fw-semibold menu-link`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px;`}>PROGRAMS</a>
                         </li>
                         <li>
-                            <a href="/career" class={`${textColor} fw-semibold`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px; ${variant === 'white' ? 'color: #000000 !important;' : 'color: #ffffff !important;'}`}>CAREER</a>
+                            <a href="/career" class={`${textColor} fw-semibold menu-link`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px;`}>CAREER</a>
                         </li>
                     </ul>
                 </nav>
@@ -70,10 +70,15 @@ const textColor = variant === 'white' ? 'text-title' : 'text-white';
         
         if (!navbar) return;
         
-        const menuLinks = navbar.querySelectorAll('.menu-section li a');
+        // Only target desktop menu links (not mobile menu)
+        const menuLinks = navbar.querySelectorAll('.menu-section li a.menu-link');
         const variant = navbar.getAttribute('data-variant') || 'black';
+        const isMobile = window.innerWidth <= 991;
         
         function handleScroll() {
+            // Don't apply scroll styles on mobile
+            if (window.innerWidth <= 991) return;
+            
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             
             if (scrollTop > 100) {
@@ -97,11 +102,24 @@ const textColor = variant === 'white' ? 'text-title' : 'text-white';
             }
         }
 
-        // Initial check for scroll position
-        handleScroll();
+        // Initial check for scroll position (only on desktop)
+        if (!isMobile) {
+            handleScroll();
+        }
         
         // Add scroll event listener
         window.addEventListener('scroll', handleScroll, { passive: true });
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const nowMobile = window.innerWidth <= 991;
+            if (nowMobile !== isMobile) {
+                // Reset styles when switching between mobile/desktop
+                menuLinks.forEach(link => {
+                    link.style.removeProperty('color');
+                });
+            }
+        });
     });
 </script>
 
