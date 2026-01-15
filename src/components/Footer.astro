@@ -1,5 +1,13 @@
 ---
-// Footer component for Renius layout
+import { getContentObject } from '../utils/content';
+
+const footerContent = getContentObject('footer');
+const quickLinks = footerContent?.quickLinks || {};
+const explore = footerContent?.explore || {};
+const company = footerContent?.company || {};
+const address = footerContent?.address || {};
+const social = footerContent?.social || {};
+const brandText = footerContent?.brandText || 'GAMEGEEK';
 ---
 
 <!-- Footer Section Start -->
@@ -8,47 +16,41 @@
     <div class="row justify-content-center pb-90">
       <div class="col-lg-3 col-md-6">
         <div class="footer-widget mb-30" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
-          <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">Quick Links</h4>
+          <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">{quickLinks.title || 'Quick Links'}</h4>
           <ul class="footer-menu style-one list-unstyled mb-0">
-            <li><a href="/services">Service</a></li>
-            <li><a href="/">Pricing</a></li>
-            <li><a href="/">Projects</a></li>
-            <li><a href="/about">Team</a></li>
-            <li><a href="/about">About</a></li>
+            {(quickLinks.links || []).map((link) => (
+              <li><a href={link.href}>{link.text}</a></li>
+            ))}
           </ul>
         </div>
       </div>
       <div class="col-lg-3 col-md-6 ps-xxl-5">
         <div class="footer-widget mb-30" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 180ms; animation-direction: normal; animation-fill-mode: both;">
-          <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">Explore</h4>
+          <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">{explore.title || 'Explore'}</h4>
           <ul class="footer-menu style-one list-unstyled mb-0">
-            <li><a href="/">Privacy Policy</a></li>
-            <li><a href="/">Terms of Service</a></li>
-            <li><a href="/">FAQ</a></li>
-            <li><a href="/career">Careers</a></li>
-            <li><a href="/contact">Contact Us</a></li>
+            {(explore.links || []).map((link) => (
+              <li><a href={link.href}>{link.text}</a></li>
+            ))}
           </ul>
         </div>
       </div>
       <div class="col-lg-3 col-md-6 ps-xxl-5">
         <div class="footer-widget mb-30 ps-xxl-4" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 360ms; animation-direction: normal; animation-fill-mode: both;">
-          <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">Company</h4>
+          <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">{company.title || 'Company'}</h4>
           <ul class="footer-menu style-one list-unstyled mb-0">
-            <li><a href="/">Location</a></li>
-            <li><a href="/">Works</a></li>
-            <li><a href="/">Studio</a></li>
-            <li><a href="/news">News</a></li>
-            <li><a href="/">Categories</a></li>
+            {(company.links || []).map((link) => (
+              <li><a href={link.href}>{link.text}</a></li>
+            ))}
           </ul>
         </div>
       </div>
       <div class="col-lg-3 col-md-6 ps-xxl-5">
         <div class="footer-widget mb-30 ps-xxl-5" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 540ms; animation-direction: normal; animation-fill-mode: both;">
-          <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">Address</h4>
+          <h4 class="footer-widget-title position-relative fs-20 font-primary fw-bold text-white">{address.title || 'Address'}</h4>
           <ul class="contact-info-list list-unstyled mb-0">
-            <li><span class="fw-bold text-white me-1">Address:</span> NIC Building, No 6 Lane 7 Ton That Thuyet, Cau Giay, Hanoi</li>
-            <li><span class="fw-bold text-white me-1">Email:</span><a href="mailto:team@gamegeek.asia">team@gamegeek.asia</a></li>
-            <li><span class="fw-bold text-white me-1">Phone:</span><a href="tel:+84902122120">(+84) 902 122 120</a></li>
+            <li><span class="fw-bold text-white me-1">Address:</span> {address.address || ''}</li>
+            <li><span class="fw-bold text-white me-1">Email:</span><a href={`mailto:${address.email || ''}`}>{address.email || ''}</a></li>
+            <li><span class="fw-bold text-white me-1">Phone:</span><a href={`tel:${address.phone || ''}`}>{address.phone || ''}</a></li>
           </ul>
         </div>
       </div>
@@ -58,17 +60,16 @@
     <div class="row">
       <div class="col-12">
         <div class="footer-large-text font-optional fw-black round-10">
-          <span>GAMEGEEK</span>
+          <span>{brandText}</span>
         </div>
       </div>
       <div class="col-md-5">
         <div class="social-share d-flex flex-wrap align-items-center justify-content-md-start justify-content-center mb-sm-10">
-          <span class="text-alto fw-semibold me-2">Follow Us: </span>
+          <span class="text-alto fw-semibold me-2">{social.followText || 'Follow Us: '}</span>
           <ul class="social-profile style-two list-unstyled mb-0">
-            <li><a href="https://www.facebook.com/" target="_blank" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-facebook-fill"></i></a></li>
-            <li><a href="https://x.com/?lang=en" target="_blank" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-twitter-x-line"></i></a></li>
-            <li><a href="https://www.instagram.com/" target="_blank" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-instagram-line"></i></a></li>
-            <li><a href="https://www.linkedin.com/" target="_blank" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class="ri-linkedin-fill"></i></a></li>
+            {(social.links || []).map((link) => (
+              <li><a href={link.href} target="_blank" class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i class={link.icon}></i></a></li>
+            ))}
           </ul>
         </div>
       </div>

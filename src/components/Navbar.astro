@@ -1,10 +1,15 @@
 ---
+import { getContentObject } from '../utils/content';
+
 interface Props {
     variant?: 'white' | 'black';
 }
 
 const { variant = 'black' } = Astro.props;
 const textColor = variant === 'white' ? 'text-title' : 'text-white';
+const navbarContent = getContentObject('navbar');
+const menuItems = navbarContent?.menu || [];
+const buttonText = navbarContent?.buttonText || 'Get Started';
 ---
 
 
@@ -24,30 +29,17 @@ const textColor = variant === 'white' ? 'text-title' : 'text-white';
                         <button type="button" class="menu-mobile-close bg-transparent border-0"><i class="ri-close-line"></i></button>
                     </div>
                     <ul class="menu-section p-0 mb-0 lh-1" style="display: flex; justify-content: center; align-items: center; gap: 30px; list-style: none; flex-wrap: wrap;">
-                        <li>
-                            <a href="/" class={`${textColor} fw-semibold menu-link`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px;`}>HOME</a>
-                        </li>
-                        <li>
-                            <a href="/about" class={`${textColor} fw-semibold menu-link`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px;`}>ABOUT</a>
-                        </li>
-                        <li>
-                            <a href="/services" class={`${textColor} fw-semibold menu-link`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px;`}>SERVICES</a>
-                        </li>
-                        <li>
-                            <a href="/news" class={`${textColor} fw-semibold menu-link`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px;`}>NEWS</a>
-                        </li>
-                        <li>
-                            <a href="/program" class={`${textColor} fw-semibold menu-link`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px;`}>PROGRAMS</a>
-                        </li>
-                        <li>
-                            <a href="/career" class={`${textColor} fw-semibold menu-link`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px;`}>CAREER</a>
-                        </li>
+                        {menuItems.map((item) => (
+                            <li>
+                                <a href={item.href} class={`${textColor} fw-semibold menu-link`} style={`text-decoration: none; font-size: 14px; letter-spacing: 0.5px;`}>{item.text}</a>
+                            </li>
+                        ))}
                     </ul>
                 </nav>
             </div>
             <div class="other-options d-flex flex-wrap align-items-center justify-content-end">
                 <div class="option-item d-lg-block d-none">
-                    <a href="/contact" class="btn style-two d-inline-flex flex-wrap align-items-center p-0"><span class="btn-text d-inline-block fw-semibold position-relative transition">Get Started</span><span class="btn-icon position-relative d-flex flex-column align-items-center justify-content-center rounded-circle transition"><i class="ri-arrow-right-up-line"></i></span></a>
+                    <a href="/contact" class="btn style-two d-inline-flex flex-wrap align-items-center p-0"><span class="btn-text d-inline-block fw-semibold position-relative transition">{buttonText}</span><span class="btn-icon position-relative d-flex flex-column align-items-center justify-content-center rounded-circle transition"><i class="ri-arrow-right-up-line"></i></span></a>
                 </div>
                 <div class="option-item d-lg-none">
                     <button type="button" class="menu-mobile-trigger">

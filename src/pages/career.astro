@@ -2,6 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import { getContent, getContentObject } from '../utils/content.ts';
+
+const careerContent = getContentObject('career');
+const breadcrumb = careerContent?.breadcrumb || {};
+const jobMeta = careerContent?.jobMeta || {};
 ---
 
 <Layout title="Careers | GameGeek">
@@ -24,10 +29,10 @@ import Footer from '../components/Footer.astro';
       <div class="container-fluid px-xxl-5">
         <div class="row">
           <div class="col-md-10 offset-md-1 text-center">
-            <h2 class="section-title style-one fw-black text-title">CAREERS</h2>
+            <h2 class="section-title style-one fw-black text-title">{breadcrumb.title || 'CAREERS'}</h2>
             <ul class="br-menu list-unstyled">
-              <li><a href="/"><img src="/renius/image/home-icon.svg" alt="Icon">HOME</a></li>
-              <li>CAREERS</li>
+              <li><a href="/"><img src="/renius/image/home-icon.svg" alt="Icon">{breadcrumb.home || 'HOME'}</a></li>
+              <li>{breadcrumb.current || 'CAREERS'}</li>
             </ul>
           </div>
         </div>
@@ -43,12 +48,12 @@ import Footer from '../components/Footer.astro';
             <div class="job-info">
               <h3 class="fs-24 fw-bold"><a href="/career/real-estate-sales-associates" class="text-title link-hover-primary transition">Real Estate Sales Associates</a></h3>
               <ul class="job-metainfo list-unstyled">
-                <li class="position-relative"><i class="ri-map-pin-line"></i><span class="fw-medium text-title me-1">Location:</span> Ha Noi</li>
-                <li class="position-relative"><i class="ri-briefcase-line"></i><span class="fw-medium text-title me-1">Type:</span> Full-Time</li>
-                <li class="position-relative"><i class="ri-user-line"></i><span class="fw-medium text-title me-1">Experience:</span>4+ Years</li>
+                <li class="position-relative"><i class="ri-map-pin-line"></i><span class="fw-medium text-title me-1">{jobMeta.location || 'Location:'}</span> Ha Noi</li>
+                <li class="position-relative"><i class="ri-briefcase-line"></i><span class="fw-medium text-title me-1">{jobMeta.type || 'Type:'}</span> Full-Time</li>
+                <li class="position-relative"><i class="ri-user-line"></i><span class="fw-medium text-title me-1">{jobMeta.experience || 'Experience:'}</span>4+ Years</li>
               </ul>
               <div class="text-center">
-                <a href="/career/real-estate-sales-associates" class="link style-one fw-semibold">Apply Now <img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
+                <a href="/career/real-estate-sales-associates" class="link style-one fw-semibold">{careerContent.applyButton || 'Apply Now'} <img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
               </div>
             </div>
           </div>

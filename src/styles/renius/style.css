@@ -1913,15 +1913,7 @@ body {
   height: 732px;
   padding: 36px 25px 30px;
 }
-.hero-slider-one .hero-slide-item.bg-1 {
-  background-image: url(/renius/image/hero-slide-1.jpg);
-}
-.hero-slider-one .hero-slide-item.bg-2 {
-  background-image: url(/renius/image/hero-slide-2.jpg);
-}
-.hero-slider-one .hero-slide-item.bg-3 {
-  background-image: url(/renius/image/hero-slide-3.jpg);
-}
+
 .hero-slider-one .hero-slide-item:after {
   position: absolute;
   bottom: 0;
@@ -3488,7 +3480,7 @@ body {
 }
 .cta-area.style-three {
   background-image: url(/renius/image/cta-bg-3.jpg);
-  padding: 235px 0 125px;
+  padding: 135px 0 125px;
   margin-top: 80px;
   border-radius: 0 0 45px 45px;
 }

@@ -1,5 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getContent, getContentObject } from '../utils/content.ts';
+
+const contactContent = getContentObject('contact');
+const heroContent = contactContent?.hero || {};
+const formContent = contactContent?.form || {};
+const infoContent = contactContent?.info || {};
 ---
 
 <Layout title="Contact Us - Gamegeek" description="Get in touch with Gamegeek for your technology needs. Contact us for web development, mobile apps, UI/UX design, and consulting services.">
@@ -9,11 +15,10 @@ import Layout from '../layouts/Layout.astro';
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center">
           <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Get In Touch
+            {heroContent.title || 'Get In Touch'}
           </h1>
           <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-            Ready to start your next project? We'd love to hear from you. 
-            Send us a message and we'll respond as soon as possible.
+            {heroContent.description || 'Ready to start your next project? We\'d love to hear from you. Send us a message and we\'ll respond as soon as possible.'}
           </p>
         </div>
       </div>
@@ -25,71 +30,63 @@ import Layout from '../layouts/Layout.astro';
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <!-- Contact Form -->
           <div>
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">Send us a message</h2>
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">{formContent.title || 'Send us a message'}</h2>
             <form class="space-y-6">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                  <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">{formContent.fields?.firstName || 'First Name'}</label>
                   <input type="text" id="firstName" name="firstName" required 
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                 </div>
                 <div>
-                  <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                  <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">{formContent.fields?.lastName || 'Last Name'}</label>
                   <input type="text" id="lastName" name="lastName" required 
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                 </div>
               </div>
               
               <div>
-                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">{formContent.fields?.email || 'Email'}</label>
                 <input type="email" id="email" name="email" required 
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
               </div>
               
               <div>
-                <label for="company" class="block text-sm font-medium text-gray-700 mb-2">Company</label>
+                <label for="company" class="block text-sm font-medium text-gray-700 mb-2">{formContent.fields?.company || 'Company'}</label>
                 <input type="text" id="company" name="company" 
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
               </div>
               
               <div>
-                <label for="service" class="block text-sm font-medium text-gray-700 mb-2">Service Interested In</label>
+                <label for="service" class="block text-sm font-medium text-gray-700 mb-2">{formContent.fields?.service || 'Service Interested In'}</label>
                 <select id="service" name="service" 
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                  <option value="">Select a service</option>
-                  <option value="web-development">Web Development</option>
-                  <option value="mobile-apps">Mobile Apps</option>
-                  <option value="ui-ux">UI/UX Design</option>
-                  <option value="cloud">Cloud Solutions</option>
-                  <option value="ecommerce">E-commerce</option>
-                  <option value="consulting">Consulting</option>
-                  <option value="other">Other</option>
+                  {(formContent.serviceOptions || ['Select a service', 'Web Development', 'Mobile Apps', 'UI/UX Design', 'Cloud Solutions', 'E-commerce', 'Consulting', 'Other']).map((option, index) => (
+                    <option value={index === 0 ? '' : option.toLowerCase().replace(/\s+/g, '-')}>{option}</option>
+                  ))}
                 </select>
               </div>
               
               <div>
-                <label for="budget" class="block text-sm font-medium text-gray-700 mb-2">Project Budget</label>
+                <label for="budget" class="block text-sm font-medium text-gray-700 mb-2">{formContent.fields?.budget || 'Project Budget'}</label>
                 <select id="budget" name="budget" 
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                  <option value="">Select budget range</option>
-                  <option value="under-10k">Under $10,000</option>
-                  <option value="10k-25k">$10,000 - $25,000</option>
-                  <option value="25k-50k">$25,000 - $50,000</option>
-                  <option value="50k-100k">$50,000 - $100,000</option>
-                  <option value="over-100k">Over $100,000</option>
+                  {(formContent.budgetOptions || ['Select budget range', 'Under $10,000', '$10,000 - $25,000', '$25,000 - $50,000', '$50,000 - $100,000', 'Over $100,000']).map((option, index) => (
+                    <option value={index === 0 ? '' : option.toLowerCase().replace(/\s+/g, '-').replace(/\$/g, '').replace(/,/g, '')}>{option}</option>
+                  ))}
                 </select>
               </div>
               
               <div>
-                <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                <label for="message" class="block text-sm font-medium text-gray-700 mb-2">{formContent.fields?.message || 'Message'}</label>
                 <textarea id="message" name="message" rows="6" required 
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="Tell us about your project..."></textarea>
+                  placeholder={formContent.fields?.messagePlaceholder || 'Tell us about your project...'}></textarea>
               </div>
               
               <button type="submit" 
                 class="w-full bg-primary-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-700 transition-colors">
-                Send Message
+                {formContent.submitButton || 'Send Message'}
               </button>
             </form>
           </div>
@@ -97,10 +94,9 @@ import Layout from '../layouts/Layout.astro';
           <!-- Contact Information -->
           <div class="space-y-8">
             <div>
-              <h2 class="text-3xl font-bold text-gray-900 mb-8">Contact Information</h2>
+              <h2 class="text-3xl font-bold text-gray-900 mb-8">{infoContent.title || 'Contact Information'}</h2>
               <p class="text-lg text-gray-600 mb-8">
-                We're here to help! Reach out to us through any of the channels below, 
-                and we'll get back to you within 24 hours.
+                {infoContent.description || 'We\'re here to help! Reach out to us through any of the channels below, and we\'ll get back to you within 24 hours.'}
               </p>
             </div>
 
@@ -113,8 +109,8 @@ import Layout from '../layouts/Layout.astro';
                   </svg>
                 </div>
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900 mb-1">Email</h3>
-                  <p class="text-gray-600">team@gamegeek.asia</p>
+                  <h3 class="text-lg font-semibold text-gray-900 mb-1">{infoContent.email?.label || 'Email'}</h3>
+                  <p class="text-gray-600">{infoContent.email?.value || 'team@gamegeek.asia'}</p>
                 </div>
               </div>
 
@@ -125,8 +121,8 @@ import Layout from '../layouts/Layout.astro';
                   </svg>
                 </div>
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900 mb-1">Phone</h3>
-                  <p class="text-gray-600">(+84) 902 122 120</p>
+                  <h3 class="text-lg font-semibold text-gray-900 mb-1">{infoContent.phone?.label || 'Phone'}</h3>
+                  <p class="text-gray-600">{infoContent.phone?.value || '(+84) 902 122 120'}</p>
                 </div>
               </div>
 
@@ -138,8 +134,8 @@ import Layout from '../layouts/Layout.astro';
                   </svg>
                 </div>
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900 mb-1">Address</h3>
-                  <p class="text-gray-600">NIC Building, No 6 Lane 7 Ton That Thuyet<br>Cau Giay, Hanoi</p>
+                  <h3 class="text-lg font-semibold text-gray-900 mb-1">{infoContent.address?.label || 'Address'}</h3>
+                  <p class="text-gray-600" set:html={infoContent.address?.value?.replace('\n', '<br>') || 'NIC Building, No 6 Lane 7 Ton That Thuyet<br>Cau Giay, Hanoi'}></p>
                 </div>
               </div>
 
@@ -150,17 +146,17 @@ import Layout from '../layouts/Layout.astro';
                   </svg>
                 </div>
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900 mb-1">Business Hours</h3>
-                  <p class="text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM</p>
-                  <p class="text-gray-600">Saturday: 10:00 AM - 4:00 PM</p>
-                  <p class="text-gray-600">Sunday: Closed</p>
+                  <h3 class="text-lg font-semibold text-gray-900 mb-1">{infoContent.hours?.label || 'Business Hours'}</h3>
+                  {(infoContent.hours?.values || ['Monday - Friday: 9:00 AM - 6:00 PM', 'Saturday: 10:00 AM - 4:00 PM', 'Sunday: Closed']).map((hour) => (
+                    <p class="text-gray-600">{hour}</p>
+                  ))}
                 </div>
               </div>
             </div>
 
             <!-- Social Links -->
             <div class="pt-8">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">Follow Us</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">{infoContent.followText || 'Follow Us'}</h3>
               <div class="flex space-x-4">
                 <a href="#" class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-primary-100 transition-colors">
                   <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">

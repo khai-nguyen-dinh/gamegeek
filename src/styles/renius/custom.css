@@ -478,6 +478,7 @@ img[src*="services2.png"] {
 .hero-transparent-text-wrap {
   margin-top: 180px;
   padding-top: 30px;
+  padding-bottom: 80px;
   padding-left: 20px;
   padding-right: 20px;
 }
@@ -505,8 +506,9 @@ img[src*="services2.png"] {
   }
 
   .hero-transparent-text-wrap {
-    margin-top: 160px;
+    margin-top: 120px;
     padding-top: 25px;
+    padding-bottom: 60px;
   }
 
   .hero-transparent-text {
@@ -517,8 +519,8 @@ img[src*="services2.png"] {
 /* Mobile landscape and below */
 @media (max-width: 991px) {
   .hero-slider {
-    height: 60vh;
-    min-height: 400px;
+    height: 70vh;
+    min-height: 500px;
   }
 
   .hero-left-content {
@@ -576,8 +578,8 @@ img[src*="services2.png"] {
 /* Mobile portrait */
 @media (max-width: 768px) {
   .hero-slider {
-    height: 50vh;
-    min-height: 350px;
+    height: 60vh;
+    min-height: 450px;
   }
 
   .hero-area.style-three .row.position-relative {
@@ -635,8 +637,8 @@ img[src*="services2.png"] {
 /* Small mobile */
 @media (max-width: 480px) {
   .hero-slider {
-    height: 45vh;
-    min-height: 300px;
+    height: 55vh;
+    min-height: 400px;
   }
 
   .hero-left-content {
@@ -698,8 +700,8 @@ img[src*="services2.png"] {
 
 .hero-slider {
   width: 100%;
-  height: 75vh;
-  min-height: 450px;
+  height: 100vh;
+  min-height: 600px;
   margin-top: 0;
   padding-top: 0;
   position: relative;

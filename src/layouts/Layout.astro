@@ -9,6 +9,7 @@ import '../styles/renius/footer.css';
 import '../styles/renius/responsive.css';
 import '../styles/renius/dark-theme.css';
 import '../styles/renius/custom.css';
+import FloatingContact from '../components/FloatingContact.astro';
 
 export interface Props {
   title: string;
@@ -38,6 +39,9 @@ const { title, description = "GameGeek is the central hub connecting Vietnam's g
   </head>
   <body>
     <slot />
+    
+    <!-- Floating Contact Form -->
+    <FloatingContact />
     
     <!-- Link of JS files -->
     <script is:inline src="/renius/bootstrap.bundle.min.js"></script>

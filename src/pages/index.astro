@@ -3,9 +3,19 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import slidesData from '../data/slides.json';
+import { getContent, getContentObject } from '../utils/content';
 
 // Sort slides by order
 const slides = slidesData.slides.sort((a, b) => a.order - b.order);
+
+// Get content from JSON
+const homeContent = getContentObject('home');
+const aboutContent = homeContent?.about || {};
+const servicesContent = homeContent?.services || {};
+const networkContent = homeContent?.network || {};
+const ctaContent = homeContent?.cta || {};
+const newsContent = homeContent?.news || {};
+const moveText = homeContent?.moveText || [];
 ---
 
 <Layout title="GameGeek | Connecting the Game Industry of Vietnam">
@@ -76,7 +86,7 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
                 </div>
               </>
               ) : (
-                <div class="hero-image-slide" style={`background-image: url('${slide.image}'); background-size: cover; background-position: center; background-repeat: no-repeat; width: 100%; height: 75vh; min-height: 450px;`}></div>
+                <div class="hero-image-slide" style={`background-image: url('${slide.image}'); background-size: cover; background-position: center; background-repeat: no-repeat; width: 100%; height: 100vh; min-height: 450px;`}></div>
               )}
             </div>
             ))}
@@ -112,13 +122,12 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
               <div class="about-content position-relative">
                 <h6
                   class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20">
-                  ABOUT US</h6>
-                <h2 class="section-title style-one fw-normal text-title mb-20">GAMEGEEK – <br><span class="fw-black">THE
-                    GAMING CENTRAL HUB </span><br> OF VIETNAM</h2>
-                <p class="mb-28">Founded in 2016, GameGeek is Vietnam’s central gaming hub. We bridge local talent with global opportunities, uniting studios, publishers, and investors to drive innovation and position Vietnam as a regional powerhouse.</p>
+                  {aboutContent.subtitle || 'ABOUT US'}</h6>
+                <h2 class="section-title style-one fw-normal text-title mb-20" set:html={`${aboutContent.titlePart1 || ''}<span class="fw-black">${aboutContent.titleHighlight || ''}</span>${aboutContent.titlePart2 || ''}`}></h2>
+                <p class="mb-28">{aboutContent.description || ''}</p>
 
                 <a href="about.html" class="btn style-one d-inline-flex flex-wrap align-items-center p-0"><span
-                    class="btn-text d-inline-block fw-semibold position-relative transition">More About Us</span><span
+                    class="btn-text d-inline-block fw-semibold position-relative transition">{aboutContent.buttonText || 'More About Us'}</span><span
                     class="btn-icon position-relative d-flex flex-column align-items-center justify-content-center rounded-circle transition"><i
                       class="ri-arrow-right-up-line"></i></span></a>
               </div>
@@ -133,18 +142,12 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
         <div class="move-text-wrapper overflow-hidden mb-120">
           <div class="move-text style-two position-relative z-1">
             <ul class="list-unstyled mb-0">
-              <li class="position-relative font-secondary">VIETNAM GAME CENTRAL HUB</li>
-              <li class="position-relative font-secondary">CONNECTED</li>
-              <li class="position-relative font-secondary">INNOVATIVE</li>
-              <li class="position-relative font-secondary">TRUSTED</li>
-              <li class="position-relative font-secondary">TRANSPARENCY</li>
-              <li class="position-relative font-secondary">EXPERT</li>
-              <li class="position-relative font-secondary">VIETNAM GAME CENTRAL HUB</li>
-              <li class="position-relative font-secondary">CONNECTED</li>
-              <li class="position-relative font-secondary">INNOVATIVE</li>
-              <li class="position-relative font-secondary">TRUSTED</li>
-              <li class="position-relative font-secondary">TRANSPARENCY</li>
-              <li class="position-relative font-secondary">EXPERT</li>
+              {moveText.map((text) => (
+                <li class="position-relative font-secondary">{text}</li>
+              ))}
+              {moveText.map((text) => (
+                <li class="position-relative font-secondary">{text}</li>
+              ))}
             </ul>
           </div>
         </div>
@@ -153,54 +156,29 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
             <div class="col-xl-10 offset-xl-1 col-md-12 text-center px-xxl-3">
               <h6
                 class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-25"
-                data-cue="slideInUp">OUR SERVICES</h6>
-              <h2 class="section-title style-one fw-normal text-title mb-40 services-title-wide" data-cue="slideInUp" data-delay="300" style="max-width: 100%; padding: 0 20px;">
-                End-to-End Solutions for <span class="fw-black">Global Partners & Your Bridge</span> to the Global
-                Stage</h2>
+                data-cue="slideInUp">{servicesContent.subtitle || 'OUR SERVICES'}</h6>
+              <h2 class="section-title style-one fw-normal text-title mb-40 services-title-wide" data-cue="slideInUp" data-delay="300" style="max-width: 100%; padding: 0 20px;" set:html={`${servicesContent.titlePart1 || ''}<span class="fw-black">${servicesContent.titleHighlight || ''}</span>${servicesContent.titlePart2 || ''}`}></h2>
             </div>
           </div>
           <div class="row">
-            <div class="col-lg-4 col-md-6 mb-30">
-              <div class="feature-card style-four position-relative z-1 overflow-hidden round-20 mb-30">
-                <div class="feature-info">
-                  <h3 class="fs-24 font-primary fw-black">MARKETING AGENCY</h3>
-                  <p>Strategic Event Series</p>
-                  <p>B2B Matchmaking</p>
-                  <p>Integrated Media Solutions</p>
-                  <a href="about.html" class="link style-one fw-semibold">Discover More<img
-                    src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
-                </div>
-                <img src="/renius/image/services2.png" alt="Image"
-                  class="position-absolute z-n1 transition services2-image">
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-30">
-              <div
-                class="feature-card style-five bg-f position-relative overflow-hidden d-flex flex-column align-items-end justify-content-end round-20 z-1 mb-30">
-                <div class="feature-info">
-                  <h3 class="fs-24 font-primary fw-black text-white">GAMING BUSINESS</h3>
-                  <p class="text-alto">Strategic Representation (AppMagic, Playable Ads, etc)</p>
-                  <p class="text-alto">Tailored GTM Execution</p>
-                  <p class="text-alto">Others: Talent & Education</p>
-                  <a href="about.html" class="link style-one fw-semibold">Discover More<img
+            {(servicesContent.items || []).map((service, index) => (
+              <div class="col-lg-4 col-md-6 mb-30">
+                <div class={`feature-card ${index === 1 ? 'style-five bg-f' : 'style-four'} position-relative z-1 overflow-hidden round-20 mb-30 ${index === 1 ? 'd-flex flex-column align-items-end justify-content-end' : ''}`}>
+                  <div class="feature-info">
+                    <h3 class={`fs-24 font-primary fw-black ${index === 1 ? 'text-white' : ''}`}>{service.title}</h3>
+                    {service.items?.map((item) => (
+                      <p class={index === 1 ? 'text-alto' : ''}>{item}</p>
+                    ))}
+                    <a href="about.html" class="link style-one fw-semibold">{service.linkText || 'Discover More'}<img
                       src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
+                  </div>
+                  {index === 0 && <img src="/renius/image/services2.png" alt="Image"
+                    class="position-absolute z-n1 transition services2-image">}
+                  {index === 2 && <img src="/renius/image/service1.png" alt="Image"
+                    class="position-absolute z-n1 transition services2-image">}
                 </div>
               </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-30">
-              <div class="feature-card style-four position-relative z-1 overflow-hidden round-20 mb-30">
-                <div class="feature-info">
-                  <h3 class="fs-24 font-primary fw-black">GO TO MARKET SERVICES</h3>
-                  <p>Sale reference: APP MAGIC, PLAYABLE LABS</p>
-                  <p>Go to market for specific services</p>
-                  <p>Other: Recruitment, Education</p>
-                  <a href="about.html" class="link style-one fw-semibold">Discover More<img
-                    src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
-                </div>
-                <img src="/renius/image/service1.png" alt="Image"
-                  class="position-absolute z-n1 transition services2-image">
-              </div>
-            </div>
+            ))}
             <!-- <div class="col-lg-4 col-md-6 mb-30">
               <div class="feature-card style-three position-relative round-20 transition mb-30">
                 <div class="br-one position-absolute top-0 start-0"></div>
@@ -235,15 +213,14 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
                 class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-25"
                 data-cue="slideInUp" data-show="true"
                 style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
-                OUR NETWORK</h6>
+                {networkContent.subtitle || 'OUR NETWORK'}</h6>
               <h2 class="section-title style-one fw-normal text-white" data-cue="slideInUp" data-delay="400"
                 data-show="true"
-                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 400ms; animation-direction: normal; animation-fill-mode: both;">
-                Best Connector in  <span class="fw-black">Vietnam Market</span></h2>
+                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 400ms; animation-direction: normal; animation-fill-mode: both;" set:html={`${networkContent.titlePart1 || ''}<span class="fw-black">${networkContent.titleHighlight || ''}</span>${networkContent.titlePart2 || ''}`}></h2>
             </div>
             <div class="col-lg-5 col-md-4 text-md-end">
               <a href="services.html" class="btn style-one d-inline-flex flex-wrap align-items-center p-0"><span
-                  class="btn-text d-inline-block fw-semibold position-relative transition">View All Services</span><span
+                  class="btn-text d-inline-block fw-semibold position-relative transition">{networkContent.buttonText || 'View All Services'}</span><span
                   class="btn-icon position-relative d-flex flex-column align-items-center justify-content-center rounded-circle transition"><i
                     class="ri-arrow-right-up-line"></i></span></a>
             </div>
@@ -297,57 +274,19 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
             </div>
           </div> -->
           <div class="row justify-content-center">
-            <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+            {(networkContent.stats || []).map((stat, index) => (
+              <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true" style={`animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: ${index % 3 === 0 ? 0 : index % 3 === 1 ? 180 : 360}ms; animation-direction: normal; animation-fill-mode: both;`}>
                 <div class="award-card style-one main-award d-flex flex-wrap align-items-center mb-30 transition">
-                    <div class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
-                        <span class="fs-28 fw-black text-black">200+</span>
-                    </div>
-                    <div class="award-title">
-                        <h5 class="fs-20 fw-semibold text-title mb-0">Global Partners</h5>
-                    </div>
+                  <div class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
+                    <span class="fs-28 fw-black text-black">{stat.value || ''}</span>
+                  </div>
+                  <div class="award-title">
+                    <h5 class="fs-20 fw-semibold text-title mb-0">{stat.label || ''}</h5>
+                  </div>
                 </div>
-            </div>
-            <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 180ms; animation-direction: normal; animation-fill-mode: both;">
-                <div class="award-card style-one main-award d-flex flex-wrap align-items-center mb-30 transition">
-                    <div class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
-                        <span class="fs-28 fw-black text-black">300+</span>
-                    </div>
-                    <div class="award-title">
-                        <h5 class="fs-20 fw-semibold text-title mb-0">Industry Experts</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 360ms; animation-direction: normal; animation-fill-mode: both;">
-                <div class="award-card style-one main-award d-flex flex-wrap align-items-center mb-30 transition">
-                    <div class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
-                        <span class="fs-28 fw-black text-black">700+</span>
-                    </div>
-                    <div class="award-title">
-                        <h5 class="fs-20 fw-semibold text-title mb-0">Game Studio</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
-                <div class="award-card style-one main-award d-flex flex-wrap align-items-center mb-30 transition">
-                    <div class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
-                        <span class="fs-28 fw-black text-black">100+</span>
-                    </div>
-                    <div class="award-title">
-                        <h5 class="fs-20 fw-semibold text-title mb-0">Global Investors</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-4 col-md-6" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 180ms; animation-direction: normal; animation-fill-mode: both;">
-                <div class="award-card style-one main-award d-flex flex-wrap align-items-center mb-30 transition">
-                    <div class="award-badge bg_secondary d-flex flex-column align-items-center justify-content-center rounded-circle">
-                        <span class="fs-28 fw-black text-black">7</span>
-                    </div>
-                    <div class="award-title">
-                        <h5 class="fs-20 fw-semibold text-title mb-0">Countries & Regions</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       <!-- Service Section End -->
@@ -467,8 +406,7 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
         <div class="container">
           <div class="row align-items-center">
             <div class="col-lg-6 col-md-7 mb-sm-20">
-              <h2 class="section-title style-two fw-normal text-white mb-0">Vietnam - A Rising Hub for <span
-                  class="fw-black">Game Production</span> in Asia</h2>
+              <h2 class="section-title style-two fw-normal text-white mb-0" set:html={`${ctaContent.titlePart1 || ''}<span class="fw-black">${ctaContent.titleHighlight || ''}</span>${ctaContent.titlePart2 || ''}`}></h2>
             </div>
             <div class="col-lg-6 col-md-5">
               <div
@@ -647,89 +585,38 @@ const slides = slidesData.slides.sort((a, b) => a.order - b.order);
             <div class="col-xl-8 offset-xl-2 col-md-10 offset-md-1 text-center mb-60">
               <h6
                 class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20"
-                data-cue="slideInUp">NEWS &amp; INSIGHTS</h6>
+                data-cue="slideInUp">{newsContent.subtitle || 'NEWS & INSIGHTS'}</h6>
               <h2 class="section-title style-one fw-normal text-title px-xxl-8 mb-0" data-cue="slideInUp"
-                data-delay="300"><span class="fw-black">Vietnam Gaming Landscape</h2>
+                data-delay="300" set:html={`${newsContent.titlePart1 || ''}<span class="fw-black">${newsContent.titleHighlight || 'Vietnam Gaming Landscape'}</span>${newsContent.titlePart2 || ''}`}></h2>
             </div>
           </div>
           <div class="row justify-content-center mb-4">
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="counter-card style-one bg-1 position-relative z-1 round-10">
-                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">GLOBAL RANKING</h6>
-                <h4 class="font-secondary fw-black fs-36 text-title">TOP <span class="counter ls-1 transition">1</span>
-                </h4>
-                <p class="fw-medium d-block mb-0">Country globally in Game Downloads & Events organizer in Vietnam</p>
+            {(newsContent.stats || []).slice(0, 4).map((stat, index) => (
+              <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class={`counter-card style-one bg-${index === 0 ? 1 : index === 1 ? 2 : index === 2 ? 3 : 2} position-relative z-1 round-10`}>
+                  <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                  <h6 class="fs-12 font-primary fw-semibold text-title ls-1">{stat.label || ''}</h6>
+                  <h4 class="font-secondary fw-black fs-36 text-title">
+                    {stat.prefix || ''}<span class="counter ls-1 transition">{stat.value || ''}</span>{stat.suffix || ''}
+                  </h4>
+                  <p class="fw-medium d-block mb-0">{stat.description || ''}</p>
+                </div>
               </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="counter-card style-one bg-2 position-relative z-1 round-10">
-                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">2024 DOWNLOADS</h6>
-                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">6.1</span>B
-                </h4>
-                <p class="fw-medium d-block mb-0">Apps & Games downloads on Google Play in 2024</p>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="counter-card style-one bg-3 position-relative z-1 round-10">
-                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">H1 2025 DOWNLOADS</h6>
-                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">5.2</span>B
-                </h4>
-                <p class="fw-medium d-block mb-0">Downloads from Vietnam in the first half of 2025</p>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="counter-card style-one bg-2 position-relative z-1 round-10">
-                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">ARPU/YEAR</h6>
-                <h4 class="font-secondary fw-black fs-36 text-title">$<span class="counter ls-1 transition">12</span>
-                </h4>
-                <p class="fw-medium d-block mb-0">~10x India's $1.85/year, ~2x Indonesia's $7.82/year; the highest among
-                  Tier 3 countries</p>
-              </div>
-            </div>
+            ))}
           </div>
           <div class="row justify-content-center">
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="counter-card style-one bg-2 position-relative z-1 round-10">
-                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">MARKET SHARE</h6>
-                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">37.3</span>%
-                </h4>
-                <p class="fw-medium d-block mb-0">Global market share in downloads (Google & Sensor Tower, GameVerse
-                  2025)</p>
+            {(newsContent.stats || []).slice(4, 8).map((stat, index) => (
+              <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class={`counter-card style-one bg-${index === 0 ? 2 : index === 1 ? 1 : index === 2 ? 2 : 3} position-relative z-1 round-10`}>
+                  <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
+                  <h6 class="fs-12 font-primary fw-semibold text-title ls-1">{stat.label || ''}</h6>
+                  <h4 class="font-secondary fw-black fs-36 text-title">
+                    {stat.prefix || ''}<span class="counter ls-1 transition">{stat.value || ''}</span>{stat.suffix || ''}
+                  </h4>
+                  <p class="fw-medium d-block mb-0">{stat.description || ''}</p>
+                </div>
               </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="counter-card style-one bg-1 position-relative z-1 round-10">
-                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">PER MINUTE</h6>
-                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">11.6</span>K
-                </h4>
-                <p class="fw-medium d-block mb-0">Apps & Games download on Google Play per minute in 2024</p>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="counter-card style-one bg-2 position-relative z-1 round-10">
-                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">2025 PROJECTION</h6>
-                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">10.3</span>B
-                </h4>
-                <p class="fw-medium d-block mb-0">Projected 2025 total: 10.3B downloads (+7.7% YoY)</p>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6">
-              <div class="counter-card style-one bg-3 position-relative z-1 round-10">
-                <img src="/renius/image/star-group.png" alt="Icon" class="position-absolute card-shape z-1">
-                <h6 class="fs-12 font-primary fw-semibold text-title ls-1">AD REVENUE GROWTH</h6>
-                <h4 class="font-secondary fw-black fs-36 text-title"><span class="counter ls-1 transition">30</span>%
-                </h4>
-                <p class="fw-medium d-block mb-0">Ad revenue growing annually; Players are increasingly open to in-game
-                  ads</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

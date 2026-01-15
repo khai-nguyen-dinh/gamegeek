@@ -3,6 +3,11 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import newsData from '../data/news.json';
+import { getContent, getContentObject } from '../utils/content.ts';
+
+const newsContent = getContentObject('news');
+const breadcrumb = newsContent?.breadcrumb || {};
+const sidebar = newsContent?.sidebar || {};
 
 // Get posts and categories from JSON
 const { posts, categories } = newsData;
@@ -70,10 +75,10 @@ posts.forEach(post => {
       <div class="container-fluid px-xxl-5">
         <div class="row">
           <div class="col-md-10 offset-md-1 text-center">
-            <h2 class="section-title style-one fw-black text-title">NEWS & INSIGHTS</h2>
+            <h2 class="section-title style-one fw-black text-title">{breadcrumb.title || 'NEWS & INSIGHTS'}</h2>
             <ul class="br-menu list-unstyled">
-              <li><a href="/"><img src="/renius/image/home-icon.svg" alt="Icon">HOME</a></li>
-              <li>BLOG</li>
+              <li><a href="/"><img src="/renius/image/home-icon.svg" alt="Icon">{breadcrumb.home || 'HOME'}</a></li>
+              <li>{breadcrumb.current || 'BLOG'}</li>
             </ul>
           </div>
         </div>
@@ -88,12 +93,12 @@ posts.forEach(post => {
           <aside class="sidebar mt-lg-50">
             <div class="sidebar-widget search-widget bg-gray round-10">
               <form action="#" class="position-relative">
-                <input type="search" placeholder="Search" class="w-100 bg-white border-0 round-10 text-para outline-0">
+                <input type="search" placeholder={sidebar.search?.placeholder || 'Search'} class="w-100 bg-white border-0 round-10 text-para outline-0">
                 <button class="position-absolute top-0 h-100 bg-transparent border-0"><i class="ri-search-line"></i></button>
               </form>
             </div>
             <div class="sidebar-widget category-widget bg-gray round-10">
-              <h3 class="sidebar-widget-title fs-18 fw-semibold text-title mb-15">Categories</h3>
+              <h3 class="sidebar-widget-title fs-18 fw-semibold text-title mb-15">{sidebar.categories?.title || 'Categories'}</h3>
               <ul class="list-unstyled mb-0">
                 {categories.map(cat => {
                   const count = categoryCounts.get(cat.id) || 0;
@@ -109,7 +114,7 @@ posts.forEach(post => {
               </ul>
             </div>
             <div class="sidebar-widget category-widget bg-gray round-10">
-              <h3 class="sidebar-widget-title fs-18 fw-semibold text-title mb-15">Recent Posts</h3>
+              <h3 class="sidebar-widget-title fs-18 fw-semibold text-title mb-15">{sidebar.recentPosts?.title || 'Recent Posts'}</h3>
               <div class="rp-post-wrap">
                 {recentPosts.map(post => (
                   <div class="rp-post-card d-flex flex-wrap align-items-center">
@@ -127,13 +132,11 @@ posts.forEach(post => {
               </div>
             </div>
             <div class="sidebar-widget tags-widget bg-gray round-10">
-              <h3 class="sidebar-widget-title fs-18 fw-semibold text-title mb-15">Tags</h3>
+              <h3 class="sidebar-widget-title fs-18 fw-semibold text-title mb-15">{sidebar.tags?.title || 'Tags'}</h3>
               <ul class="list-unstyled mb-0">
-                <li><a href="#">Business</a></li>
-                <li><a href="#">Development</a></li>
-                <li><a href="#">Design</a></li>
-                <li><a href="#">Marketing</a></li>
-                <li><a href="#">Real Estate</a></li>
+                {(sidebar.tags?.items || ['Business', 'Development', 'Design', 'Marketing', 'Real Estate']).map((tag) => (
+                  <li><a href="#">{tag}</a></li>
+                ))}
               </ul>
             </div>
           </aside>
@@ -157,7 +160,7 @@ posts.forEach(post => {
                 <h3 class="fs-28 fw-black mt-2">
                   <a href={`/news/${featuredPost.slug}`} class="text-title link-hover-primary fw-bold transition">{featuredPost.title}</a>
                 </h3>
-                <a href={`/news/${featuredPost.slug}`} class="link style-one fw-semibold">Read More<img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
+                <a href={`/news/${featuredPost.slug}`} class="link style-one fw-semibold">{newsContent.readMore || 'Read More'}<img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
               </div>
             </div>
           )}

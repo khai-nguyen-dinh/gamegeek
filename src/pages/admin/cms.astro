@@ -2,17 +2,26 @@
 import Layout from '../../layouts/Layout.astro';
 import newsData from '../../data/news.json';
 import slidesData from '../../data/slides.json';
+import contentData from '../../data/content.json';
 ---
 
 <Layout title="CMS - Quản lý News & Categories | GameGeek">
   <div class="cms-container" style="min-height: 100vh; background: #f5f5f5; padding: 2rem 0;">
     <div class="container" style="max-width: 1400px; margin: 0 auto; padding: 0 1rem;">
-      <div class="cms-header" style="background: white; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        <h1 style="margin: 0; color: #333; font-size: 2rem; font-weight: bold;">CMS - Quản lý Content</h1>
-        <p style="margin: 0.5rem 0 0 0; color: #666;">Quản lý categories, bài viết news và hero slides</p>
+      <div class="cms-header" style="background: white; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h1 style="margin: 0; color: #333; font-size: 2rem; font-weight: bold;">CMS - Quản lý Content</h1>
+          <p style="margin: 0.5rem 0 0 0; color: #666;">Quản lý categories, bài viết news và hero slides</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <span id="current-username" style="color: #666; font-size: 0.9rem;"></span>
+          <button id="logout-btn" style="padding: 0.5rem 1rem; border: 1px solid #dc3545; background: white; color: #dc3545; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+            Đăng xuất
+          </button>
+        </div>
       </div>
 
-      <div class="cms-tabs" style="display: flex; gap: 1rem; margin-bottom: 2rem; background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+      <div class="cms-tabs" style="display: flex; gap: 1rem; margin-bottom: 2rem; background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-wrap: wrap;">
         <button id="tab-categories" class="tab-btn active" style="padding: 0.75rem 1.5rem; border: none; background: #FF5E14; color: white; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
           Categories
         </button>
@@ -21,6 +30,12 @@ import slidesData from '../../data/slides.json';
         </button>
         <button id="tab-slides" class="tab-btn" style="padding: 0.75rem 1.5rem; border: none; background: #e0e0e0; color: #333; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
           Slides
+        </button>
+        <button id="tab-content" class="tab-btn" style="padding: 0.75rem 1.5rem; border: none; background: #e0e0e0; color: #333; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
+          Text Content
+        </button>
+        <button id="tab-users" class="tab-btn" style="padding: 0.75rem 1.5rem; border: none; background: #e0e0e0; color: #333; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
+          👤 User Management
         </button>
       </div>
 
@@ -63,6 +78,220 @@ import slidesData from '../../data/slides.json';
         
         <div id="slides-list" style="display: grid; gap: 1rem;">
           <!-- Slides will be loaded here -->
+        </div>
+      </div>
+
+      <!-- Text Content Section -->
+      <div id="content-section" class="cms-section" style="display: none; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <div style="margin-bottom: 1.5rem;">
+          <h2 style="margin: 0 0 0.5rem 0; color: #333; font-size: 1.5rem;">Quản lý Text Content</h2>
+          <p style="margin: 0; color: #666; font-size: 0.9rem;">Chỉnh sửa text trên website theo từng trang. Dễ dàng và không cần biết code!</p>
+        </div>
+        
+        <!-- Page Selector -->
+        <div style="margin-bottom: 2rem;">
+          <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600; font-size: 1.1rem;">Chọn trang cần chỉnh sửa:</label>
+          <select id="content-page-selector" style="width: 100%; padding: 0.75rem; border: 2px solid #FF5E14; border-radius: 6px; font-size: 1rem; font-weight: 600; background: white; cursor: pointer;">
+            <option value="home">🏠 Trang Chủ (Home)</option>
+            <option value="about">👥 Giới Thiệu (About)</option>
+            <option value="services">💼 Dịch Vụ (Services)</option>
+            <option value="contact">📧 Liên Hệ (Contact)</option>
+            <option value="news">📰 Tin Tức (News)</option>
+            <option value="blog">📝 Blog</option>
+            <option value="career">💼 Tuyển Dụng (Career)</option>
+            <option value="program">🎯 Chương Trình (Program)</option>
+            <option value="navbar">🧭 Menu Điều Hướng (Navbar)</option>
+            <option value="footer">🦶 Chân Trang (Footer)</option>
+            <option value="contactForm">📋 Form Liên Hệ (Contact Form)</option>
+          </select>
+        </div>
+        
+        <!-- Content Forms (will be dynamically generated) -->
+        <div id="content-forms-container">
+          <!-- Forms will be loaded here based on selected page -->
+        </div>
+        
+        <!-- Advanced JSON Editor (Hidden by default) -->
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #e0e0e0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="margin: 0; color: #333; font-size: 1.2rem;">⚙️ Chế độ Nâng Cao (JSON Editor)</h3>
+            <button id="toggle-json-editor" style="padding: 0.5rem 1rem; border: 1px solid #666; background: white; color: #666; border-radius: 6px; cursor: pointer; font-weight: 600;">
+              Hiện JSON Editor
+            </button>
+          </div>
+          <div id="json-editor-container" style="display: none;">
+            <textarea id="content-json" rows="30" style="width: 100%; padding: 1rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; font-family: 'Courier New', monospace; background: #f8f9fa;" spellcheck="false"></textarea>
+            <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.85rem;">
+              💡 Lưu ý: Đảm bảo JSON hợp lệ. Sử dụng <a href="https://jsonlint.com" target="_blank" style="color: #FF5E14;">JSONLint</a> để kiểm tra trước khi lưu.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1rem;">
+              <button id="content-validate-btn" style="padding: 0.75rem 1.5rem; border: 1px solid #28a745; background: white; color: #28a745; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                ✓ Validate JSON
+              </button>
+              <button id="content-reset-btn" style="padding: 0.75rem 1.5rem; border: 1px solid #dc3545; background: white; color: #dc3545; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                ↺ Reset
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stat Modal -->
+      <div id="stat-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 2rem; border-radius: 8px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto;">
+          <h3 id="stat-modal-title" style="margin: 0 0 1.5rem 0; color: #333;">Thêm Stat</h3>
+          <form id="stat-form">
+            <input type="hidden" id="stat-index">
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Giá trị (Value)</label>
+              <input type="text" id="stat-value" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;" placeholder="10+, 8+, 9, STRATEGIC SUPPORT, etc.">
+              <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.85rem;">💡 Có thể dùng xuống dòng bằng cách nhập \n (ví dụ: STRATEGIC\nSUPPORT)</p>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+              <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Mô tả (Description)</label>
+              <textarea id="stat-description" rows="3" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; font-family: inherit; resize: vertical;" placeholder="Nhập mô tả cho stat này..."></textarea>
+            </div>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+              <button type="button" id="stat-cancel-btn" style="padding: 0.75rem 1.5rem; border: 1px solid #ddd; background: white; color: #333; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                Hủy
+              </button>
+              <button type="submit" style="padding: 0.75rem 1.5rem; border: none; background: #FF5E14; color: white; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                Lưu
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Service Slide Modal -->
+      <div id="service-slide-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 2rem; border-radius: 8px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto;">
+          <h3 id="service-slide-modal-title" style="margin: 0 0 1.5rem 0; color: #333;">Thêm Service Slide</h3>
+          <form id="service-slide-form">
+            <input type="hidden" id="service-slide-index">
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Ảnh nền slide</label>
+              <div style="display: flex; gap: 0.5rem; align-items: flex-start;">
+                <input type="text" id="service-slide-image" required style="flex: 1; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;" placeholder="/images/... hoặc URL">
+                <input type="file" accept="image/*" id="service-slide-image-file" style="display: none;" data-target="service-slide-image">
+                <button type="button" onclick="document.getElementById('service-slide-image-file').click()" style="padding: 0.75rem 1rem; border: 1px solid #ddd; background: #f8f9fa; border-radius: 6px; cursor: pointer; white-space: nowrap;">📷 Chọn</button>
+              </div>
+              <div id="service-slide-image-preview" style="margin-top: 0.5rem; display: none;">
+                <img id="service-slide-image-preview-img" src="" alt="Preview" style="max-width: 100%; max-height: 300px; border-radius: 6px; border: 1px solid #ddd;">
+              </div>
+              <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.85rem;">💡 Upload ảnh hoặc nhập URL. Ảnh này sẽ là nền của slide.</p>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+              <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Thứ tự (Order)</label>
+              <input type="number" id="service-slide-order" required min="1" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;" value="1">
+            </div>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+              <button type="button" id="service-slide-cancel-btn" style="padding: 0.75rem 1.5rem; border: 1px solid #ddd; background: white; color: #333; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                Hủy
+              </button>
+              <button type="submit" style="padding: 0.75rem 1.5rem; border: none; background: #FF5E14; color: white; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                Lưu
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Service Tab Modal -->
+      <div id="service-tab-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 2rem; border-radius: 8px; max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto;">
+          <h3 id="service-tab-modal-title" style="margin: 0 0 1.5rem 0; color: #333;">Thêm Tab</h3>
+          <form id="service-tab-form">
+            <input type="hidden" id="service-tab-index">
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Tên Tab</label>
+              <input type="text" id="service-tab-name" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;" placeholder="Business & Strategy Acceleration">
+            </div>
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Mô tả</label>
+              <textarea id="service-tab-description" rows="3" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; font-family: inherit; resize: vertical;" placeholder="Comprehensive advisory on publishing strategy..."></textarea>
+            </div>
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Ảnh</label>
+              <div style="display: flex; gap: 0.5rem; align-items: flex-start;">
+                <input type="text" id="service-tab-image" required style="flex: 1; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;" placeholder="/renius/image/service2.jpg hoặc URL">
+                <input type="file" accept="image/*" id="service-tab-image-file" style="display: none;" data-target="service-tab-image">
+                <button type="button" onclick="document.getElementById('service-tab-image-file').click()" style="padding: 0.75rem 1rem; border: 1px solid #ddd; background: #f8f9fa; border-radius: 6px; cursor: pointer; white-space: nowrap;">📷 Chọn</button>
+              </div>
+              <div id="service-tab-image-preview" style="margin-top: 0.5rem; display: none;">
+                <img id="service-tab-image-preview-img" src="" alt="Preview" style="max-width: 100%; max-height: 300px; border-radius: 6px; border: 1px solid #ddd;">
+              </div>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <label style="display: block; margin: 0; color: #333; font-weight: 600;">Items (Danh sách)</label>
+                <button type="button" id="add-service-tab-item-btn" style="padding: 0.5rem 1rem; border: none; background: #28a745; color: white; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem;">+ Thêm Item</button>
+              </div>
+              <div id="service-tab-items-list" style="display: grid; gap: 1rem;">
+                <!-- Items will be added here -->
+              </div>
+            </div>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+              <button type="button" id="service-tab-cancel-btn" style="padding: 0.75rem 1.5rem; border: 1px solid #ddd; background: white; color: #333; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                Hủy
+              </button>
+              <button type="submit" style="padding: 0.75rem 1.5rem; border: none; background: #FF5E14; color: white; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                Lưu
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- User Management Section -->
+      <div id="users-section" class="cms-section" style="display: none; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <div style="margin-bottom: 1.5rem;">
+          <h2 style="margin: 0; color: #333; font-size: 1.5rem;">👤 Quản lý User & Password</h2>
+          <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">Thay đổi username và password cho tài khoản CMS</p>
+        </div>
+
+        <!-- Update Username Form -->
+        <div style="margin-bottom: 2rem; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #FF5E14;">
+          <h3 style="margin: 0 0 1rem 0; color: #333; font-size: 1.2rem; font-weight: 600;">Đổi Username</h3>
+          <form id="update-username-form">
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Username mới</label>
+              <input type="text" id="new-username" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;" placeholder="Nhập username mới">
+            </div>
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Password hiện tại (để xác nhận)</label>
+              <input type="password" id="username-confirm-password" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;" placeholder="Nhập password hiện tại">
+            </div>
+            <div id="username-error" style="display: none; padding: 0.75rem; background: #fee; border: 1px solid #fcc; border-radius: 6px; color: #c33; font-size: 0.9rem; margin-bottom: 1rem;"></div>
+            <div id="username-success" style="display: none; padding: 0.75rem; background: #efe; border: 1px solid #cfc; border-radius: 6px; color: #3c3; font-size: 0.9rem; margin-bottom: 1rem;"></div>
+            <button type="submit" style="padding: 0.75rem 1.5rem; border: none; background: #FF5E14; color: white; border-radius: 6px; cursor: pointer; font-weight: 600;">
+              Cập nhật Username
+            </button>
+          </form>
+        </div>
+
+        <!-- Update Password Form -->
+        <div style="padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #28a745;">
+          <h3 style="margin: 0 0 1rem 0; color: #333; font-size: 1.2rem; font-weight: 600;">Đổi Password</h3>
+          <form id="update-password-form">
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Password hiện tại</label>
+              <input type="password" id="old-password" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;" placeholder="Nhập password hiện tại">
+            </div>
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Password mới</label>
+              <input type="password" id="new-password" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;" placeholder="Nhập password mới" minlength="6">
+            </div>
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Xác nhận password mới</label>
+              <input type="password" id="confirm-password" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;" placeholder="Nhập lại password mới" minlength="6">
+            </div>
+            <div id="password-error" style="display: none; padding: 0.75rem; background: #fee; border: 1px solid #fcc; border-radius: 6px; color: #c33; font-size: 0.9rem; margin-bottom: 1rem;"></div>
+            <div id="password-success" style="display: none; padding: 0.75rem; background: #efe; border: 1px solid #cfc; border-radius: 6px; color: #3c3; font-size: 0.9rem; margin-bottom: 1rem;"></div>
+            <button type="submit" style="padding: 0.75rem 1.5rem; border: none; background: #28a745; color: white; border-radius: 6px; cursor: pointer; font-weight: 600;">
+              Cập nhật Password
+            </button>
+          </form>
         </div>
       </div>
 
@@ -282,50 +511,185 @@ import slidesData from '../../data/slides.json';
     </div>
   </div>
 
-  <script define:vars={{ newsData, slidesData }}>
+  <script define:vars={{ newsData, slidesData, contentData }}>
+    // Authentication check
+    function checkAuth() {
+      const authenticated = localStorage.getItem('cms_authenticated') === 'true';
+      if (!authenticated) {
+        window.location.href = '/admin/login';
+        return false;
+      }
+      
+      // Check session timeout (24 hours)
+      const loginTime = localStorage.getItem('cms_login_time');
+      if (loginTime) {
+        const timeDiff = Date.now() - parseInt(loginTime, 10);
+        const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 24 hours
+        if (timeDiff > SESSION_TIMEOUT) {
+          localStorage.removeItem('cms_authenticated');
+          localStorage.removeItem('cms_username');
+          localStorage.removeItem('cms_login_time');
+          window.location.href = '/admin/login';
+          return false;
+        }
+      }
+      
+      // Display current username
+      const username = localStorage.getItem('cms_username') || 'admin';
+      const usernameEl = document.getElementById('current-username');
+      if (usernameEl) {
+        usernameEl.textContent = `Xin chào, ${username}`;
+      }
+      
+      return true;
+    }
+
+    // Check authentication on page load
+    if (!checkAuth()) {
+      // Will redirect, so stop execution
+      throw new Error('Not authenticated');
+    }
+
+    // Logout handler
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      if (confirm('Bạn có chắc muốn đăng xuất?')) {
+        localStorage.removeItem('cms_authenticated');
+        localStorage.removeItem('cms_username');
+        localStorage.removeItem('cms_login_time');
+        window.location.href = '/admin/login';
+      }
+    });
+
     // Initialize data
     let categories = [...newsData.categories];
     let posts = [...newsData.posts];
     let slides = [...slidesData.slides];
+    let content = JSON.parse(JSON.stringify(contentData)); // Deep copy
     let currentEditingCategory = null;
     let currentEditingPost = null;
     let currentEditingSlide = null;
+    
+    // Initialize stats, vision, mission from content
+    let stats = content.about?.features || [];
+    let vision = content.about?.vision || { title: 'Vision', description: '' };
+    let mission = content.about?.mission || { title: 'Mission', description: '' };
+    let currentEditingStatIndex = null;
+    
+    // Initialize service slides
+    let serviceSlides = content.services?.serviceSlides || [];
+    let currentEditingServiceSlideIndex = null;
+    
+    // Initialize service tabs
+    let serviceTabs = content.services?.tabs || [];
+    let currentEditingServiceTabIndex = null;
+    let currentEditingServiceTabItems = [];
+    
+    // Function to reload stats from content when about page is selected
+    function reloadStatsFromContent() {
+      stats = content.about?.features || [];
+      vision = content.about?.vision || { title: 'Vision', description: '' };
+      mission = content.about?.mission || { title: 'Mission', description: '' };
+    }
+    
+    // Function to reload service slides from content when services page is selected
+    function reloadServiceSlidesFromContent() {
+      serviceSlides = content.services?.serviceSlides || [];
+      serviceTabs = content.services?.tabs || [];
+    }
 
     // Tab switching
     document.getElementById('tab-categories').addEventListener('click', () => {
       document.getElementById('categories-section').style.display = 'block';
       document.getElementById('posts-section').style.display = 'none';
       document.getElementById('slides-section').style.display = 'none';
+      document.getElementById('content-section').style.display = 'none';
+      document.getElementById('users-section').style.display = 'none';
       document.getElementById('tab-categories').style.background = '#FF5E14';
       document.getElementById('tab-categories').style.color = 'white';
       document.getElementById('tab-posts').style.background = '#e0e0e0';
       document.getElementById('tab-posts').style.color = '#333';
       document.getElementById('tab-slides').style.background = '#e0e0e0';
       document.getElementById('tab-slides').style.color = '#333';
+      document.getElementById('tab-content').style.background = '#e0e0e0';
+      document.getElementById('tab-content').style.color = '#333';
+      document.getElementById('tab-users').style.background = '#e0e0e0';
+      document.getElementById('tab-users').style.color = '#333';
     });
 
     document.getElementById('tab-posts').addEventListener('click', () => {
       document.getElementById('categories-section').style.display = 'none';
       document.getElementById('posts-section').style.display = 'block';
       document.getElementById('slides-section').style.display = 'none';
+      document.getElementById('content-section').style.display = 'none';
+      document.getElementById('users-section').style.display = 'none';
       document.getElementById('tab-posts').style.background = '#FF5E14';
       document.getElementById('tab-posts').style.color = 'white';
       document.getElementById('tab-categories').style.background = '#e0e0e0';
       document.getElementById('tab-categories').style.color = '#333';
       document.getElementById('tab-slides').style.background = '#e0e0e0';
       document.getElementById('tab-slides').style.color = '#333';
+      document.getElementById('tab-content').style.background = '#e0e0e0';
+      document.getElementById('tab-content').style.color = '#333';
+      document.getElementById('tab-users').style.background = '#e0e0e0';
+      document.getElementById('tab-users').style.color = '#333';
     });
 
     document.getElementById('tab-slides').addEventListener('click', () => {
       document.getElementById('categories-section').style.display = 'none';
       document.getElementById('posts-section').style.display = 'none';
       document.getElementById('slides-section').style.display = 'block';
+      document.getElementById('content-section').style.display = 'none';
+      document.getElementById('users-section').style.display = 'none';
       document.getElementById('tab-slides').style.background = '#FF5E14';
       document.getElementById('tab-slides').style.color = 'white';
       document.getElementById('tab-categories').style.background = '#e0e0e0';
       document.getElementById('tab-categories').style.color = '#333';
       document.getElementById('tab-posts').style.background = '#e0e0e0';
       document.getElementById('tab-posts').style.color = '#333';
+      document.getElementById('tab-content').style.background = '#e0e0e0';
+      document.getElementById('tab-content').style.color = '#333';
+      document.getElementById('tab-users').style.background = '#e0e0e0';
+      document.getElementById('tab-users').style.color = '#333';
+    });
+
+    document.getElementById('tab-content').addEventListener('click', () => {
+      document.getElementById('categories-section').style.display = 'none';
+      document.getElementById('posts-section').style.display = 'none';
+      document.getElementById('slides-section').style.display = 'none';
+      document.getElementById('content-section').style.display = 'block';
+      document.getElementById('users-section').style.display = 'none';
+      document.getElementById('tab-content').style.background = '#FF5E14';
+      document.getElementById('tab-content').style.color = 'white';
+      document.getElementById('tab-categories').style.background = '#e0e0e0';
+      document.getElementById('tab-categories').style.color = '#333';
+      document.getElementById('tab-posts').style.background = '#e0e0e0';
+      document.getElementById('tab-posts').style.color = '#333';
+      document.getElementById('tab-slides').style.background = '#e0e0e0';
+      document.getElementById('tab-slides').style.color = '#333';
+      document.getElementById('tab-users').style.background = '#e0e0e0';
+      document.getElementById('tab-users').style.color = '#333';
+      // Load content JSON
+      document.getElementById('content-json').value = JSON.stringify(content, null, 2);
+      // Load first page form
+      loadContentForm('home');
+    });
+
+    document.getElementById('tab-users').addEventListener('click', () => {
+      document.getElementById('categories-section').style.display = 'none';
+      document.getElementById('posts-section').style.display = 'none';
+      document.getElementById('slides-section').style.display = 'none';
+      document.getElementById('content-section').style.display = 'none';
+      document.getElementById('users-section').style.display = 'block';
+      document.getElementById('tab-users').style.background = '#FF5E14';
+      document.getElementById('tab-users').style.color = 'white';
+      document.getElementById('tab-categories').style.background = '#e0e0e0';
+      document.getElementById('tab-categories').style.color = '#333';
+      document.getElementById('tab-posts').style.background = '#e0e0e0';
+      document.getElementById('tab-posts').style.color = '#333';
+      document.getElementById('tab-slides').style.background = '#e0e0e0';
+      document.getElementById('tab-slides').style.color = '#333';
+      document.getElementById('tab-content').style.background = '#e0e0e0';
+      document.getElementById('tab-content').style.color = '#333';
     });
 
     // Render categories
@@ -737,6 +1101,1047 @@ import slidesData from '../../data/slides.json';
     // Setup image upload for slide
     setupImageUpload('slide-image-file', 'slide-image', 'slide-image-preview', 'slide-image-preview-img');
 
+    // Content Form Generator
+    function createTextField(id, label, value = '', placeholder = '', rows = 1, helpText = '') {
+      const isTextarea = rows > 1;
+      const inputTag = isTextarea 
+        ? `<textarea id="${id}" rows="${rows}" placeholder="${placeholder}" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; font-family: inherit; resize: vertical;">${value}</textarea>`
+        : `<input type="text" id="${id}" value="${value}" placeholder="${placeholder}" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;">`;
+      
+      return `
+        <div style="margin-bottom: 1.5rem;">
+          <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">${label}</label>
+          ${inputTag}
+          ${helpText ? `<p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.85rem;">${helpText}</p>` : ''}
+        </div>
+      `;
+    }
+
+    function createSection(title) {
+      return {
+        start: `<div style="margin-bottom: 2rem; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #FF5E14;"><h3 style="margin: 0 0 1rem 0; color: #333; font-size: 1.3rem; font-weight: 700;">${title}</h3>`,
+        end: '</div>'
+      };
+    }
+
+    function loadContentForm(page) {
+      const container = document.getElementById('content-forms-container');
+      let html = '';
+      const pageData = content[page] || {};
+
+      if (page === 'home') {
+        const aboutSection = createSection('📝 About Section');
+        html += aboutSection.start;
+        html += createTextField('home-about-subtitle', 'Subtitle', pageData.about?.subtitle || '', 'ABOUT US');
+        html += createTextField('home-about-titlePart1', 'Tiêu đề - Phần 1', pageData.about?.titlePart1 || '', 'GAMEGEEK – ');
+        html += createTextField('home-about-titleHighlight', 'Tiêu đề - Phần tô đậm', pageData.about?.titleHighlight || '', 'THE GAMING CENTRAL HUB');
+        html += createTextField('home-about-titlePart2', 'Tiêu đề - Phần 2', pageData.about?.titlePart2 || '', ' OF VIETNAM');
+        html += createTextField('home-about-description', 'Mô tả', pageData.about?.description || '', '', 4);
+        html += createTextField('home-about-buttonText', 'Text nút', pageData.about?.buttonText || '', 'More About Us');
+        html += aboutSection.end;
+        
+        const servicesSection = createSection('💼 Services Section');
+        html += servicesSection.start;
+        html += createTextField('home-services-subtitle', 'Subtitle', pageData.services?.subtitle || '', 'OUR SERVICES');
+        html += createTextField('home-services-titlePart1', 'Tiêu đề - Phần 1', pageData.services?.titlePart1 || '', 'End-to-End Solutions for ');
+        html += createTextField('home-services-titleHighlight', 'Tiêu đề - Phần tô đậm', pageData.services?.titleHighlight || '', 'Global Partners & Your Bridge');
+        html += createTextField('home-services-titlePart2', 'Tiêu đề - Phần 2', pageData.services?.titlePart2 || '', ' to the Global Stage');
+        
+        // Service Items
+        html += '<div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #ddd;">';
+        html += '<h4 style="margin: 0 0 1rem 0; color: #333; font-size: 1.1rem; font-weight: 600;">📋 Service Items (3 service cards)</h4>';
+        
+        const serviceItems = pageData.services?.items || [];
+        for (let i = 0; i < 3; i++) {
+          const item = serviceItems[i] || { title: '', items: [], linkText: '' };
+          html += `<div style="margin-bottom: 2rem; padding: 1.5rem; background: white; border: 1px solid #e0e0e0; border-radius: 8px;">`;
+          html += `<h5 style="margin: 0 0 1rem 0; color: #FF5E14; font-size: 1rem; font-weight: 600;">Service Card ${i + 1}</h5>`;
+          html += createTextField(`home-services-items-${i}-title`, 'Tiêu đề Service', item.title || '', 'MARKETING AGENCY');
+          html += createTextField(`home-services-items-${i}-linkText`, 'Text nút "Discover More"', item.linkText || '', 'Discover More');
+          
+          html += '<div style="margin-top: 1rem;">';
+          html += '<label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Danh sách dịch vụ (mỗi dòng là 1 item)</label>';
+          html += `<textarea id="home-services-items-${i}-items" rows="4" placeholder="Strategic Event Series\nB2B Matchmaking\nIntegrated Media Solutions" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; font-family: inherit; resize: vertical;">${(item.items || []).join('\n')}</textarea>`;
+          html += '<p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.85rem;">💡 Mỗi dòng là một dịch vụ riêng biệt</p>';
+          html += '</div>';
+          
+          html += '</div>';
+        }
+        
+        html += '</div>';
+        html += servicesSection.end;
+        
+        const networkSection = createSection('🌐 Network Section');
+        html += networkSection.start;
+        html += createTextField('home-network-subtitle', 'Subtitle', pageData.network?.subtitle || '', 'OUR NETWORK');
+        html += createTextField('home-network-titlePart1', 'Tiêu đề - Phần 1', pageData.network?.titlePart1 || '', 'Best Connector in ');
+        html += createTextField('home-network-titleHighlight', 'Tiêu đề - Phần tô đậm', pageData.network?.titleHighlight || '', 'Vietnam Market');
+        html += createTextField('home-network-titlePart2', 'Tiêu đề - Phần 2', pageData.network?.titlePart2 || '', '');
+        html += createTextField('home-network-buttonText', 'Text nút', pageData.network?.buttonText || '', 'View All Services');
+        
+        // Network Stats
+        html += '<div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #ddd;">';
+        html += '<h4 style="margin: 0 0 1rem 0; color: #333; font-size: 1.1rem; font-weight: 600;">📊 Network Stats (5 số liệu thống kê)</h4>';
+        
+        const networkStats = pageData.network?.stats || [];
+        for (let i = 0; i < 5; i++) {
+          const stat = networkStats[i] || { value: '', label: '' };
+          html += `<div style="margin-bottom: 1.5rem; padding: 1.5rem; background: white; border: 1px solid #e0e0e0; border-radius: 8px;">`;
+          html += `<h5 style="margin: 0 0 1rem 0; color: #FF5E14; font-size: 1rem; font-weight: 600;">Stat Card ${i + 1}</h5>`;
+          html += createTextField(`home-network-stats-${i}-value`, 'Số liệu (ví dụ: 200+, 300+, 7)', stat.value || '', '200+');
+          html += createTextField(`home-network-stats-${i}-label`, 'Nhãn mô tả', stat.label || '', 'Global Partners');
+          html += '</div>';
+        }
+        
+        html += '</div>';
+        html += networkSection.end;
+        
+        const ctaSection = createSection('📢 CTA Section');
+        html += ctaSection.start;
+        html += createTextField('home-cta-titlePart1', 'Tiêu đề - Phần 1', pageData.cta?.titlePart1 || '', 'Vietnam - A Rising Hub for ');
+        html += createTextField('home-cta-titleHighlight', 'Tiêu đề - Phần tô đậm', pageData.cta?.titleHighlight || '', 'Game Production');
+        html += createTextField('home-cta-titlePart2', 'Tiêu đề - Phần 2', pageData.cta?.titlePart2 || '', ' in Asia');
+        html += ctaSection.end;
+        
+        const newsSection = createSection('📰 News & Insights Section');
+        html += newsSection.start;
+        html += createTextField('home-news-subtitle', 'Subtitle', pageData.news?.subtitle || '', 'NEWS & INSIGHTS');
+        html += createTextField('home-news-titlePart1', 'Tiêu đề - Phần 1', pageData.news?.titlePart1 || '', '');
+        html += createTextField('home-news-titleHighlight', 'Tiêu đề - Phần tô đậm', pageData.news?.titleHighlight || '', 'Vietnam Gaming Landscape');
+        html += createTextField('home-news-titlePart2', 'Tiêu đề - Phần 2', pageData.news?.titlePart2 || '', '');
+        
+        // News Stats
+        html += '<div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #ddd;">';
+        html += '<h4 style="margin: 0 0 1rem 0; color: #333; font-size: 1.1rem; font-weight: 600;">📊 News Stats (8 số liệu thống kê)</h4>';
+        
+        const newsStats = pageData.news?.stats || [];
+        for (let i = 0; i < 8; i++) {
+          const stat = newsStats[i] || { label: '', prefix: '', value: '', suffix: '', description: '' };
+          html += `<div style="margin-bottom: 1.5rem; padding: 1.5rem; background: white; border: 1px solid #e0e0e0; border-radius: 8px;">`;
+          html += `<h5 style="margin: 0 0 1rem 0; color: #FF5E14; font-size: 1rem; font-weight: 600;">Stat Card ${i + 1}</h5>`;
+          html += createTextField(`home-news-stats-${i}-label`, 'Nhãn (ví dụ: GLOBAL RANKING)', stat.label || '', 'GLOBAL RANKING');
+          html += createTextField(`home-news-stats-${i}-prefix`, 'Tiền tố (ví dụ: TOP , $)', stat.prefix || '', 'TOP ');
+          html += createTextField(`home-news-stats-${i}-value`, 'Giá trị số (ví dụ: 1, 6.1, 12)', stat.value || '', '1');
+          html += createTextField(`home-news-stats-${i}-suffix`, 'Hậu tố (ví dụ: B, %, K)', stat.suffix || '', '');
+          html += createTextField(`home-news-stats-${i}-description`, 'Mô tả', stat.description || '', '', 2);
+          html += '</div>';
+        }
+        
+        html += '</div>';
+        html += newsSection.end;
+      } else if (page === 'about') {
+        const heroSection = createSection('🎯 Hero Section');
+        html += heroSection.start;
+        html += createTextField('about-hero-subtitle', 'Subtitle', pageData.hero?.subtitle || '', 'THE LOCAL VOICE');
+        html += createTextField('about-hero-titlePart1', 'Tiêu đề - Phần 1', pageData.hero?.titlePart1 || '', 'The ');
+        html += createTextField('about-hero-titleHighlight', 'Tiêu đề - Phần tô đậm 1', pageData.hero?.titleHighlight || '', 'central hub ');
+        html += createTextField('about-hero-titlePart2', 'Tiêu đề - Phần 2', pageData.hero?.titlePart2 || '', ' in Vietnam dedicated to the ');
+        html += createTextField('about-hero-titleHighlight2', 'Tiêu đề - Phần tô đậm 2', pageData.hero?.titleHighlight2 || '', 'Vietnamese Game Maker ');
+        html += createTextField('about-hero-titlePart3', 'Tiêu đề - Phần 3', pageData.hero?.titlePart3 || '', 'Community');
+        html += createTextField('about-hero-buttonText', 'Text nút', pageData.hero?.buttonText || '', 'Our Services');
+        html += heroSection.end;
+        
+        const aboutSection = createSection('📖 About Section');
+        html += aboutSection.start;
+        html += createTextField('about-aboutSection-subtitle', 'Subtitle', pageData.aboutSection?.subtitle || '', 'WHO ARE WE?');
+        html += createTextField('about-aboutSection-titlePart1', 'Tiêu đề - Phần 1', pageData.aboutSection?.titlePart1 || '', 'Vietnam\'s ');
+        html += createTextField('about-aboutSection-titleHighlight', 'Tiêu đề - Phần tô đậm', pageData.aboutSection?.titleHighlight || '', 'Gaming Central Hub ');
+        html += createTextField('about-aboutSection-titlePart2', 'Tiêu đề - Phần 2', pageData.aboutSection?.titlePart2 || '', '');
+        html += createTextField('about-aboutSection-description', 'Mô tả', pageData.aboutSection?.description || '', '', 5);
+        html += aboutSection.end;
+        
+        const teamSection = createSection('👥 Team Section');
+        html += teamSection.start;
+        html += createTextField('about-team-subtitle', 'Subtitle', pageData.team?.subtitle || '', 'MEET THE TEAM');
+        html += createTextField('about-team-titlePart1', 'Tiêu đề - Phần 1', pageData.team?.titlePart1 || '', 'Connect and scale faster in ');
+        html += createTextField('about-team-titleHighlight', 'Tiêu đề - Phần tô đậm', pageData.team?.titleHighlight || '', 'Vietnam\'s game industry');
+        html += createTextField('about-team-titlePart2', 'Tiêu đề - Phần 2', pageData.team?.titlePart2 || '', '');
+        html += teamSection.end;
+        
+        // Stats Section
+        const statsSection = createSection('📊 Stats (Thống kê)');
+        html += statsSection.start;
+        html += '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">';
+        html += '<p style="margin: 0; color: #666; font-size: 0.9rem;">Quản lý các thống kê hiển thị trên trang About</p>';
+        html += '<button type="button" id="add-stat-btn-about" style="padding: 0.5rem 1rem; border: none; background: #FF5E14; color: white; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">+ Thêm Stat</button>';
+        html += '</div>';
+        html += '<div id="stats-list-about" style="display: grid; gap: 1rem; margin-top: 1rem;">';
+        html += '</div>';
+        html += statsSection.end;
+        
+        // Vision Section
+        const visionSection = createSection('👁️ Vision (Tầm nhìn)');
+        html += visionSection.start;
+        html += createTextField('about-vision-title', 'Tiêu đề', pageData.vision?.title || '', 'Vision');
+        html += createTextField('about-vision-description', 'Mô tả', pageData.vision?.description || '', '', 4);
+        html += visionSection.end;
+        
+        // Mission Section
+        const missionSection = createSection('🎯 Mission (Sứ mệnh)');
+        html += missionSection.start;
+        html += createTextField('about-mission-title', 'Tiêu đề', pageData.mission?.title || '', 'Mission');
+        html += createTextField('about-mission-description', 'Mô tả', pageData.mission?.description || '', '', 4);
+        html += missionSection.end;
+        
+        const ctaSection = createSection('📢 CTA Section');
+        html += ctaSection.start;
+        html += createTextField('about-cta-titlePart1', 'Tiêu đề - Phần 1', pageData.cta?.titlePart1 || '', 'Your Next ');
+        html += createTextField('about-cta-titleHighlight', 'Tiêu đề - Phần tô đậm', pageData.cta?.titleHighlight || '', 'Big Event Starts Here ');
+        html += createTextField('about-cta-titlePart2', 'Tiêu đề - Phần 2', pageData.cta?.titlePart2 || '', ' – Let\'s Make It Extraordinary!');
+        html += ctaSection.end;
+      } else if (page === 'services') {
+        const heroSection = createSection('🎯 Hero Section');
+        html += heroSection.start;
+        html += createTextField('services-hero-subtitle', 'Subtitle', pageData.hero?.subtitle || '', 'End-to-End Solutions for Global Partners');
+        html += createTextField('services-hero-titlePart1', 'Tiêu đề - Phần 1', pageData.hero?.titlePart1 || '', 'One hub for ');
+        html += createTextField('services-hero-titleHighlight', 'Tiêu đề - Tô đậm 1', pageData.hero?.titleHighlight || '', 'strategy,');
+        html += createTextField('services-hero-titleHighlight2', 'Tiêu đề - Tô đậm 2', pageData.hero?.titleHighlight2 || '', 'execution,');
+        html += createTextField('services-hero-titlePart4', 'Tiêu đề - Phần giữa', pageData.hero?.titlePart4 || '', ' and');
+        html += createTextField('services-hero-titleHighlight3', 'Tiêu đề - Tô đậm 3', pageData.hero?.titleHighlight3 || '', 'sustained growth');
+        html += heroSection.end;
+        
+        const partnersSection = createSection('🤝 Local Partners');
+        html += partnersSection.start;
+        html += createTextField('services-localPartners-subtitle', 'Subtitle', pageData.localPartners?.subtitle || '', 'LOCAL PARTNERS');
+        html += createTextField('services-localPartners-titlePart1', 'Tiêu đề - Phần 1', pageData.localPartners?.titlePart1 || '', 'Your ');
+        html += createTextField('services-localPartners-titleHighlight', 'Tiêu đề - Tô đậm 1', pageData.localPartners?.titleHighlight || '', 'Bridge ');
+        html += createTextField('services-localPartners-titlePart2', 'Tiêu đề - Phần 2', pageData.localPartners?.titlePart2 || '', ' to the ');
+        html += createTextField('services-localPartners-titleHighlight2', 'Tiêu đề - Tô đậm 2', pageData.localPartners?.titleHighlight2 || '', 'Global Stage');
+        
+        // Tabs Management
+        html += '<div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #ddd;">';
+        html += '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">';
+        html += '<h4 style="margin: 0; color: #333; font-size: 1.1rem; font-weight: 600;">📑 Quản lý Tabs (4 tabs)</h4>';
+        html += '<button type="button" id="add-service-tab-btn" style="padding: 0.5rem 1rem; border: none; background: #FF5E14; color: white; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">+ Thêm Tab</button>';
+        html += '</div>';
+        html += '<div id="service-tabs-list" style="display: grid; gap: 1.5rem; margin-bottom: 2rem;">';
+        html += '</div>';
+        html += '</div>';
+        
+        html += partnersSection.end;
+        
+        // Service Slider Section
+        const sliderSection = createSection('🖼️ Service Slider (Ảnh nền thay đổi, text giữ nguyên)');
+        html += sliderSection.start;
+        html += '<p style="color: #666; margin-bottom: 1.5rem; padding: 1rem; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">';
+        html += '<strong>💡 Lưu ý:</strong> Text của 3 service cards bên dưới sẽ giữ nguyên với mọi slide. Chỉ ảnh nền của slide thay đổi.';
+        html += '</p>';
+        
+        html += '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">';
+        html += '<h4 style="margin: 0; color: #333; font-size: 1.1rem; font-weight: 600;">Quản lý Slides (Ảnh nền)</h4>';
+        html += '<button type="button" id="add-service-slide-btn" style="padding: 0.5rem 1rem; border: none; background: #FF5E14; color: white; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">+ Thêm Slide</button>';
+        html += '</div>';
+        html += '<div id="service-slides-list" style="display: grid; gap: 1rem; margin-bottom: 2rem;">';
+        html += '</div>';
+        
+        // Service Cards Text (Static - giữ nguyên với mọi slide)
+        html += '<div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #ddd;">';
+        html += '<h4 style="margin: 0 0 1.5rem 0; color: #333; font-size: 1.1rem; font-weight: 600;">📋 Service Cards Text (Giữ nguyên với mọi slide)</h4>';
+        
+        const serviceCards = pageData.serviceCards || [
+          {
+            title: 'MARKETING AGENCY',
+            items: ['Event series', 'Business Match', 'Media hub / Package - agency for brands']
+          },
+          {
+            title: 'GAMING BUSINESS',
+            items: ['M&A games / Co-pub / Invest / Deal broker', 'Set up business gaming in VN', 'Accelerator / Incubator']
+          },
+          {
+            title: 'GO TO MARKET SERVICES',
+            items: ['Sale reference: APP MAGIC, PLAYABLE LABS', 'Go to market for specific services', 'Other: Recruitment, Education']
+          }
+        ];
+        
+        for (let i = 0; i < 3; i++) {
+          const card = serviceCards[i] || { title: '', items: [] };
+          html += `<div style="margin-bottom: 2rem; padding: 1.5rem; background: white; border: 1px solid #e0e0e0; border-radius: 8px;">`;
+          html += `<h5 style="margin: 0 0 1rem 0; color: #FF5E14; font-size: 1rem; font-weight: 600;">Service Card ${i + 1}</h5>`;
+          html += createTextField(`services-serviceCards-${i}-title`, 'Tiêu đề', card.title || '', 'MARKETING AGENCY');
+          html += '<div style="margin-top: 1rem;">';
+          html += '<label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Danh sách items (mỗi dòng là 1 item)</label>';
+          html += `<textarea id="services-serviceCards-${i}-items" rows="4" placeholder="Event series\nBusiness Match\nMedia hub / Package - agency for brands" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; font-family: inherit; resize: vertical;">${(card.items || []).join('\n')}</textarea>`;
+          html += '<p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.85rem;">💡 Mỗi dòng là một item riêng biệt</p>';
+          html += '</div>';
+          html += '</div>';
+        }
+        
+        html += '</div>';
+        html += sliderSection.end;
+        
+        const ctaSection = createSection('📢 CTA Section');
+        html += ctaSection.start;
+        html += createTextField('services-cta-titlePart1', 'Tiêu đề - Phần 1', pageData.cta?.titlePart1 || '', 'Vietnam - A Rising Hub for ');
+        html += createTextField('services-cta-titleHighlight', 'Tiêu đề - Tô đậm', pageData.cta?.titleHighlight || '', 'Game Production');
+        html += createTextField('services-cta-titlePart2', 'Tiêu đề - Phần 2', pageData.cta?.titlePart2 || '', ' in Asia');
+        html += ctaSection.end;
+      } else if (page === 'contact') {
+        const heroSection = createSection('🎯 Hero Section');
+        html += heroSection.start;
+        html += createTextField('contact-hero-title', 'Tiêu đề', pageData.hero?.title || '', 'Get In Touch');
+        html += createTextField('contact-hero-description', 'Mô tả', pageData.hero?.description || '', '', 3);
+        html += heroSection.end;
+        
+        const formSection = createSection('📋 Form Section');
+        html += formSection.start;
+        html += createTextField('contact-form-title', 'Tiêu đề form', pageData.form?.title || '', 'Send us a message');
+        html += createTextField('contact-form-submitButton', 'Text nút Submit', pageData.form?.submitButton || '', 'Send Message');
+        html += formSection.end;
+        
+        const infoSection = createSection('ℹ️ Contact Info');
+        html += infoSection.start;
+        html += createTextField('contact-info-title', 'Tiêu đề', pageData.info?.title || '', 'Contact Information');
+        html += createTextField('contact-info-description', 'Mô tả', pageData.info?.description || '', '', 3);
+        html += createTextField('contact-info-email-value', 'Email', pageData.info?.email?.value || '', 'team@gamegeek.asia');
+        html += createTextField('contact-info-phone-value', 'Số điện thoại', pageData.info?.phone?.value || '', '(+84) 902 122 120');
+        html += createTextField('contact-info-address-value', 'Địa chỉ (mỗi dòng cách nhau bởi \\n)', pageData.info?.address?.value || '', 'NIC Building, No 6 Lane 7 Ton That Thuyet\\nCau Giay, Hanoi', 3);
+        html += infoSection.end;
+      } else if (page === 'news') {
+        const breadcrumbSection = createSection('📰 Breadcrumb');
+        html += breadcrumbSection.start;
+        html += createTextField('news-breadcrumb-title', 'Tiêu đề', pageData.breadcrumb?.title || '', 'NEWS & INSIGHTS');
+        html += createTextField('news-breadcrumb-home', 'Text Home', pageData.breadcrumb?.home || '', 'HOME');
+        html += createTextField('news-breadcrumb-current', 'Text Current', pageData.breadcrumb?.current || '', 'BLOG');
+        html += breadcrumbSection.end;
+        
+        const sidebarSection = createSection('🔍 Sidebar');
+        html += sidebarSection.start;
+        html += createTextField('news-sidebar-search-placeholder', 'Placeholder tìm kiếm', pageData.sidebar?.search?.placeholder || '', 'Search');
+        html += createTextField('news-sidebar-categories-title', 'Tiêu đề Categories', pageData.sidebar?.categories?.title || '', 'Categories');
+        html += createTextField('news-sidebar-recentPosts-title', 'Tiêu đề Recent Posts', pageData.sidebar?.recentPosts?.title || '', 'Recent Posts');
+        html += createTextField('news-readMore', 'Text Read More', pageData.readMore || '', 'Read More');
+        html += sidebarSection.end;
+      } else if (page === 'blog') {
+        const heroSection = createSection('🎯 Hero Section');
+        html += heroSection.start;
+        html += createTextField('blog-hero-title', 'Tiêu đề', pageData.hero?.title || '', 'Our Blog');
+        html += createTextField('blog-hero-description', 'Mô tả', pageData.hero?.description || '', '', 3);
+        html += heroSection.end;
+        
+        const newsletterSection = createSection('📧 Newsletter');
+        html += newsletterSection.start;
+        html += createTextField('blog-newsletter-title', 'Tiêu đề', pageData.newsletter?.title || '', 'Stay Updated');
+        html += createTextField('blog-newsletter-description', 'Mô tả', pageData.newsletter?.description || '', '', 3);
+        html += createTextField('blog-newsletter-placeholder', 'Placeholder email', pageData.newsletter?.placeholder || '', 'Enter your email');
+        html += createTextField('blog-newsletter-button', 'Text nút', pageData.newsletter?.button || '', 'Subscribe');
+        html += newsletterSection.end;
+      } else if (page === 'career') {
+        const breadcrumbSection = createSection('📰 Breadcrumb');
+        html += breadcrumbSection.start;
+        html += createTextField('career-breadcrumb-title', 'Tiêu đề', pageData.breadcrumb?.title || '', 'CAREERS');
+        html += createTextField('career-breadcrumb-home', 'Text Home', pageData.breadcrumb?.home || '', 'HOME');
+        html += createTextField('career-breadcrumb-current', 'Text Current', pageData.breadcrumb?.current || '', 'CAREERS');
+        html += breadcrumbSection.end;
+        
+        const jobSection = createSection('💼 Job Info');
+        html += jobSection.start;
+        html += createTextField('career-applyButton', 'Text nút Apply', pageData.applyButton || '', 'Apply Now');
+        html += createTextField('career-jobMeta-location', 'Label Location', pageData.jobMeta?.location || '', 'Location:');
+        html += createTextField('career-jobMeta-type', 'Label Type', pageData.jobMeta?.type || '', 'Type:');
+        html += createTextField('career-jobMeta-experience', 'Label Experience', pageData.jobMeta?.experience || '', 'Experience:');
+        html += jobSection.end;
+      } else if (page === 'program') {
+        const heroSection = createSection('🎯 Hero Section');
+        html += heroSection.start;
+        html += createTextField('program-hero-title', 'Tiêu đề', pageData.hero?.title || '', 'OUR FEATURED PROGRAMS');
+        html += heroSection.end;
+        
+        const eventsSection = createSection('📅 Upcoming Events');
+        html += eventsSection.start;
+        html += createTextField('program-upcomingEvents-title', 'Tiêu đề', pageData.upcomingEvents?.title || '', 'UPCOMING EVENTS');
+        html += eventsSection.end;
+        
+        const filtersSection = createSection('🔍 Filters');
+        html += filtersSection.start;
+        html += createTextField('program-filters-searchButton', 'Text nút Search', pageData.filters?.searchButton || '', 'Search Projects');
+        html += filtersSection.end;
+        
+        const statusSection = createSection('📊 Event Status');
+        html += statusSection.start;
+        html += createTextField('program-eventStatus-upcoming', 'Text Upcoming', pageData.eventStatus?.upcoming || '', 'Upcoming');
+        html += createTextField('program-eventStatus-completed', 'Text Completed', pageData.eventStatus?.completed || '', 'Completed');
+        html += statusSection.end;
+        
+        const socialSection = createSection('📱 Social');
+        html += socialSection.start;
+        html += createTextField('program-followText', 'Text Follow Us', pageData.followText || '', 'Follow Us:');
+        html += socialSection.end;
+      } else if (page === 'navbar') {
+        const menuSection = createSection('🧭 Menu Items');
+        html += menuSection.start;
+        html += '<p style="color: #666; margin-bottom: 1rem;">Menu items được quản lý trong JSON. Sử dụng JSON Editor để chỉnh sửa.</p>';
+        html += createTextField('navbar-buttonText', 'Text nút Get Started', pageData.buttonText || '', 'Get Started');
+        html += menuSection.end;
+      } else if (page === 'footer') {
+        const footerSection = createSection('🦶 Footer Content');
+        html += footerSection.start;
+        html += '<p style="color: #666; margin-bottom: 1rem;">Footer links được quản lý trong JSON. Sử dụng JSON Editor để chỉnh sửa.</p>';
+        html += createTextField('footer-address-address', 'Địa chỉ', pageData.address?.address || '', 'NIC Building, No 6 Lane 7 Ton That Thuyet, Cau Giay, Hanoi');
+        html += createTextField('footer-address-email', 'Email', pageData.address?.email || '', 'team@gamegeek.asia');
+        html += createTextField('footer-address-phone', 'Số điện thoại', pageData.address?.phone || '', '(+84) 902 122 120');
+        html += createTextField('footer-social-followText', 'Text Follow Us', pageData.social?.followText || '', 'Follow Us:');
+        html += createTextField('footer-brandText', 'Text Brand', pageData.brandText || '', 'GAMEGEEK');
+        html += footerSection.end;
+      } else if (page === 'contactForm') {
+        const formSection = createSection('📋 Contact Form');
+        html += formSection.start;
+        html += createTextField('contactForm-step1-question', 'Câu hỏi Bước 1', pageData.step1?.question || '', 'You are…');
+        html += createTextField('contactForm-step2-question', 'Câu hỏi Bước 2', pageData.step2?.question || '', 'What are you looking for?');
+        html += createTextField('contactForm-step3-title', 'Tiêu đề Bước 3', pageData.step3?.title || '', 'Contact Information');
+        html += createTextField('contactForm-step3-description', 'Mô tả Bước 3', pageData.step3?.description || '', '', 3);
+        html += createTextField('contactForm-step3-submitButton', 'Text nút Submit', pageData.step3?.submitButton || '', 'Submit');
+        html += formSection.end;
+      }
+
+      container.innerHTML = html;
+      
+      // Setup handlers for about page
+      if (page === 'about') {
+        renderStats('stats-list-about');
+        setupAddStatButton();
+        setupVisionMissionHandlers();
+      }
+      
+      // Setup handlers for services page
+      if (page === 'services') {
+        renderServiceSlides();
+        setupServiceSlideHandlers();
+        renderServiceTabs();
+        setupServiceTabHandlers();
+      }
+    }
+    
+    // Service Tabs Functions
+    function renderServiceTabs() {
+      const container = document.getElementById('service-tabs-list');
+      if (!container) return;
+      
+      if (serviceTabs.length === 0) {
+        container.innerHTML = '<p style="color: #666; text-align: center; padding: 2rem;">Chưa có tab nào. Click "Thêm Tab" để thêm mới.</p>';
+        return;
+      }
+      
+      container.innerHTML = serviceTabs.map((tab, index) => `
+        <div style="padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border: 1px solid #e0e0e0;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div style="flex: 1;">
+              <h5 style="margin: 0 0 0.5rem 0; color: #333; font-size: 1.1rem; font-weight: 600;">Tab ${index + 1}: ${tab.name || 'Chưa có tên'}</h5>
+              <p style="margin: 0 0 0.5rem 0; color: #666; font-size: 0.9rem;">${tab.description || 'Chưa có mô tả'}</p>
+              <p style="margin: 0; color: #999; font-size: 0.85rem;">Ảnh: ${tab.image || 'Chưa có ảnh'}</p>
+              <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">Items: ${(tab.items || []).length} mục</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-left: 1rem; flex-shrink: 0;">
+              <button onclick="editServiceTab(${index})" style="padding: 0.5rem 1rem; border: 1px solid #FF5E14; background: white; color: #FF5E14; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem;">
+                Sửa
+              </button>
+              <button onclick="deleteServiceTab(${index})" style="padding: 0.5rem 1rem; border: none; background: #dc3545; color: white; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem;">
+                Xóa
+              </button>
+            </div>
+          </div>
+          ${tab.image ? `<img src="${tab.image}" alt="Tab ${index + 1}" style="width: 100%; max-width: 200px; height: 120px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd;" onerror="this.style.display='none'">` : ''}
+        </div>
+      `).join('');
+    }
+    
+    window.editServiceTab = function(index) {
+      const tab = serviceTabs[index];
+      currentEditingServiceTabIndex = index;
+      currentEditingServiceTabItems = JSON.parse(JSON.stringify(tab.items || []));
+      
+      document.getElementById('service-tab-index').value = index;
+      document.getElementById('service-tab-name').value = tab.name || '';
+      document.getElementById('service-tab-description').value = tab.description || '';
+      document.getElementById('service-tab-image').value = tab.image || '';
+      document.getElementById('service-tab-modal-title').textContent = 'Sửa Tab';
+      
+      // Show preview if image exists
+      if (tab.image) {
+        document.getElementById('service-tab-image-preview-img').src = tab.image;
+        document.getElementById('service-tab-image-preview').style.display = 'block';
+      }
+      
+      renderServiceTabItems();
+      document.getElementById('service-tab-modal').style.display = 'flex';
+    };
+    
+    window.deleteServiceTab = function(index) {
+      if (confirm('Bạn có chắc muốn xóa tab này?')) {
+        serviceTabs.splice(index, 1);
+        renderServiceTabs();
+        // Update content
+        if (!content.services) content.services = {};
+        content.services.tabs = serviceTabs;
+      }
+    };
+    
+    function renderServiceTabItems() {
+      const container = document.getElementById('service-tab-items-list');
+      if (!container) return;
+      
+      if (currentEditingServiceTabItems.length === 0) {
+        container.innerHTML = '<p style="color: #666; text-align: center; padding: 1rem;">Chưa có item nào. Click "+ Thêm Item" để thêm.</p>';
+        return;
+      }
+      
+      container.innerHTML = currentEditingServiceTabItems.map((item, itemIndex) => `
+        <div style="padding: 1rem; background: white; border: 1px solid #e0e0e0; border-radius: 6px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+            <h6 style="margin: 0; color: #333; font-size: 0.95rem; font-weight: 600;">Item ${itemIndex + 1}</h6>
+            <button type="button" onclick="removeServiceTabItem(${itemIndex})" style="padding: 0.25rem 0.75rem; border: none; background: #dc3545; color: white; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.75rem;">
+              Xóa
+            </button>
+          </div>
+          <div style="display: grid; grid-template-columns: 80px 1fr; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <input type="text" id="service-tab-item-${itemIndex}-number" value="${item.number || ''}" placeholder="01" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem;" onchange="updateServiceTabItem(${itemIndex}, 'number', this.value)">
+            <input type="text" id="service-tab-item-${itemIndex}-title" value="${item.title || ''}" placeholder="Title" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem;" onchange="updateServiceTabItem(${itemIndex}, 'title', this.value)">
+          </div>
+          <textarea id="service-tab-item-${itemIndex}-description" rows="2" placeholder="Description" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem; font-family: inherit; resize: vertical;" onchange="updateServiceTabItem(${itemIndex}, 'description', this.value)">${item.description || ''}</textarea>
+        </div>
+      `).join('');
+    }
+    
+    window.addServiceTabItem = function() {
+      currentEditingServiceTabItems.push({
+        number: '',
+        title: '',
+        description: ''
+      });
+      renderServiceTabItems();
+    };
+    
+    window.removeServiceTabItem = function(index) {
+      currentEditingServiceTabItems.splice(index, 1);
+      renderServiceTabItems();
+    };
+    
+    window.updateServiceTabItem = function(index, field, value) {
+      if (currentEditingServiceTabItems[index]) {
+        currentEditingServiceTabItems[index][field] = value;
+      }
+    };
+    
+    function setupServiceTabHandlers() {
+      const addBtn = document.getElementById('add-service-tab-btn');
+      if (addBtn && !addBtn.dataset.handlerSetup) {
+        addBtn.dataset.handlerSetup = 'true';
+        addBtn.addEventListener('click', () => {
+          currentEditingServiceTabIndex = null;
+          currentEditingServiceTabItems = [];
+          document.getElementById('service-tab-form').reset();
+          document.getElementById('service-tab-index').value = '';
+          document.getElementById('service-tab-image-preview').style.display = 'none';
+          document.getElementById('service-tab-modal-title').textContent = 'Thêm Tab';
+          renderServiceTabItems();
+          document.getElementById('service-tab-modal').style.display = 'flex';
+        });
+      }
+      
+      const addItemBtn = document.getElementById('add-service-tab-item-btn');
+      if (addItemBtn && !addItemBtn.dataset.handlerSetup) {
+        addItemBtn.dataset.handlerSetup = 'true';
+        addItemBtn.addEventListener('click', () => {
+          addServiceTabItem();
+        });
+      }
+      
+      const form = document.getElementById('service-tab-form');
+      if (form && !form.dataset.handlerSetup) {
+        form.dataset.handlerSetup = 'true';
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const name = document.getElementById('service-tab-name').value.trim();
+          const description = document.getElementById('service-tab-description').value.trim();
+          const image = document.getElementById('service-tab-image').value.trim();
+          const index = document.getElementById('service-tab-index').value;
+
+          if (!name || !description || !image) {
+            alert('Vui lòng điền đầy đủ thông tin!');
+            return;
+          }
+
+          const tab = {
+            name: name,
+            description: description,
+            image: image,
+            items: currentEditingServiceTabItems.filter(item => item.number || item.title || item.description)
+          };
+
+          if (index !== '' && currentEditingServiceTabIndex !== null) {
+            serviceTabs[currentEditingServiceTabIndex] = tab;
+          } else {
+            serviceTabs.push(tab);
+          }
+
+          // Update content
+          if (!content.services) content.services = {};
+          content.services.tabs = serviceTabs;
+
+          document.getElementById('service-tab-modal').style.display = 'none';
+          renderServiceTabs();
+        });
+      }
+      
+      const cancelBtn = document.getElementById('service-tab-cancel-btn');
+      if (cancelBtn && !cancelBtn.dataset.handlerSetup) {
+        cancelBtn.dataset.handlerSetup = 'true';
+        cancelBtn.addEventListener('click', () => {
+          document.getElementById('service-tab-modal').style.display = 'none';
+        });
+      }
+      
+      // Setup image upload and preview for tab
+      const fileInput = document.getElementById('service-tab-image-file');
+      const textInput = document.getElementById('service-tab-image');
+      const preview = document.getElementById('service-tab-image-preview');
+      const previewImg = document.getElementById('service-tab-image-preview-img');
+      
+      if (fileInput && textInput && preview && previewImg) {
+        fileInput.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+              alert('File quá lớn! Vui lòng chọn file nhỏ hơn 5MB.');
+              return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const base64 = event.target.result;
+              previewImg.src = base64;
+              preview.style.display = 'block';
+              
+              if (file.size < 500 * 1024) {
+                textInput.value = base64;
+              } else {
+                textInput.value = '';
+                alert('File lớn hơn 500KB. Vui lòng:\n1. Upload lên ImgBB/Cloudinary và nhập URL\n2. Hoặc copy file vào public/images/ và nhập đường dẫn /images/tên-file.jpg');
+              }
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+        textInput.addEventListener('input', (e) => {
+          const url = e.target.value;
+          if (url && (url.startsWith('http') || url.startsWith('data:image') || url.startsWith('/images') || url.startsWith('/renius'))) {
+            previewImg.src = url;
+            preview.style.display = 'block';
+          } else if (!url) {
+            preview.style.display = 'none';
+          }
+        });
+      }
+    }
+    
+    // Service Slides Functions
+    function renderServiceSlides() {
+      const container = document.getElementById('service-slides-list');
+      if (!container) return;
+      
+      if (serviceSlides.length === 0) {
+        container.innerHTML = '<p style="color: #666; text-align: center; padding: 2rem;">Chưa có slide nào. Click "Thêm Slide" để thêm mới.</p>';
+        return;
+      }
+      
+      const sortedSlides = [...serviceSlides].sort((a, b) => (a.order || 0) - (b.order || 0));
+      container.innerHTML = sortedSlides.map((slide, index) => {
+        const actualIndex = serviceSlides.findIndex(s => s === slide);
+        return `
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: white; border-radius: 6px; border: 1px solid #e0e0e0;">
+            <div style="flex: 1; display: flex; align-items: center; gap: 1rem;">
+              <div style="min-width: 120px; height: 80px; border-radius: 6px; overflow: hidden; border: 1px solid #e0e0e0; flex-shrink: 0;">
+                <img src="${slide.image || ''}" alt="Slide ${index + 1}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'80\'%3E%3Crect fill=\'%23ddd\' width=\'120\' height=\'80\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' fill=\'%23999\' font-size=\'12\'%3ENo Image%3C/text%3E%3C/svg%3E'">
+              </div>
+              <div style="flex: 1;">
+                <p style="margin: 0 0 0.25rem 0; color: #333; font-size: 1rem; font-weight: 600;">Slide ${index + 1}</p>
+                <p style="margin: 0; color: #666; font-size: 0.9rem;">Order: ${slide.order || index + 1}</p>
+                <p style="margin: 0.25rem 0 0 0; color: #999; font-size: 0.85rem; word-break: break-all;">${slide.image || 'Chưa có ảnh'}</p>
+              </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-left: 1rem; flex-shrink: 0;">
+              <button onclick="editServiceSlide(${actualIndex})" style="padding: 0.5rem 1rem; border: 1px solid #FF5E14; background: white; color: #FF5E14; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem;">
+                Sửa
+              </button>
+              <button onclick="deleteServiceSlide(${actualIndex})" style="padding: 0.5rem 1rem; border: none; background: #dc3545; color: white; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem;">
+                Xóa
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    window.editServiceSlide = function(index) {
+      const slide = serviceSlides[index];
+      currentEditingServiceSlideIndex = index;
+      document.getElementById('service-slide-index').value = index;
+      document.getElementById('service-slide-image').value = slide.image || '';
+      document.getElementById('service-slide-order').value = slide.order || index + 1;
+      document.getElementById('service-slide-modal-title').textContent = 'Sửa Service Slide';
+      
+      // Show preview if image exists
+      if (slide.image) {
+        document.getElementById('service-slide-image-preview-img').src = slide.image;
+        document.getElementById('service-slide-image-preview').style.display = 'block';
+      }
+      
+      document.getElementById('service-slide-modal').style.display = 'flex';
+    };
+    
+    window.deleteServiceSlide = function(index) {
+      if (confirm('Bạn có chắc muốn xóa slide này?')) {
+        serviceSlides.splice(index, 1);
+        renderServiceSlides();
+        // Update content
+        if (!content.services) content.services = {};
+        content.services.serviceSlides = serviceSlides;
+      }
+    };
+    
+    function setupServiceSlideHandlers() {
+      const addBtn = document.getElementById('add-service-slide-btn');
+      if (addBtn && !addBtn.dataset.handlerSetup) {
+        addBtn.dataset.handlerSetup = 'true';
+        addBtn.addEventListener('click', () => {
+          currentEditingServiceSlideIndex = null;
+          document.getElementById('service-slide-form').reset();
+          document.getElementById('service-slide-index').value = '';
+          document.getElementById('service-slide-order').value = serviceSlides.length + 1;
+          document.getElementById('service-slide-image-preview').style.display = 'none';
+          document.getElementById('service-slide-modal-title').textContent = 'Thêm Service Slide';
+          document.getElementById('service-slide-modal').style.display = 'flex';
+        });
+      }
+      
+      const form = document.getElementById('service-slide-form');
+      if (form && !form.dataset.handlerSetup) {
+        form.dataset.handlerSetup = 'true';
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const image = document.getElementById('service-slide-image').value.trim();
+          const order = parseInt(document.getElementById('service-slide-order').value) || 1;
+          const index = document.getElementById('service-slide-index').value;
+
+          if (!image) {
+            alert('Vui lòng nhập ảnh cho slide!');
+            return;
+          }
+
+          const slide = {
+            image: image,
+            order: order
+          };
+
+          if (index !== '' && currentEditingServiceSlideIndex !== null) {
+            serviceSlides[currentEditingServiceSlideIndex] = slide;
+          } else {
+            serviceSlides.push(slide);
+          }
+
+          // Update content
+          if (!content.services) content.services = {};
+          content.services.serviceSlides = serviceSlides;
+
+          document.getElementById('service-slide-modal').style.display = 'none';
+          renderServiceSlides();
+        });
+      }
+      
+      const cancelBtn = document.getElementById('service-slide-cancel-btn');
+      if (cancelBtn && !cancelBtn.dataset.handlerSetup) {
+        cancelBtn.dataset.handlerSetup = 'true';
+        cancelBtn.addEventListener('click', () => {
+          document.getElementById('service-slide-modal').style.display = 'none';
+        });
+      }
+      
+      // Setup image upload and preview
+      const fileInput = document.getElementById('service-slide-image-file');
+      const textInput = document.getElementById('service-slide-image');
+      const preview = document.getElementById('service-slide-image-preview');
+      const previewImg = document.getElementById('service-slide-image-preview-img');
+      
+      if (fileInput && textInput && preview && previewImg) {
+        fileInput.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+              alert('File quá lớn! Vui lòng chọn file nhỏ hơn 5MB.');
+              return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const base64 = event.target.result;
+              previewImg.src = base64;
+              preview.style.display = 'block';
+              
+              if (file.size < 500 * 1024) {
+                textInput.value = base64;
+              } else {
+                textInput.value = '';
+                alert('File lớn hơn 500KB. Vui lòng:\n1. Upload lên ImgBB/Cloudinary và nhập URL\n2. Hoặc copy file vào public/images/ và nhập đường dẫn /images/tên-file.jpg');
+              }
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+        textInput.addEventListener('input', (e) => {
+          const url = e.target.value;
+          if (url && (url.startsWith('http') || url.startsWith('data:image') || url.startsWith('/images'))) {
+            previewImg.src = url;
+            preview.style.display = 'block';
+          } else if (!url) {
+            preview.style.display = 'none';
+          }
+        });
+      }
+    }
+
+    // Page selector change handler
+    document.getElementById('content-page-selector').addEventListener('change', (e) => {
+      const page = e.target.value;
+      if (page === 'about') {
+        reloadStatsFromContent();
+      } else if (page === 'services') {
+        reloadServiceSlidesFromContent();
+      }
+      loadContentForm(page);
+    });
+
+    // Save content from forms
+    function saveContentFromForms() {
+      const page = document.getElementById('content-page-selector').value;
+      const pageData = {};
+
+      // Get all input values for current page
+      const inputs = document.querySelectorAll('#content-forms-container input, #content-forms-container textarea');
+      
+      // Special handling for about page - stats, vision, mission
+      if (page === 'about') {
+        // Save stats
+        pageData.features = stats;
+        
+        // Vision and mission are handled by regular input fields
+        const visionTitle = document.getElementById('about-vision-title');
+        const visionDesc = document.getElementById('about-vision-description');
+        const missionTitle = document.getElementById('about-mission-title');
+        const missionDesc = document.getElementById('about-mission-description');
+        
+        if (visionTitle && visionDesc) {
+          pageData.vision = {
+            title: visionTitle.value || 'Vision',
+            description: visionDesc.value || ''
+          };
+        }
+        
+        if (missionTitle && missionDesc) {
+          pageData.mission = {
+            title: missionTitle.value || 'Mission',
+            description: missionDesc.value || ''
+          };
+        }
+      }
+      
+      // Special handling for services page - service slides, service cards, and tabs
+      if (page === 'services') {
+        // Save service slides
+        pageData.serviceSlides = serviceSlides;
+        
+        // Save service cards text
+        const serviceCards = [];
+        for (let i = 0; i < 3; i++) {
+          const titleInput = document.getElementById(`services-serviceCards-${i}-title`);
+          const itemsTextarea = document.getElementById(`services-serviceCards-${i}-items`);
+          
+          if (titleInput || itemsTextarea) {
+            const items = itemsTextarea ? itemsTextarea.value.split('\n').filter(item => item.trim() !== '') : [];
+            serviceCards.push({
+              title: titleInput ? titleInput.value : '',
+              items: items
+            });
+          }
+        }
+        
+        if (serviceCards.length > 0) {
+          pageData.serviceCards = serviceCards;
+        }
+        
+        // Save service tabs
+        pageData.tabs = serviceTabs;
+      }
+      
+      // Special handling for service items and network stats
+      if (page === 'home') {
+        // Service Items
+        const serviceItems = [];
+        for (let i = 0; i < 3; i++) {
+          const titleInput = document.getElementById(`home-services-items-${i}-title`);
+          const linkTextInput = document.getElementById(`home-services-items-${i}-linkText`);
+          const itemsTextarea = document.getElementById(`home-services-items-${i}-items`);
+          
+          if (titleInput || linkTextInput || itemsTextarea) {
+            const items = itemsTextarea ? itemsTextarea.value.split('\n').filter(item => item.trim() !== '') : [];
+            serviceItems.push({
+              title: titleInput ? titleInput.value : '',
+              items: items,
+              linkText: linkTextInput ? linkTextInput.value : ''
+            });
+          }
+        }
+        
+        // Save service items if they exist
+        if (serviceItems.length > 0) {
+          if (!pageData.services) {
+            pageData.services = {};
+          }
+          pageData.services.items = serviceItems;
+        }
+        
+        // Network Stats
+        const networkStats = [];
+        for (let i = 0; i < 5; i++) {
+          const valueInput = document.getElementById(`home-network-stats-${i}-value`);
+          const labelInput = document.getElementById(`home-network-stats-${i}-label`);
+          
+          if (valueInput || labelInput) {
+            networkStats.push({
+              value: valueInput ? valueInput.value : '',
+              label: labelInput ? labelInput.value : ''
+            });
+          }
+        }
+        
+        // Save network stats if they exist
+        if (networkStats.length > 0) {
+          if (!pageData.network) {
+            pageData.network = {};
+          }
+          pageData.network.stats = networkStats;
+        }
+        
+        // News Stats
+        const newsStats = [];
+        for (let i = 0; i < 8; i++) {
+          const labelInput = document.getElementById(`home-news-stats-${i}-label`);
+          const prefixInput = document.getElementById(`home-news-stats-${i}-prefix`);
+          const valueInput = document.getElementById(`home-news-stats-${i}-value`);
+          const suffixInput = document.getElementById(`home-news-stats-${i}-suffix`);
+          const descriptionInput = document.getElementById(`home-news-stats-${i}-description`);
+          
+          if (labelInput || prefixInput || valueInput || suffixInput || descriptionInput) {
+            newsStats.push({
+              label: labelInput ? labelInput.value : '',
+              prefix: prefixInput ? prefixInput.value : '',
+              value: valueInput ? valueInput.value : '',
+              suffix: suffixInput ? suffixInput.value : '',
+              description: descriptionInput ? descriptionInput.value : ''
+            });
+          }
+        }
+        
+        // Save news stats if they exist
+        if (newsStats.length > 0) {
+          if (!pageData.news) {
+            pageData.news = {};
+          }
+          pageData.news.stats = newsStats;
+        }
+      }
+      
+      inputs.forEach(input => {
+        const id = input.id;
+        if (id.startsWith(page + '-')) {
+          // Skip service items, network stats, and news stats as they're handled above
+          if ((id.includes('services-items-') && (id.includes('-title') || id.includes('-linkText') || id.includes('-items'))) ||
+              (id.includes('network-stats-') && (id.includes('-value') || id.includes('-label'))) ||
+              (id.includes('news-stats-') && (id.includes('-label') || id.includes('-prefix') || id.includes('-value') || id.includes('-suffix') || id.includes('-description')))) {
+            return;
+          }
+          
+          const path = id.replace(page + '-', '').split('-');
+          let current = pageData;
+          for (let i = 0; i < path.length - 1; i++) {
+            if (!current[path[i]]) {
+              current[path[i]] = {};
+            }
+            current = current[path[i]];
+          }
+          current[path[path.length - 1]] = input.value;
+        }
+      });
+
+      // Merge with existing content to preserve structure
+      if (content[page]) {
+        Object.assign(content[page], pageData);
+      } else {
+        content[page] = pageData;
+      }
+      
+      // Also update JSON editor if visible
+      if (document.getElementById('json-editor-container').style.display !== 'none') {
+        document.getElementById('content-json').value = JSON.stringify(content, null, 2);
+      }
+    }
+
+    // Auto-save on input change
+    document.addEventListener('input', (e) => {
+      if (e.target.closest('#content-forms-container')) {
+        saveContentFromForms();
+      }
+    });
+
+    // Toggle JSON Editor
+    document.getElementById('toggle-json-editor').addEventListener('click', () => {
+      const container = document.getElementById('json-editor-container');
+      const button = document.getElementById('toggle-json-editor');
+      if (container.style.display === 'none') {
+        container.style.display = 'block';
+        button.textContent = 'Ẩn JSON Editor';
+        // Update JSON from current content
+        document.getElementById('content-json').value = JSON.stringify(content, null, 2);
+      } else {
+        container.style.display = 'none';
+        button.textContent = 'Hiện JSON Editor';
+      }
+    });
+
+    // Text Content functions
+    document.getElementById('content-validate-btn').addEventListener('click', () => {
+      const jsonText = document.getElementById('content-json').value;
+      try {
+        JSON.parse(jsonText);
+        alert('✓ JSON hợp lệ!');
+      } catch (error) {
+        alert('✗ JSON không hợp lệ:\n' + error.message);
+      }
+    });
+
+    document.getElementById('content-reset-btn').addEventListener('click', () => {
+      if (confirm('Bạn có chắc muốn reset về giá trị ban đầu? Tất cả thay đổi sẽ mất.')) {
+        content = JSON.parse(JSON.stringify(contentData)); // Reset to original
+        document.getElementById('content-json').value = JSON.stringify(content, null, 2);
+        loadContentForm(document.getElementById('content-page-selector').value);
+      }
+    });
+
+    // Update content when textarea changes
+    document.getElementById('content-json').addEventListener('input', (e) => {
+      try {
+        const newContent = JSON.parse(e.target.value);
+        content = newContent;
+        // Remove error styling if JSON is valid
+        e.target.style.borderColor = '#ddd';
+        // Reload current form
+        loadContentForm(document.getElementById('content-page-selector').value);
+      } catch (error) {
+        // Show error styling
+        e.target.style.borderColor = '#dc3545';
+      }
+    });
+
     // Save function
     document.getElementById('save-btn').addEventListener('click', () => {
       const newsData = {
@@ -747,6 +2152,21 @@ import slidesData from '../../data/slides.json';
       const slidesData = {
         slides: slides.sort((a, b) => a.order - b.order)
       };
+      
+      // Validate content JSON before saving
+      let contentDataToSave = content;
+      try {
+        const contentText = document.getElementById('content-json').value;
+        if (contentText) {
+          contentDataToSave = JSON.parse(contentText);
+        }
+      } catch (error) {
+        if (confirm('Content JSON không hợp lệ. Bạn có muốn tiếp tục lưu các file khác không?')) {
+          // Continue without content.json
+        } else {
+          return;
+        }
+      }
       
       // Save news.json
       const newsBlob = new Blob([JSON.stringify(newsData, null, 2)], { type: 'application/json' });
@@ -768,7 +2188,322 @@ import slidesData from '../../data/slides.json';
         URL.revokeObjectURL(slidesUrl);
       }, 500);
       
-      alert('Đã tải 2 file JSON:\n1. news.json - thay thế src/data/news.json\n2. slides.json - thay thế src/data/slides.json\nSau đó rebuild dự án.');
+      // Update stats, vision, mission in content before saving
+      if (!contentDataToSave.about) {
+        contentDataToSave.about = {};
+      }
+      contentDataToSave.about.features = stats;
+      contentDataToSave.about.vision = vision;
+      contentDataToSave.about.mission = mission;
+      
+      // Save content.json if valid
+      if (contentDataToSave) {
+        setTimeout(() => {
+          const contentBlob = new Blob([JSON.stringify(contentDataToSave, null, 2)], { type: 'application/json' });
+          const contentUrl = URL.createObjectURL(contentBlob);
+          const contentA = document.createElement('a');
+          contentA.href = contentUrl;
+          contentA.download = 'content.json';
+          contentA.click();
+          URL.revokeObjectURL(contentUrl);
+        }, 1000);
+        
+        alert('Đã tải 3 file JSON:\n1. news.json - thay thế src/data/news.json\n2. slides.json - thay thế src/data/slides.json\n3. content.json - thay thế src/data/content.json\nSau đó rebuild dự án.');
+      } else {
+        alert('Đã tải 2 file JSON:\n1. news.json - thay thế src/data/news.json\n2. slides.json - thay thế src/data/slides.json\nSau đó rebuild dự án.');
+      }
+    });
+
+    // Stats, Vision & Mission Functions
+    function renderStats(containerId = 'stats-list-about') {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      
+      if (stats.length === 0) {
+        container.innerHTML = '<p style="color: #666; text-align: center; padding: 2rem;">Chưa có stat nào. Click "Thêm Stat" để thêm mới.</p>';
+        return;
+      }
+      
+      container.innerHTML = stats.map((stat, index) => {
+        const valueDisplay = stat.value.includes('\\n') 
+          ? stat.value.split('\\n').map(line => `<div style="line-height: 1.2; font-size: 0.9rem;">${line}</div>`).join('')
+          : `<div style="font-size: ${stat.value.includes('.') ? '1.1rem' : '1.3rem'};">${stat.value}</div>`;
+        
+        return `
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: white; border-radius: 6px; border: 1px solid #e0e0e0;">
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="min-width: 60px; width: 60px; height: 60px; background: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #333; flex-shrink: 0; text-align: center; padding: 0.25rem;">
+                  ${valueDisplay}
+                </div>
+                <div style="flex: 1;">
+                  <p style="margin: 0; color: #333; font-size: 0.95rem; line-height: 1.4;">${stat.description}</p>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-left: 1rem; flex-shrink: 0;">
+              <button onclick="editStat(${index})" style="padding: 0.5rem 1rem; border: 1px solid #FF5E14; background: white; color: #FF5E14; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem;">
+                Sửa
+              </button>
+              <button onclick="deleteStat(${index})" style="padding: 0.5rem 1rem; border: none; background: #dc3545; color: white; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem;">
+                Xóa
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.editStat = function(index) {
+      const stat = stats[index];
+      currentEditingStatIndex = index;
+      document.getElementById('stat-index').value = index;
+      document.getElementById('stat-value').value = stat.value;
+      document.getElementById('stat-description').value = stat.description;
+      document.getElementById('stat-modal-title').textContent = 'Sửa Stat';
+      document.getElementById('stat-modal').style.display = 'flex';
+    };
+
+    window.deleteStat = function(index) {
+      if (confirm('Bạn có chắc muốn xóa stat này?')) {
+        stats.splice(index, 1);
+        renderStats('stats-list-about');
+        // Update content
+        if (!content.about) content.about = {};
+        content.about.features = stats;
+      }
+    };
+
+    // Add stat button handler - check which container exists
+    function setupAddStatButton() {
+      const addBtnAbout = document.getElementById('add-stat-btn-about');
+      if (addBtnAbout) {
+        addBtnAbout.addEventListener('click', () => {
+          currentEditingStatIndex = null;
+          document.getElementById('stat-form').reset();
+          document.getElementById('stat-index').value = '';
+          document.getElementById('stat-modal-title').textContent = 'Thêm Stat';
+          document.getElementById('stat-modal').style.display = 'flex';
+        });
+      }
+    }
+
+    document.getElementById('stat-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const value = document.getElementById('stat-value').value.trim();
+      const description = document.getElementById('stat-description').value.trim();
+      const index = document.getElementById('stat-index').value;
+
+      if (!value || !description) {
+        alert('Vui lòng điền đầy đủ thông tin!');
+        return;
+      }
+
+      const stat = {
+        value: value,
+        description: description
+      };
+
+      if (index !== '' && currentEditingStatIndex !== null) {
+        stats[currentEditingStatIndex] = stat;
+      } else {
+        stats.push(stat);
+      }
+
+      // Update content
+      if (!content.about) content.about = {};
+      content.about.features = stats;
+      
+      // Also update vision and mission if they exist in form
+      const visionTitle = document.getElementById('about-vision-title');
+      const visionDesc = document.getElementById('about-vision-description');
+      const missionTitle = document.getElementById('about-mission-title');
+      const missionDesc = document.getElementById('about-mission-description');
+      
+      if (visionTitle && visionDesc) {
+        content.about.vision = {
+          title: visionTitle.value || 'Vision',
+          description: visionDesc.value || ''
+        };
+      }
+      
+      if (missionTitle && missionDesc) {
+        content.about.mission = {
+          title: missionTitle.value || 'Mission',
+          description: missionDesc.value || ''
+        };
+      }
+
+      document.getElementById('stat-modal').style.display = 'none';
+      renderStats('stats-list-about');
+    });
+
+    document.getElementById('stat-cancel-btn').addEventListener('click', () => {
+      document.getElementById('stat-modal').style.display = 'none';
+    });
+
+    // Setup handlers for vision and mission when about page is loaded
+    function setupVisionMissionHandlers() {
+      const visionTitle = document.getElementById('about-vision-title');
+      const missionTitle = document.getElementById('about-mission-title');
+      
+      if (visionTitle && !visionTitle.dataset.handlerSetup) {
+        visionTitle.dataset.handlerSetup = 'true';
+        // Vision and mission are auto-saved via saveContentFromForms
+      }
+    }
+
+    // User Management Functions
+    function getCredentials() {
+      const stored = localStorage.getItem('cms_credentials');
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch (e) {
+          console.error('Error parsing stored credentials:', e);
+        }
+      }
+      // Default credentials
+      return {
+        username: 'admin',
+        password: 'admin123'
+      };
+    }
+
+    function saveCredentials(credentials) {
+      try {
+        localStorage.setItem('cms_credentials', JSON.stringify(credentials));
+        return true;
+      } catch (e) {
+        console.error('Error saving credentials:', e);
+        return false;
+      }
+    }
+
+    // Update Username Form Handler
+    document.getElementById('update-username-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const newUsername = document.getElementById('new-username').value.trim();
+      const password = document.getElementById('username-confirm-password').value;
+      const errorDiv = document.getElementById('username-error');
+      const successDiv = document.getElementById('username-success');
+      
+      // Hide previous messages
+      errorDiv.style.display = 'none';
+      successDiv.style.display = 'none';
+      
+      // Validate
+      if (!newUsername || newUsername.length < 3) {
+        errorDiv.textContent = 'Username phải có ít nhất 3 ký tự!';
+        errorDiv.style.display = 'block';
+        return;
+      }
+      
+      const credentials = getCredentials();
+      
+      // Check password
+      if (password !== credentials.password) {
+        errorDiv.textContent = 'Password không đúng!';
+        errorDiv.style.display = 'block';
+        document.getElementById('username-confirm-password').value = '';
+        return;
+      }
+      
+      // Update username
+      const newCredentials = {
+        username: newUsername,
+        password: credentials.password
+      };
+      
+      if (saveCredentials(newCredentials)) {
+        // Update current username in localStorage
+        localStorage.setItem('cms_username', newUsername);
+        
+        // Update display
+        const usernameEl = document.getElementById('current-username');
+        if (usernameEl) {
+          usernameEl.textContent = `Xin chào, ${newUsername}`;
+        }
+        
+        successDiv.textContent = 'Username đã được cập nhật thành công!';
+        successDiv.style.display = 'block';
+        
+        // Clear form
+        document.getElementById('new-username').value = '';
+        document.getElementById('username-confirm-password').value = '';
+        
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+          successDiv.style.display = 'none';
+        }, 3000);
+      } else {
+        errorDiv.textContent = 'Có lỗi xảy ra khi lưu username!';
+        errorDiv.style.display = 'block';
+      }
+    });
+
+    // Update Password Form Handler
+    document.getElementById('update-password-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const oldPassword = document.getElementById('old-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      const errorDiv = document.getElementById('password-error');
+      const successDiv = document.getElementById('password-success');
+      
+      // Hide previous messages
+      errorDiv.style.display = 'none';
+      successDiv.style.display = 'none';
+      
+      // Validate
+      if (newPassword.length < 6) {
+        errorDiv.textContent = 'Password mới phải có ít nhất 6 ký tự!';
+        errorDiv.style.display = 'block';
+        return;
+      }
+      
+      if (newPassword !== confirmPassword) {
+        errorDiv.textContent = 'Password xác nhận không khớp!';
+        errorDiv.style.display = 'block';
+        document.getElementById('confirm-password').value = '';
+        return;
+      }
+      
+      const credentials = getCredentials();
+      
+      // Check old password
+      if (oldPassword !== credentials.password) {
+        errorDiv.textContent = 'Password hiện tại không đúng!';
+        errorDiv.style.display = 'block';
+        document.getElementById('old-password').value = '';
+        return;
+      }
+      
+      // Update password
+      const newCredentials = {
+        username: credentials.username,
+        password: newPassword
+      };
+      
+      if (saveCredentials(newCredentials)) {
+        successDiv.textContent = 'Password đã được cập nhật thành công!';
+        successDiv.style.display = 'block';
+        
+        // Clear form
+        document.getElementById('old-password').value = '';
+        document.getElementById('new-password').value = '';
+        document.getElementById('confirm-password').value = '';
+        
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+          successDiv.style.display = 'none';
+        }, 3000);
+      } else {
+        errorDiv.textContent = 'Có lỗi xảy ra khi lưu password!';
+        errorDiv.style.display = 'block';
+      }
     });
 
     // Initialize

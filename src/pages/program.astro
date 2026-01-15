@@ -2,6 +2,13 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import { getContent, getContentObject } from '../utils/content.ts';
+
+const programContent = getContentObject('program');
+const heroContent = programContent?.hero || {};
+const upcomingEvents = programContent?.upcomingEvents || {};
+const filters = programContent?.filters || {};
+const eventStatus = programContent?.eventStatus || {};
 ---
 
 <Layout title="GameGeek | Connecting the Game Industry of Vietnam">
@@ -20,7 +27,7 @@ import Footer from '../components/Footer.astro';
             <div class="hero-area style-two position-relative z-1 overflow-hidden">
                 <div class="row text-center">
                             <div class="section-heading text-center pb-20">
-                                <h2 class="section-title style-one text-title fw-bold">OUR FEATURED PROGRAMS</h2>
+                                <h2 class="section-title style-one text-title fw-bold">{heroContent.title || 'OUR FEATURED PROGRAMS'}</h2>
                             </div>
                 </div>
                 <div class="br-one position-absolute top-0 z-n1"></div>
@@ -76,7 +83,7 @@ import Footer from '../components/Footer.astro';
                     </div>
                 </div>
                 <div class="post-share d-flex flex-wrap align-items-center justify-content-md-end">
-                    <span class="text-title fw-semibold">Follow Us:</span>
+                    <span class="text-title fw-semibold">{programContent.followText || 'Follow Us:'}</span>
                     <ul class="social-profile style-three list-unstyled mb-0">
                         <li><a href="https://www.facebook.com/" target="_blank"
                                 class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
@@ -97,41 +104,35 @@ import Footer from '../components/Footer.astro';
             <!-- Upcoming Events Section -->
             <div class="container pt-60 pb-120">
                 <div class="section-heading text-center pb-20">
-                    <h2 class="section-title style-one text-title fw-bold">UPCOMING EVENTS</h2>
+                    <h2 class="section-title style-one text-title fw-bold">{upcomingEvents.title || 'UPCOMING EVENTS'}</h2>
                 </div>
                 <div class="project-filter-box style-one d-flex flex-wrap align-items-end round-10 mb-40">
                     <div class="form-group mb-20">
-                        <label class="fs-14 fw-semibold text-title d-block mb-1">Event Status</label>
+                        <label class="fs-14 fw-semibold text-title d-block mb-1">{filters.eventStatus?.label || 'Event Status'}</label>
                         <select class="w-100 ht-48 border-0 bg-gray outline-0">
-                            <option value="1">All</option>
-                            <option value="1">Upcoming</option>
-                            <option value="2">Past</option>
+                            {(filters.eventStatus?.options || ['All', 'Upcoming', 'Past']).map((option, index) => (
+                              <option value={index}>{option}</option>
+                            ))}
                         </select>
                     </div>
                     <div class="form-group mb-20">
-                        <label class="fs-14 fw-semibold text-title d-block mb-1">Location</label>
+                        <label class="fs-14 fw-semibold text-title d-block mb-1">{filters.location?.label || 'Location'}</label>
                         <select class="w-100 ht-48 border-0 bg-gray outline-0">
-                            <option value="0">All City</option>
-                            <option value="1">Ha Noi</option>
-                            <option value="2">Ho Chi Minh City</option>
+                            {(filters.location?.options || ['All City', 'Ha Noi', 'Ho Chi Minh City']).map((option, index) => (
+                              <option value={index}>{option}</option>
+                            ))}
                         </select>
                     </div>
                     <div class="form-group mb-20">
-                        <label class="fs-14 fw-semibold text-title d-block mb-1">Year of Event</label>
+                        <label class="fs-14 fw-semibold text-title d-block mb-1">{filters.year?.label || 'Year of Event'}</label>
                         <select class="w-100 ht-48 border-0 bg-gray outline-0">
-                            <option value="0">All Year</option>
-                            <option value="1">2023</option>
-                            <option value="2">2024</option>
-                            <option value="3">2025</option>
-                            <option value="4">2026</option>
-                            <option value="5">2027</option>
-                            <option value="6">2028</option>
-                            <option value="7">2029</option>
-                            <option value="8">2030</option>
+                            {(filters.year?.options || ['All Year', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030']).map((option, index) => (
+                              <option value={index}>{option}</option>
+                            ))}
                         </select>
                     </div>
                     <div class="form-group mb-20">
-                        <button class="btn style-two d-block w-100 p-0"><span class="btn-text d-block w-100 fw-semibold position-relative transition">Search Projects</span></button>
+                        <button class="btn style-two d-block w-100 p-0"><span class="btn-text d-block w-100 fw-semibold position-relative transition">{filters.searchButton || 'Search Projects'}</span></button>
                     </div>
                 </div>
                 <div class="row justify-content-center">
@@ -139,7 +140,7 @@ import Footer from '../components/Footer.astro';
                         <div class="project-card style-four bg-1 position-relative overflow-hidden z-1 round-10 mb-45">
                             <img src="/renius/image/project-bg-5.jpg" alt="Project" class="project-card-img position-absolute top-0 start-0 w-100 h-100">
                             <div class="project-header d-flex flex-wrap align-items-center justify-content-between mb-3">
-                                <span class="project-status transition">Upcoming</span>
+                                <span class="project-status transition">{eventStatus.upcoming || 'Upcoming'}</span>
                                 <span class="project-counter transition">2024</span>
                             </div>
                             <div class="project-title d-flex flex-wrap align-items-center justify-content-between">
@@ -151,7 +152,7 @@ import Footer from '../components/Footer.astro';
                         <div class="project-card style-four bg-2 position-relative overflow-hidden z-1 round-10 mb-45">
                             <img src="/renius/image/project-bg-6.jpg" alt="Project" class="project-card-img position-absolute top-0 start-0 w-100 h-100">
                             <div class="project-header d-flex flex-wrap align-items-center justify-content-between mb-3">
-                                <span class="project-status transition">Completed</span>
+                                <span class="project-status transition">{eventStatus.completed || 'Completed'}</span>
                                 <span class="project-counter transition">2025</span>
                             </div>
                             <div class="project-title d-flex flex-wrap align-items-center justify-content-between">
@@ -163,7 +164,7 @@ import Footer from '../components/Footer.astro';
                         <div class="project-card style-four bg-3 position-relative overflow-hidden z-1 round-10 mb-45">
                             <img src="/renius/image/project-bg-7.jpg" alt="Project" class="project-card-img position-absolute top-0 start-0 w-100 h-100">
                             <div class="project-header d-flex flex-wrap align-items-center justify-content-between mb-3">
-                                <span class="project-status transition">Upcoming</span>
+                                <span class="project-status transition">{eventStatus.upcoming || 'Upcoming'}</span>
                                 <span class="project-counter transition">2024</span>
                             </div>
                             <div class="project-title d-flex flex-wrap align-items-center justify-content-between">
@@ -175,7 +176,7 @@ import Footer from '../components/Footer.astro';
                         <div class="project-card style-four bg-4 position-relative overflow-hidden z-1 round-10 mb-45">
                             <img src="/renius/image/project-bg-6.jpg" alt="Project" class="project-card-img position-absolute top-0 start-0 w-100 h-100">
                             <div class="project-header d-flex flex-wrap align-items-center justify-content-between mb-3">
-                                <span class="project-status transition">Completed</span>
+                                <span class="project-status transition">{eventStatus.completed || 'Completed'}</span>
                                 <span class="project-counter transition">2025</span>
                             </div>
                             <div class="project-title d-flex flex-wrap align-items-center justify-content-between">
@@ -187,7 +188,7 @@ import Footer from '../components/Footer.astro';
                         <div class="project-card style-four bg-1 position-relative overflow-hidden z-1 round-10 mb-45">
                             <img src="/renius/image/project-bg-8.jpg" alt="Project" class="project-card-img position-absolute top-0 start-0 w-100 h-100">
                             <div class="project-header d-flex flex-wrap align-items-center justify-content-between mb-3">
-                                <span class="project-status transition">Upcoming</span>
+                                <span class="project-status transition">{eventStatus.upcoming || 'Upcoming'}</span>
                                 <span class="project-counter transition">2024</span>
                             </div>
                             <div class="project-title d-flex flex-wrap align-items-center justify-content-between">
@@ -199,7 +200,7 @@ import Footer from '../components/Footer.astro';
                         <div class="project-card style-four bg-2 position-relative overflow-hidden z-1 round-10 mb-45">
                             <img src="/renius/image/project-bg-7.jpg" alt="Project" class="project-card-img position-absolute top-0 start-0 w-100 h-100">
                             <div class="project-header d-flex flex-wrap align-items-center justify-content-between mb-3">
-                                <span class="project-status transition">Completed</span>
+                                <span class="project-status transition">{eventStatus.completed || 'Completed'}</span>
                                 <span class="project-counter transition">2025</span>
                             </div>
                             <div class="project-title d-flex flex-wrap align-items-center justify-content-between">
