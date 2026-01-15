@@ -295,17 +295,16 @@ export default config({
       path: 'src/content/site-content',
       schema: {
         // Home Page Content
-        homeHero: fields.object({
-          label: 'Home - Hero Section',
-          fields: {
+        homeHero: fields.object(
+          {
             title: fields.text({ label: 'Title' }),
             titleHighlight: fields.text({ label: 'Title Highlight' }),
             subtitle: fields.text({ label: 'Subtitle', multiline: true }),
           },
-        }),
-        homeAbout: fields.object({
-          label: 'Home - About Section',
-          fields: {
+          { label: 'Home - Hero Section' }
+        ),
+        homeAbout: fields.object(
+          {
             subtitle: fields.text({ label: 'Subtitle' }),
             titlePart1: fields.text({ label: 'Title Part 1' }),
             titleHighlight: fields.text({ label: 'Title Highlight' }),
@@ -313,53 +312,54 @@ export default config({
             description: fields.text({ label: 'Description', multiline: true }),
             buttonText: fields.text({ label: 'Button Text' }),
           },
-        }),
-        homeServices: fields.object({
-          label: 'Home - Services Section',
-          fields: {
+          { label: 'Home - About Section' }
+        ),
+        homeServices: fields.object(
+          {
             subtitle: fields.text({ label: 'Subtitle' }),
             titlePart1: fields.text({ label: 'Title Part 1' }),
             titleHighlight: fields.text({ label: 'Title Highlight' }),
             titlePart2: fields.text({ label: 'Title Part 2' }),
           },
-        }),
-        homeNetwork: fields.object({
-          label: 'Home - Network Section',
-          fields: {
+          { label: 'Home - Services Section' }
+        ),
+        homeNetwork: fields.object(
+          {
             subtitle: fields.text({ label: 'Subtitle' }),
             titlePart1: fields.text({ label: 'Title Part 1' }),
             titleHighlight: fields.text({ label: 'Title Highlight' }),
             titlePart2: fields.text({ label: 'Title Part 2' }),
             buttonText: fields.text({ label: 'Button Text' }),
           },
-        }),
+          { label: 'Home - Network Section' }
+        ),
         // Navbar
-        navbar: fields.object({
-          label: 'Navigation Bar',
-          fields: {
+        navbar: fields.object(
+          {
             buttonText: fields.text({ label: 'Button Text' }),
           },
-        }),
+          { label: 'Navigation Bar' }
+        ),
         // Footer
-        footer: fields.object({
-          label: 'Footer',
-          fields: {
+        footer: fields.object(
+          {
             address: fields.text({ label: 'Address', multiline: true }),
             email: fields.text({ label: 'Email' }),
             phone: fields.text({ label: 'Phone' }),
             brandText: fields.text({ label: 'Brand Text' }),
           },
-        }),
+          { label: 'Footer' }
+        ),
         // Contact Form
-        contactForm: fields.object({
-          label: 'Contact Form',
-          fields: {
+        contactForm: fields.object(
+          {
             step1Question: fields.text({ label: 'Step 1 Question' }),
             step2Question: fields.text({ label: 'Step 2 Question' }),
             step3Title: fields.text({ label: 'Step 3 Title' }),
             step3Description: fields.text({ label: 'Step 3 Description', multiline: true }),
           },
-        }),
+          { label: 'Contact Form' }
+        ),
         // Full JSON Content (for complex nested structures)
         fullContent: fields.document({
           label: 'Full Site Content (JSON)',

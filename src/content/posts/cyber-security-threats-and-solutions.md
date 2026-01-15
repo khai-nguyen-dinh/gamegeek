@@ -1,6 +1,8 @@
 ---
 id: "7"
-title: Cyber Security Threats and Solutions in Modern Business
+title:
+  name: Cyber Security Threats and Solutions in Modern Business
+  slug: cyber-security-threats-and-solutions
 slug: cyber-security-threats-and-solutions
 date: "2024-12-01"
 category: cyber-security

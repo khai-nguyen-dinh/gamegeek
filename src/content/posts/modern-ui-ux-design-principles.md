@@ -1,6 +1,8 @@
 ---
 id: "6"
-title: Modern UI/UX Design Principles for Digital Products
+title:
+  name: Modern UI/UX Design Principles for Digital Products
+  slug: modern-ui-ux-design-principles
 slug: modern-ui-ux-design-principles
 date: "2024-12-03"
 category: ui-ux-design

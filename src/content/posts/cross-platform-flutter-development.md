@@ -1,6 +1,8 @@
 ---
 id: "4"
-title: Cross-Platform Mobile Development with Flutter
+title:
+  name: Cross-Platform Mobile Development with Flutter
+  slug: cross-platform-flutter-development
 slug: cross-platform-flutter-development
 date: "2024-12-08"
 category: it-services

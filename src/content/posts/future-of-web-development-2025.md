@@ -1,6 +1,8 @@
 ---
 id: "2"
-title: "The Future of Web Development: Trends to Watch in 2025"
+title:
+  name: "The Future of Web Development: Trends to Watch in 2025"
+  slug: future-of-web-development-2025
 slug: future-of-web-development-2025
 date: "2024-12-15"
 category: it-services

@@ -1,6 +1,8 @@
 ---
 id: "3"
-title: Building Scalable React Applications
+title:
+  name: Building Scalable React Applications
+  slug: building-scalable-react-applications
 slug: building-scalable-react-applications
 date: "2024-12-10"
 category: it-services

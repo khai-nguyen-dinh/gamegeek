@@ -1,6 +1,8 @@
 ---
 id: "5"
-title: Database Security Best Practices for 2025
+title:
+  name: Database Security Best Practices for 2025
+  slug: database-security-best-practices-2025
 slug: database-security-best-practices-2025
 date: "2024-12-05"
 category: database-security

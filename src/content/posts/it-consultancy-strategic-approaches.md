@@ -1,6 +1,8 @@
 ---
 id: "8"
-title: Strategic IT Consultancy Approaches for Business Growth
+title:
+  name: Strategic IT Consultancy Approaches for Business Growth
+  slug: it-consultancy-strategic-approaches
 slug: it-consultancy-strategic-approaches
 date: "2024-11-28"
 category: it-consultancy
