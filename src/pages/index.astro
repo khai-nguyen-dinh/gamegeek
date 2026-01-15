@@ -126,7 +126,7 @@ const moveText = homeContent?.moveText || [];
                 <h2 class="section-title style-one fw-normal text-title mb-20" set:html={`${aboutContent.titlePart1 || ''}<span class="fw-black">${aboutContent.titleHighlight || ''}</span>${aboutContent.titlePart2 || ''}`}></h2>
                 <p class="mb-28">{aboutContent.description || ''}</p>
 
-                <a href="about.html" class="btn style-one d-inline-flex flex-wrap align-items-center p-0"><span
+                <a href="/about" class="btn style-one d-inline-flex flex-wrap align-items-center p-0"><span
                     class="btn-text d-inline-block fw-semibold position-relative transition">{aboutContent.buttonText || 'More About Us'}</span><span
                     class="btn-icon position-relative d-flex flex-column align-items-center justify-content-center rounded-circle transition"><i
                       class="ri-arrow-right-up-line"></i></span></a>
@@ -169,7 +169,7 @@ const moveText = homeContent?.moveText || [];
                     {service.items?.map((item) => (
                       <p class={index === 1 ? 'text-alto' : ''}>{item}</p>
                     ))}
-                    <a href="about.html" class="link style-one fw-semibold">{service.linkText || 'Discover More'}<img
+                    <a href="/about" class="link style-one fw-semibold">{service.linkText || 'Discover More'}<img
                       src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
                   </div>
                   {index === 0 && <img src="/renius/image/services2.png" alt="Image"
@@ -192,7 +192,7 @@ const moveText = homeContent?.moveText || [];
                 </div>
                 <h3 class="fs-24 font-primary fw-black">GO TO MARKET SERVICES</h3>
                 <p>Boost local sales fast with our experienced on-ground team.</p>
-                <a href="services.html" class="link style-one fw-semibold">Our Solution <img
+                <a href="/services" class="link style-one fw-semibold">Our Solution <img
                     src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
               </div>
             </div> -->
@@ -219,7 +219,7 @@ const moveText = homeContent?.moveText || [];
                 style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 400ms; animation-direction: normal; animation-fill-mode: both;" set:html={`${networkContent.titlePart1 || ''}<span class="fw-black">${networkContent.titleHighlight || ''}</span>${networkContent.titlePart2 || ''}`}></h2>
             </div>
             <div class="col-lg-5 col-md-4 text-md-end">
-              <a href="services.html" class="btn style-one d-inline-flex flex-wrap align-items-center p-0"><span
+              <a href="/services" class="btn style-one d-inline-flex flex-wrap align-items-center p-0"><span
                   class="btn-text d-inline-block fw-semibold position-relative transition">{networkContent.buttonText || 'View All Services'}</span><span
                   class="btn-icon position-relative d-flex flex-column align-items-center justify-content-center rounded-circle transition"><i
                     class="ri-arrow-right-up-line"></i></span></a>
@@ -229,47 +229,47 @@ const moveText = homeContent?.moveText || [];
             <div class="service-card style-three mb-30" data-cue="slideInUp" data-show="true"
               style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
               <img src="/renius/image/ecosystem.svg" alt="Icon">
-              <h3 class="fs-24 fw-semibold"><a href="service-single.html"
+            <h3 class="fs-24 fw-semibold"><a href="/services"
                   class="text-white link-hover-primary transition">Ecosystem Connectivity</a></h3>
               <p class="text-alto">We connect studios, publishers, service providers, and investors into one unified
                 network.</p>
               <p class="text-alto">Through trusted bridges to the global market, we turn connections into real business
                 opportunities.</p>
-              <a href="services.html" class="link style-one fw-semibold">Read More<img
+            <a href="/services" class="link style-one fw-semibold">Read More<img
                   src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
             </div>
             <div class="service-card style-three mb-30" data-cue="slideInUp" data-show="true"
               style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 180ms; animation-direction: normal; animation-fill-mode: both;">
               <img src="/renius/image/analytic.svg" alt="Icon">
-              <h3 class="fs-24 fw-semibold"><a href="service-single.html"
+            <h3 class="fs-24 fw-semibold"><a href="/services"
                   class="text-white link-hover-primary transition">Insight &amp; Analytics</a></h3>
               <p class="text-alto">Get access to accurate market data, player insights, and industry trends.</p>
               <p class="text-alto">We help partners make smarter decisions with localized intelligence you can act on.
               </p>
-              <a href="services.html" class="link style-one fw-semibold">Read More<img
+            <a href="/services" class="link style-one fw-semibold">Read More<img
                   src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
             </div>
             <div class="service-card style-three mb-30" data-cue="slideInUp" data-show="true"
               style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 360ms; animation-direction: normal; animation-fill-mode: both;">
               <img src="/renius/image/community.svg" alt="Icon">
-              <h3 class="fs-24 fw-semibold"><a href="service-single.html"
+            <h3 class="fs-24 fw-semibold"><a href="/services"
                   class="text-white link-hover-primary transition">Community Growth</a></h3>
               <p class="text-alto">We cultivate a vibrant game-focused community through events, workshops, and
                 partnerships.</p>
               <p class="text-alto">Your team gains visibility, support, and a strong network to grow faster.</p>
-              <a href="services.html" class="link style-one fw-semibold">Read More<img
+            <a href="/services" class="link style-one fw-semibold">Read More<img
                   src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
             </div>
             <div class="service-card style-three mb-30" data-cue="slideInUp" data-show="true"
               style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 540ms; animation-direction: normal; animation-fill-mode: both;">
               <img src="/renius/image/innovation.svg" alt="Icon">
-              <h3 class="fs-24 fw-semibold"><a href="service-single.html"
+            <h3 class="fs-24 fw-semibold"><a href="/services"
                   class="text-white link-hover-primary transition">Innovation Support</a></h3>
               <p class="text-alto">From early-stage ideas to scaling solutions, we provide guidance, resources, and
                 strategic connections.</p>
               <p class="text-alto">We help innovators build, refine, and launch with confidence in the Vietnam market.
               </p>
-              <a href="services.html" class="link style-one fw-semibold">Read More<img
+            <a href="/services" class="link style-one fw-semibold">Read More<img
                   src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
             </div>
           </div> -->
@@ -343,9 +343,9 @@ const moveText = homeContent?.moveText || [];
             data-swiper-slide-index="0">
             <div class="project-card style-three bg-1 position-relative overflow-hidden z-1 round-10">
               <span class="project-counter text-center fw-semibold d-block lh-1 transition">01</span>
-              <h3 class="fs-24 fw-semibold mb-0 transition"><a href="project-single.html"
+              <h3 class="fs-24 fw-semibold mb-0 transition"><a href="/program"
                   class="text-title hover-text-primary transition">Urban Modern Duplex Project</a></h3>
-              <a href="project-single.html"
+              <a href="/program"
                 class="project-link d-flex flex-column align-items-center justify-content-center rounded-circle transition"><img
                   src="/renius/image/up-right-arrow-yellow.svg" alt="Icon" class="transition"></a>
             </div>
@@ -354,9 +354,9 @@ const moveText = homeContent?.moveText || [];
             aria-label="2 / 5" data-swiper-slide-index="1">
             <div class="project-card style-three bg-2 position-relative overflow-hidden z-1 round-10">
               <span class="project-counter text-center fw-semibold d-block lh-1 transition">02</span>
-              <h3 class="fs-24 fw-semibold mb-0 transition"><a href="project-single.html"
+              <h3 class="fs-24 fw-semibold mb-0 transition"><a href="/program"
                   class="text-title hover-text-primary transition">Northern Seaview Hotel</a></h3>
-              <a href="project-single.html"
+              <a href="/program"
                 class="project-link d-flex flex-column align-items-center justify-content-center rounded-circle transition"><img
                   src="/renius/image/up-right-arrow-yellow.svg" alt="Icon" class="transition"></a>
             </div>
@@ -365,9 +365,9 @@ const moveText = homeContent?.moveText || [];
             aria-label="3 / 5" data-swiper-slide-index="2">
             <div class="project-card style-three bg-3 position-relative overflow-hidden z-1 round-10">
               <span class="project-counter text-center fw-semibold d-block lh-1 transition">03</span>
-              <h3 class="fs-24 fw-semibold mb-0 transition"><a href="project-single.html"
+              <h3 class="fs-24 fw-semibold mb-0 transition"><a href="/program"
                   class="text-title hover-text-primary transition">Premier Office Tower</a></h3>
-              <a href="project-single.html"
+              <a href="/program"
                 class="project-link d-flex flex-column align-items-center justify-content-center rounded-circle transition"><img
                   src="/renius/image/up-right-arrow-yellow.svg" alt="Icon" class="transition"></a>
             </div>
@@ -376,9 +376,9 @@ const moveText = homeContent?.moveText || [];
             aria-label="4 / 5" data-swiper-slide-index="3">
             <div class="project-card style-three bg-4 position-relative overflow-hidden z-1 round-10">
               <span class="project-counter text-center fw-semibold d-block lh-1 transition">04</span>
-              <h3 class="fs-24 fw-semibold mb-0 transition"><a href="project-single.html"
+              <h3 class="fs-24 fw-semibold mb-0 transition"><a href="/program"
                   class="text-title hover-text-primary transition">Greenview Apartment</a></h3>
-              <a href="project-single.html"
+              <a href="/program"
                 class="project-link d-flex flex-column align-items-center justify-content-center rounded-circle transition"><img
                   src="/renius/image/up-right-arrow-yellow.svg" alt="Icon" class="transition"></a>
             </div>
@@ -387,9 +387,9 @@ const moveText = homeContent?.moveText || [];
             data-swiper-slide-index="4">
             <div class="project-card style-three bg-2 position-relative overflow-hidden z-1 round-10">
               <span class="project-counter text-center fw-semibold d-block lh-1 transition">02</span>
-              <h3 class="fs-24 fw-semibold mb-0 transition"><a href="project-single.html"
+              <h3 class="fs-24 fw-semibold mb-0 transition"><a href="/program"
                   class="text-title hover-text-primary transition">Artur Hitech Tower</a></h3>
-              <a href="project-single.html"
+              <a href="/program"
                 class="project-link d-flex flex-column align-items-center justify-content-center rounded-circle transition"><img
                   src="/renius/image/up-right-arrow-yellow.svg" alt="Icon" class="transition"></a>
             </div>
@@ -415,7 +415,7 @@ const moveText = homeContent?.moveText || [];
                   class="rotate position-relative z-2 d-block mx-auto">
                 <img src="/renius/image/up-right-arrow-white-small.svg" alt="Icon"
                   class="arrow-icon position-absolute z-n1">
-                <a href="contact.html" class="position-absolute top-0 start-0 w-100 h-100 z-2"></a>
+                <a href="/contact" class="position-absolute top-0 start-0 w-100 h-100 z-2"></a>
               </div>
             </div>
           </div>
