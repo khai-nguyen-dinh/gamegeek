@@ -1,0 +1,14 @@
+---
+id: "8"
+title: Strategic IT Consultancy Approaches for Business Growth
+slug: it-consultancy-strategic-approaches
+date: "2024-11-28"
+category: it-consultancy
+author: Admin
+image: /images/testimonialProfileThumb1_1.jpg
+thumb: /images/blogThumb1_2.jpg
+thumb2: /images/blogThumb1_1.jpg
+thumb3: /images/blogThumb1_2.jpg
+breadcrumbBg: /images/newsdetail.jpg
+---
+

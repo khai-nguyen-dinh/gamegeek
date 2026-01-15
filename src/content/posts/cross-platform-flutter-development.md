@@ -1,0 +1,14 @@
+---
+id: "4"
+title: Cross-Platform Mobile Development with Flutter
+slug: cross-platform-flutter-development
+date: "2024-12-08"
+category: it-services
+author: Admin
+image: /images/testimonialProfileThumb1_3.jpg
+thumb: /images/blogThumb1_2.jpg
+thumb2: /images/blogThumb1_1.jpg
+thumb3: /images/blogThumb1_2.jpg
+breadcrumbBg: /images/newsdetail.jpg
+---
+

@@ -1,0 +1,15 @@
+---
+id: slide-1
+type: content
+title: THE GAMING CENTRAL HUB OF VIETNAM
+slug: the-gaming-central-hub-of-vietnam
+subtitle: WHERE GAMING MEETS GLOBAL OPPORTUNITY
+description: Your entry point to partnerships, investment, and market access across the global gaming ecosystem.
+buttonText: "Let's Talk"
+buttonLink: /contact
+backgroundImage: ""
+image: ""
+order: 1
+active: true
+---
+

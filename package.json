@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "keystatic:sync": "node scripts/keystatic-gitlab-sync.js"
+    "keystatic:sync": "node scripts/keystatic-gitlab-sync.js",
+    "migrate:keystatic": "node scripts/migrate-to-keystatic.js"
   },
   "dependencies": {
     "@astrojs/react": "^3.0.0",

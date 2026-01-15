@@ -1,0 +1,14 @@
+---
+id: "2"
+title: "The Future of Web Development: Trends to Watch in 2025"
+slug: future-of-web-development-2025
+date: "2024-12-15"
+category: it-services
+author: Admin
+image: /images/testimonialProfileThumb1_1.jpg
+thumb: /images/blogThumb1_1.jpg
+thumb2: /images/blogThumb1_1.jpg
+thumb3: /images/blogThumb1_2.jpg
+breadcrumbBg: /images/newsdetail.jpg
+---
+

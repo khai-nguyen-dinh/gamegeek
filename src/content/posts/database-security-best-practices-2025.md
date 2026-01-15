@@ -1,0 +1,14 @@
+---
+id: "5"
+title: Database Security Best Practices for 2025
+slug: database-security-best-practices-2025
+date: "2024-12-05"
+category: database-security
+author: Admin
+image: /images/testimonialProfileThumb1_1.jpg
+thumb: /images/blogThumb1_1.jpg
+thumb2: /images/blogThumb1_1.jpg
+thumb3: /images/blogThumb1_2.jpg
+breadcrumbBg: /images/newsdetail.jpg
+---
+

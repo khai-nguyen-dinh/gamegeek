@@ -1,4 +1,4 @@
-import { config, fields, collection } from '@keystatic/core';
+import { config, fields, collection, singleton } from '@keystatic/core';
 
 export default config({
   storage: {
@@ -14,6 +14,10 @@ export default config({
       path: 'src/content/posts/*',
       format: { contentField: 'content' },
       schema: {
+        id: fields.text({ 
+          label: 'ID',
+          description: 'Unique identifier for the post',
+        }),
         title: fields.slug({ name: { label: 'Title' } }),
         slug: fields.text({ 
           label: 'Slug',
@@ -84,6 +88,10 @@ export default config({
       slugField: 'name',
       path: 'src/content/categories/*',
       schema: {
+        id: fields.text({ 
+          label: 'ID',
+          description: 'Unique identifier (should match slug)',
+        }),
         name: fields.text({ label: 'Category Name' }),
         slug: fields.text({ 
           label: 'Slug',
@@ -190,27 +198,50 @@ export default config({
       slugField: 'title',
       path: 'src/content/slides/*',
       schema: {
-        title: fields.text({ label: 'Slide Title' }),
+        id: fields.text({ 
+          label: 'ID',
+          description: 'Unique identifier (e.g., slide-1, slide-2)',
+        }),
+        type: fields.select({
+          label: 'Slide Type',
+          options: [
+            { label: 'Content Slide (with text)', value: 'content' },
+            { label: 'Image Slide (image only)', value: 'image' },
+          ],
+          defaultValue: 'content',
+        }),
+        title: fields.text({ 
+          label: 'Slide Title',
+          validation: { isRequired: false },
+        }),
         slug: fields.slug({ name: { label: 'Title' } }),
         subtitle: fields.text({ 
           label: 'Subtitle',
           multiline: true,
+          validation: { isRequired: false },
         }),
         description: fields.text({ 
           label: 'Description',
           multiline: true,
+          validation: { isRequired: false },
+        }),
+        buttonText: fields.text({ 
+          label: 'Button Text',
+          validation: { isRequired: false },
+        }),
+        buttonLink: fields.text({ 
+          label: 'Button Link URL',
+          validation: { isRequired: false },
+        }),
+        backgroundImage: fields.text({ 
+          label: 'Background Image URL',
+          description: 'URL for background image (if not using image field)',
+          validation: { isRequired: false },
         }),
         image: fields.image({
           label: 'Slide Image',
           directory: 'public/images',
           publicPath: '/images',
-        }),
-        link: fields.text({ 
-          label: 'Link URL',
-          validation: { isRequired: false },
-        }),
-        linkText: fields.text({ 
-          label: 'Link Text',
           validation: { isRequired: false },
         }),
         order: fields.integer({ 
@@ -253,6 +284,89 @@ export default config({
         featured: fields.checkbox({
           label: 'Featured Event',
           defaultValue: false,
+        }),
+      },
+    }),
+  },
+  singletons: {
+    // Site Content - Singleton for managing all page content
+    siteContent: singleton({
+      label: 'Site Content',
+      path: 'src/content/site-content',
+      schema: {
+        // Home Page Content
+        homeHero: fields.object({
+          label: 'Home - Hero Section',
+          fields: {
+            title: fields.text({ label: 'Title' }),
+            titleHighlight: fields.text({ label: 'Title Highlight' }),
+            subtitle: fields.text({ label: 'Subtitle', multiline: true }),
+          },
+        }),
+        homeAbout: fields.object({
+          label: 'Home - About Section',
+          fields: {
+            subtitle: fields.text({ label: 'Subtitle' }),
+            titlePart1: fields.text({ label: 'Title Part 1' }),
+            titleHighlight: fields.text({ label: 'Title Highlight' }),
+            titlePart2: fields.text({ label: 'Title Part 2' }),
+            description: fields.text({ label: 'Description', multiline: true }),
+            buttonText: fields.text({ label: 'Button Text' }),
+          },
+        }),
+        homeServices: fields.object({
+          label: 'Home - Services Section',
+          fields: {
+            subtitle: fields.text({ label: 'Subtitle' }),
+            titlePart1: fields.text({ label: 'Title Part 1' }),
+            titleHighlight: fields.text({ label: 'Title Highlight' }),
+            titlePart2: fields.text({ label: 'Title Part 2' }),
+          },
+        }),
+        homeNetwork: fields.object({
+          label: 'Home - Network Section',
+          fields: {
+            subtitle: fields.text({ label: 'Subtitle' }),
+            titlePart1: fields.text({ label: 'Title Part 1' }),
+            titleHighlight: fields.text({ label: 'Title Highlight' }),
+            titlePart2: fields.text({ label: 'Title Part 2' }),
+            buttonText: fields.text({ label: 'Button Text' }),
+          },
+        }),
+        // Navbar
+        navbar: fields.object({
+          label: 'Navigation Bar',
+          fields: {
+            buttonText: fields.text({ label: 'Button Text' }),
+          },
+        }),
+        // Footer
+        footer: fields.object({
+          label: 'Footer',
+          fields: {
+            address: fields.text({ label: 'Address', multiline: true }),
+            email: fields.text({ label: 'Email' }),
+            phone: fields.text({ label: 'Phone' }),
+            brandText: fields.text({ label: 'Brand Text' }),
+          },
+        }),
+        // Contact Form
+        contactForm: fields.object({
+          label: 'Contact Form',
+          fields: {
+            step1Question: fields.text({ label: 'Step 1 Question' }),
+            step2Question: fields.text({ label: 'Step 2 Question' }),
+            step3Title: fields.text({ label: 'Step 3 Title' }),
+            step3Description: fields.text({ label: 'Step 3 Description', multiline: true }),
+          },
+        }),
+        // Full JSON Content (for complex nested structures)
+        fullContent: fields.document({
+          label: 'Full Site Content (JSON)',
+          description: 'Advanced: Edit full content.json structure. Use with caution!',
+          formatting: false,
+          dividers: false,
+          links: false,
         }),
       },
     }),
