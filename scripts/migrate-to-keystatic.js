@@ -1,10 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { dump } from 'js-yaml';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
+const contentDir = path.join(rootDir, 'src/keystatic');
 
 // Helper function to create slug from title
 function createSlug(title) {
@@ -33,50 +35,41 @@ function formatDate(dateString) {
   return new Date().toISOString().split('T')[0];
 }
 
-// Helper to safely format YAML values
-function formatYamlValue(value) {
-  if (value === null || value === undefined || value === '') {
-    return '""';
+function ensureDir(dirPath) {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
   }
-  if (typeof value === 'string') {
-    // Quote strings that contain special characters or spaces
-    if (value.includes(':') || value.includes('"') || value.includes("'") || value.includes('\n')) {
-      return `"${value.replace(/"/g, '\\"').replace(/\n/g, '\\n')}"`;
+}
+
+function clearDir(dirPath) {
+  ensureDir(dirPath);
+  for (const entry of fs.readdirSync(dirPath)) {
+    const fullPath = path.join(dirPath, entry);
+    if (fs.lstatSync(fullPath).isFile()) {
+      fs.unlinkSync(fullPath);
     }
-    // Quote if starts with number or special char
-    if (/^[0-9@#]/.test(value)) {
-      return `"${value}"`;
-    }
-    return value;
   }
-  if (typeof value === 'boolean') {
-    return value.toString();
-  }
-  return String(value);
 }
 
 // Migrate Categories
 function migrateCategories() {
   console.log('📁 Migrating Categories...');
   const newsData = JSON.parse(fs.readFileSync(path.join(rootDir, 'src/data/news.json'), 'utf8'));
-  const categoriesDir = path.join(rootDir, 'src/content/categories');
-  
-  if (!fs.existsSync(categoriesDir)) {
-    fs.mkdirSync(categoriesDir, { recursive: true });
-  }
-  
+  const categoriesDir = path.join(rootDir, 'src/keystatic/categories');
+
+  clearDir(categoriesDir);
+
   newsData.categories.forEach(category => {
-    const filename = `${category.slug}.md`;
+    const filename = `${category.slug}.yaml`;
     const filepath = path.join(categoriesDir, filename);
-    
-    const content = `---
-id: ${formatYamlValue(category.id)}
-name: ${formatYamlValue(category.name)}
-slug: ${formatYamlValue(category.slug)}
----
-`;
-    
-    fs.writeFileSync(filepath, content, 'utf8');
+
+    const data = {
+      id: category.id ?? '',
+      name: category.name ?? '',
+      slug: category.slug ?? '',
+    };
+
+    fs.writeFileSync(filepath, dump(data, { lineWidth: -1 }), 'utf8');
     console.log(`  ✓ Created: ${filename}`);
   });
   
@@ -87,38 +80,38 @@ slug: ${formatYamlValue(category.slug)}
 function migratePosts() {
   console.log('📝 Migrating Posts...');
   const newsData = JSON.parse(fs.readFileSync(path.join(rootDir, 'src/data/news.json'), 'utf8'));
-  const postsDir = path.join(rootDir, 'src/content/posts');
-  
-  if (!fs.existsSync(postsDir)) {
-    fs.mkdirSync(postsDir, { recursive: true });
-  }
-  
+  const postsDir = path.join(rootDir, 'src/keystatic/posts');
+
+  clearDir(postsDir);
+
   newsData.posts.forEach(post => {
     const slug = post.slug || createSlug(post.title);
-    const filename = `${slug}.md`;
+    const filename = `${slug}.mdoc`;
     const filepath = path.join(postsDir, filename);
     
     // Format date
     const formattedDate = formatDate(post.date);
     
-    const frontmatter = `---
-id: ${formatYamlValue(post.id)}
-title: ${formatYamlValue(post.title)}
-slug: ${formatYamlValue(slug)}
-date: ${formatYamlValue(formattedDate)}
-category: ${formatYamlValue(post.category)}
-author: ${formatYamlValue(post.author || 'Admin')}
-image: ${formatYamlValue(post.image || '')}
-thumb: ${formatYamlValue(post.thumb || '')}
-thumb2: ${formatYamlValue(post.thumb2 || '')}
-thumb3: ${formatYamlValue(post.thumb3 || '')}
-breadcrumbBg: ${formatYamlValue(post.breadcrumbBg || '')}
----
-
-`;
+    const frontmatterData = {
+      id: post.id ?? '',
+      title: {
+        name: post.title || '',
+        slug,
+      },
+      slug,
+      date: formattedDate,
+      category: post.category || '',
+      author: post.author || 'Admin',
+      image: post.image || '',
+      thumb: post.thumb || '',
+      thumb2: post.thumb2 || '',
+      thumb3: post.thumb3 || '',
+      breadcrumbBg: post.breadcrumbBg || '',
+    };
+    const frontmatter = `---\n${dump(frontmatterData, { lineWidth: -1 })}---\n\n`;
     
     // Add content if exists
-    const content = post.content ? `\n${post.content}\n` : '';
+    const content = post.content ? `${post.content}\n` : '';
     
     fs.writeFileSync(filepath, frontmatter + content, 'utf8');
     console.log(`  ✓ Created: ${filename}`);
@@ -131,39 +124,99 @@ breadcrumbBg: ${formatYamlValue(post.breadcrumbBg || '')}
 function migrateSlides() {
   console.log('🖼️  Migrating Slides...');
   const slidesData = JSON.parse(fs.readFileSync(path.join(rootDir, 'src/data/slides.json'), 'utf8'));
-  const slidesDir = path.join(rootDir, 'src/content/slides');
-  
-  if (!fs.existsSync(slidesDir)) {
-    fs.mkdirSync(slidesDir, { recursive: true });
-  }
-  
-  slidesData.slides.forEach((slide, index) => {
-    const slug = slide.title ? createSlug(slide.title) : `slide-${index + 1}`;
-    const filename = `${slug}.md`;
-    const filepath = path.join(slidesDir, filename);
-    
-    const frontmatter = `---
-id: ${formatYamlValue(slide.id || `slide-${index + 1}`)}
-type: ${formatYamlValue(slide.type || 'content')}
-title: ${formatYamlValue(slide.title || '')}
-slug: ${formatYamlValue(slug)}
-subtitle: ${formatYamlValue(slide.subtitle || '')}
-description: ${formatYamlValue(slide.description || '')}
-buttonText: ${formatYamlValue(slide.buttonText || '')}
-buttonLink: ${formatYamlValue(slide.buttonLink || '')}
-backgroundImage: ${formatYamlValue(slide.backgroundImage || '')}
-image: ${formatYamlValue(slide.image || '')}
-order: ${slide.order || index + 1}
-active: ${slide.active !== false}
----
+  const slidesDir = path.join(rootDir, 'src/keystatic/slides');
 
-`;
-    
-    fs.writeFileSync(filepath, frontmatter, 'utf8');
+  clearDir(slidesDir);
+
+  slidesData.slides.forEach((slide, index) => {
+    const slugSource = slide.title || slide.id || `slide-${index + 1}`;
+    const slug = createSlug(slugSource);
+    const filename = `${slug}.yaml`;
+    const filepath = path.join(slidesDir, filename);
+
+    const data = {
+      id: slide.id || `slide-${index + 1}`,
+      type: slide.type || 'content',
+      title: slide.title || '',
+      slug: {
+        name: slugSource,
+        slug,
+      },
+      subtitle: slide.subtitle || '',
+      description: slide.description || '',
+      buttonText: slide.buttonText || '',
+      buttonLink: slide.buttonLink || '',
+      backgroundImage: slide.backgroundImage || '',
+      image: slide.image || null,
+      order: slide.order || index + 1,
+      active: slide.active !== false,
+    };
+
+    fs.writeFileSync(filepath, dump(data, { lineWidth: -1 }), 'utf8');
     console.log(`  ✓ Created: ${filename}`);
   });
   
   console.log(`✅ Migrated ${slidesData.slides.length} slides\n`);
+}
+
+// Migrate Site Content (Singleton)
+function migrateSiteContent() {
+  console.log('📄 Migrating Site Content...');
+  const contentData = JSON.parse(fs.readFileSync(path.join(rootDir, 'src/data/content.json'), 'utf8'));
+  const outputPath = path.join(contentDir, 'site-content.yaml');
+  const legacyJsonPath = path.join(contentDir, 'site-content.json');
+
+  const siteContent = {
+    homeHero: {
+      title: contentData?.home?.hero?.title || '',
+      titleHighlight: contentData?.home?.hero?.titleHighlight || '',
+      subtitle: contentData?.home?.hero?.subtitle || '',
+    },
+    homeAbout: {
+      subtitle: contentData?.home?.about?.subtitle || '',
+      titlePart1: contentData?.home?.about?.titlePart1 || '',
+      titleHighlight: contentData?.home?.about?.titleHighlight || '',
+      titlePart2: contentData?.home?.about?.titlePart2 || '',
+      description: contentData?.home?.about?.description || '',
+      buttonText: contentData?.home?.about?.buttonText || '',
+    },
+    homeServices: {
+      subtitle: contentData?.home?.services?.subtitle || '',
+      titlePart1: contentData?.home?.services?.titlePart1 || '',
+      titleHighlight: contentData?.home?.services?.titleHighlight || '',
+      titlePart2: contentData?.home?.services?.titlePart2 || '',
+    },
+    homeNetwork: {
+      subtitle: contentData?.home?.network?.subtitle || '',
+      titlePart1: contentData?.home?.network?.titlePart1 || '',
+      titleHighlight: contentData?.home?.network?.titleHighlight || '',
+      titlePart2: contentData?.home?.network?.titlePart2 || '',
+      buttonText: contentData?.home?.network?.buttonText || '',
+    },
+    navbar: {
+      buttonText: contentData?.navbar?.buttonText || '',
+    },
+    footer: {
+      address: contentData?.footer?.address?.address || '',
+      email: contentData?.footer?.address?.email || '',
+      phone: contentData?.footer?.address?.phone || '',
+      brandText: contentData?.footer?.brandText || '',
+    },
+    contactForm: {
+      step1Question: contentData?.contactForm?.step1?.question || '',
+      step2Question: contentData?.contactForm?.step2?.question || '',
+      step3Title: contentData?.contactForm?.step3?.title || '',
+      step3Description: contentData?.contactForm?.step3?.description || '',
+    },
+    fullContent: [],
+  };
+
+  if (fs.existsSync(legacyJsonPath)) {
+    fs.unlinkSync(legacyJsonPath);
+  }
+  fs.writeFileSync(outputPath, dump(siteContent, { lineWidth: -1 }), 'utf8');
+  console.log('  ✓ Created: site-content.yaml');
+  console.log('✅ Migrated site content\n');
 }
 
 // Main migration function
@@ -174,10 +227,11 @@ function migrate() {
     migrateCategories();
     migratePosts();
     migrateSlides();
+    migrateSiteContent();
     
     console.log('✨ Migration completed successfully!');
     console.log('\n📋 Next steps:');
-    console.log('  1. Check the migrated files in src/content/');
+    console.log('  1. Check the migrated files in src/keystatic/');
     console.log('  2. Review and adjust any fields if needed');
     console.log('  3. Access Keystatic admin at http://localhost:4321/admin');
     console.log('  4. Verify the data in Keystatic CMS');

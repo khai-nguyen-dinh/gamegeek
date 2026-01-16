@@ -1,0 +1,35 @@
+homeHero:
+  title: THE GAMING CENTRAL HUB OF VIETNAM
+  titleHighlight: CENTRAL HUB
+  subtitle: GameGeek is the central hub connecting Vietnam's game studios, publishers, investors, and media. We empower collaboration, innovation, and sustainable growth across the entire game industry ecosystem.
+homeAbout:
+  subtitle: ABOUT US
+  titlePart1: 'GAMEGEEK – '
+  titleHighlight: THE GAMING CENTRAL HUB
+  titlePart2: ' OF VIETNAM'
+  description: Founded in 2016, GameGeek is Vietnam's central gaming hub. We bridge local talent with global opportunities, uniting studios, publishers, and investors to drive innovation and position Vietnam as a regional powerhouse.
+  buttonText: More About Us
+homeServices:
+  subtitle: OUR SERVICES
+  titlePart1: 'End-to-End Solutions for '
+  titleHighlight: Global Partners & Your Bridge
+  titlePart2: ' to the Global Stage'
+homeNetwork:
+  subtitle: OUR NETWORK
+  titlePart1: 'Best Connector in '
+  titleHighlight: Vietnam Market
+  titlePart2: ''
+  buttonText: View All Services
+navbar:
+  buttonText: Get Started
+footer:
+  address: NIC Building, No 6 Lane 7 Ton That Thuyet, Cau Giay, Hanoi
+  email: team@gamegeek.asia
+  phone: (+84) 902 122 120
+  brandText: GAMEGEEK
+contactForm:
+  step1Question: You are…
+  step2Question: What are you looking for?
+  step3Title: Contact Information
+  step3Description: Please share a few details so our team can better understand your needs and get in touch.
+fullContent: []

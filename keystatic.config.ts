@@ -1,17 +1,30 @@
 import { config, fields, collection, singleton } from '@keystatic/core';
 
+const githubToken = import.meta.env.KEYSTATIC_GITHUB_TOKEN || '';
+const useGithubStorage = Boolean(githubToken);
+
 export default config({
-  storage: {
-    // Using local storage - files will be saved to src/content/
-    // A git hook will automatically commit and push to GitLab
-    kind: 'local',
-  },
+  storage: useGithubStorage
+    ? {
+        kind: 'github',
+        repo: {
+          owner: 'khai-nguyen-dinh',
+          name: 'gamegeek',
+        },
+        branch: 'main',
+        // Use a fine-grained PAT with repo contents write.
+        token: githubToken,
+      }
+    : {
+        // Fallback for local dev when no token is available.
+        kind: 'local',
+      },
   collections: {
     // News Posts Collection
     posts: collection({
       label: 'News Posts',
       slugField: 'title',
-      path: 'src/content/posts/*',
+      path: 'src/keystatic/posts/*',
       format: { contentField: 'content' },
       schema: {
         id: fields.text({ 
@@ -86,7 +99,7 @@ export default config({
     categories: collection({
       label: 'Categories',
       slugField: 'name',
-      path: 'src/content/categories/*',
+      path: 'src/keystatic/categories/*',
       schema: {
         id: fields.text({ 
           label: 'ID',
@@ -104,7 +117,7 @@ export default config({
     pages: collection({
       label: 'Pages',
       slugField: 'title',
-      path: 'src/content/pages/*',
+      path: 'src/keystatic/pages/*',
       format: { contentField: 'content' },
       schema: {
         title: fields.text({ label: 'Page Title' }),
@@ -130,7 +143,7 @@ export default config({
     services: collection({
       label: 'Services',
       slugField: 'title',
-      path: 'src/content/services/*',
+      path: 'src/keystatic/services/*',
       format: { contentField: 'description' },
       schema: {
         title: fields.text({ label: 'Service Title' }),
@@ -162,7 +175,7 @@ export default config({
     team: collection({
       label: 'Team Members',
       slugField: 'name',
-      path: 'src/content/team/*',
+      path: 'src/keystatic/team/*',
       schema: {
         name: fields.text({ label: 'Name' }),
         slug: fields.slug({ name: { label: 'Name' } }),
@@ -196,7 +209,7 @@ export default config({
     slides: collection({
       label: 'Hero Slides',
       slugField: 'title',
-      path: 'src/content/slides/*',
+      path: 'src/keystatic/slides/*',
       schema: {
         id: fields.text({ 
           label: 'ID',
@@ -259,7 +272,7 @@ export default config({
     events: collection({
       label: 'Events',
       slugField: 'title',
-      path: 'src/content/events/*',
+      path: 'src/keystatic/events/*',
       format: { contentField: 'description' },
       schema: {
         title: fields.text({ label: 'Event Title' }),
@@ -292,7 +305,7 @@ export default config({
     // Site Content - Singleton for managing all page content
     siteContent: singleton({
       label: 'Site Content',
-      path: 'src/content/site-content',
+      path: 'src/keystatic/site-content',
       schema: {
         // Home Page Content
         homeHero: fields.object(

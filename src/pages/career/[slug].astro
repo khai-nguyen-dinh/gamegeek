@@ -109,7 +109,22 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
-const { title, location, type, experience, deadline, salary, description, responsibilities, qualifications, offers } = Astro.props;
+const {
+  title = '',
+  location = '',
+  type = '',
+  experience = '',
+  deadline = '',
+  salary = '',
+  description = '',
+  responsibilities = [],
+  qualifications = [],
+  offers = [],
+} = Astro.props ?? {};
+
+if (!title) {
+  return new Response('Not found', { status: 404 });
+}
 ---
 
 <Layout title={`${title} | GameGeek`}>
