@@ -166,50 +166,7 @@ function migrateSiteContent() {
   const outputPath = path.join(contentDir, 'site-content.yaml');
   const legacyJsonPath = path.join(contentDir, 'site-content.json');
 
-  const siteContent = {
-    homeHero: {
-      title: contentData?.home?.hero?.title || '',
-      titleHighlight: contentData?.home?.hero?.titleHighlight || '',
-      subtitle: contentData?.home?.hero?.subtitle || '',
-    },
-    homeAbout: {
-      subtitle: contentData?.home?.about?.subtitle || '',
-      titlePart1: contentData?.home?.about?.titlePart1 || '',
-      titleHighlight: contentData?.home?.about?.titleHighlight || '',
-      titlePart2: contentData?.home?.about?.titlePart2 || '',
-      description: contentData?.home?.about?.description || '',
-      buttonText: contentData?.home?.about?.buttonText || '',
-    },
-    homeServices: {
-      subtitle: contentData?.home?.services?.subtitle || '',
-      titlePart1: contentData?.home?.services?.titlePart1 || '',
-      titleHighlight: contentData?.home?.services?.titleHighlight || '',
-      titlePart2: contentData?.home?.services?.titlePart2 || '',
-    },
-    homeNetwork: {
-      subtitle: contentData?.home?.network?.subtitle || '',
-      titlePart1: contentData?.home?.network?.titlePart1 || '',
-      titleHighlight: contentData?.home?.network?.titleHighlight || '',
-      titlePart2: contentData?.home?.network?.titlePart2 || '',
-      buttonText: contentData?.home?.network?.buttonText || '',
-    },
-    navbar: {
-      buttonText: contentData?.navbar?.buttonText || '',
-    },
-    footer: {
-      address: contentData?.footer?.address?.address || '',
-      email: contentData?.footer?.address?.email || '',
-      phone: contentData?.footer?.address?.phone || '',
-      brandText: contentData?.footer?.brandText || '',
-    },
-    contactForm: {
-      step1Question: contentData?.contactForm?.step1?.question || '',
-      step2Question: contentData?.contactForm?.step2?.question || '',
-      step3Title: contentData?.contactForm?.step3?.title || '',
-      step3Description: contentData?.contactForm?.step3?.description || '',
-    },
-    fullContent: [],
-  };
+  const siteContent = contentData || {};
 
   if (fs.existsSync(legacyJsonPath)) {
     fs.unlinkSync(legacyJsonPath);

@@ -307,80 +307,604 @@ export default config({
       label: 'Site Content',
       path: 'src/keystatic/site-content',
       schema: {
-        // Home Page Content
-        homeHero: fields.object(
+        home: fields.object(
           {
-            title: fields.text({ label: 'Title' }),
-            titleHighlight: fields.text({ label: 'Title Highlight' }),
-            subtitle: fields.text({ label: 'Subtitle', multiline: true }),
+            hero: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                titleHighlight: fields.text({ label: 'Title Highlight' }),
+                subtitle: fields.text({ label: 'Subtitle', multiline: true }),
+              },
+              { label: 'Hero' }
+            ),
+            about: fields.object(
+              {
+                subtitle: fields.text({ label: 'Subtitle' }),
+                titlePart1: fields.text({ label: 'Title Part 1' }),
+                titleHighlight: fields.text({ label: 'Title Highlight' }),
+                titlePart2: fields.text({ label: 'Title Part 2' }),
+                description: fields.text({ label: 'Description', multiline: true }),
+                buttonText: fields.text({ label: 'Button Text' }),
+              },
+              { label: 'About' }
+            ),
+            moveText: fields.array(fields.text({ label: 'Text' }), { label: 'Move Text' }),
+            services: fields.object(
+              {
+                subtitle: fields.text({ label: 'Subtitle' }),
+                titlePart1: fields.text({ label: 'Title Part 1' }),
+                titleHighlight: fields.text({ label: 'Title Highlight' }),
+                titlePart2: fields.text({ label: 'Title Part 2' }),
+                items: fields.array(
+                  fields.object(
+                    {
+                      title: fields.text({ label: 'Title' }),
+                      items: fields.array(fields.text({ label: 'Item' }), { label: 'Items' }),
+                      linkText: fields.text({ label: 'Link Text' }),
+                    },
+                    { label: 'Service Item' }
+                  ),
+                  { label: 'Items' }
+                ),
+              },
+              { label: 'Services' }
+            ),
+            network: fields.object(
+              {
+                subtitle: fields.text({ label: 'Subtitle' }),
+                titlePart1: fields.text({ label: 'Title Part 1' }),
+                titleHighlight: fields.text({ label: 'Title Highlight' }),
+                titlePart2: fields.text({ label: 'Title Part 2' }),
+                buttonText: fields.text({ label: 'Button Text' }),
+                stats: fields.array(
+                  fields.object(
+                    {
+                      value: fields.text({ label: 'Value' }),
+                      label: fields.text({ label: 'Label' }),
+                    },
+                    { label: 'Stat' }
+                  ),
+                  { label: 'Stats' }
+                ),
+              },
+              { label: 'Network' }
+            ),
+            cta: fields.object(
+              {
+                titlePart1: fields.text({ label: 'Title Part 1' }),
+                titleHighlight: fields.text({ label: 'Title Highlight' }),
+                titlePart2: fields.text({ label: 'Title Part 2' }),
+              },
+              { label: 'CTA' }
+            ),
+            events: fields.object(
+              {
+                subtitle: fields.text({ label: 'Subtitle' }),
+                title: fields.text({ label: 'Title' }),
+                titleHighlight: fields.text({ label: 'Title Highlight' }),
+              },
+              { label: 'Events' }
+            ),
+            news: fields.object(
+              {
+                subtitle: fields.text({ label: 'Subtitle' }),
+                titlePart1: fields.text({ label: 'Title Part 1' }),
+                titleHighlight: fields.text({ label: 'Title Highlight' }),
+                titlePart2: fields.text({ label: 'Title Part 2' }),
+                stats: fields.array(
+                  fields.object(
+                    {
+                      label: fields.text({ label: 'Label' }),
+                      prefix: fields.text({ label: 'Prefix' }),
+                      value: fields.text({ label: 'Value' }),
+                      suffix: fields.text({ label: 'Suffix' }),
+                      description: fields.text({ label: 'Description', multiline: true }),
+                    },
+                    { label: 'Stat' }
+                  ),
+                  { label: 'Stats' }
+                ),
+              },
+              { label: 'News' }
+            ),
           },
-          { label: 'Home - Hero Section' }
+          { label: 'Home' }
         ),
-        homeAbout: fields.object(
-          {
-            subtitle: fields.text({ label: 'Subtitle' }),
-            titlePart1: fields.text({ label: 'Title Part 1' }),
-            titleHighlight: fields.text({ label: 'Title Highlight' }),
-            titlePart2: fields.text({ label: 'Title Part 2' }),
-            description: fields.text({ label: 'Description', multiline: true }),
-            buttonText: fields.text({ label: 'Button Text' }),
-          },
-          { label: 'Home - About Section' }
-        ),
-        homeServices: fields.object(
-          {
-            subtitle: fields.text({ label: 'Subtitle' }),
-            titlePart1: fields.text({ label: 'Title Part 1' }),
-            titleHighlight: fields.text({ label: 'Title Highlight' }),
-            titlePart2: fields.text({ label: 'Title Part 2' }),
-          },
-          { label: 'Home - Services Section' }
-        ),
-        homeNetwork: fields.object(
-          {
-            subtitle: fields.text({ label: 'Subtitle' }),
-            titlePart1: fields.text({ label: 'Title Part 1' }),
-            titleHighlight: fields.text({ label: 'Title Highlight' }),
-            titlePart2: fields.text({ label: 'Title Part 2' }),
-            buttonText: fields.text({ label: 'Button Text' }),
-          },
-          { label: 'Home - Network Section' }
-        ),
-        // Navbar
         navbar: fields.object(
           {
+            menu: fields.array(
+              fields.object(
+                {
+                  text: fields.text({ label: 'Text' }),
+                  href: fields.text({ label: 'Href' }),
+                },
+                { label: 'Menu Item' }
+              ),
+              { label: 'Menu' }
+            ),
             buttonText: fields.text({ label: 'Button Text' }),
           },
-          { label: 'Navigation Bar' }
+          { label: 'Navbar' }
         ),
-        // Footer
         footer: fields.object(
           {
-            address: fields.text({ label: 'Address', multiline: true }),
-            email: fields.text({ label: 'Email' }),
-            phone: fields.text({ label: 'Phone' }),
+            quickLinks: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                links: fields.array(
+                  fields.object(
+                    {
+                      text: fields.text({ label: 'Text' }),
+                      href: fields.text({ label: 'Href' }),
+                    },
+                    { label: 'Link' }
+                  ),
+                  { label: 'Links' }
+                ),
+              },
+              { label: 'Quick Links' }
+            ),
+            explore: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                links: fields.array(
+                  fields.object(
+                    {
+                      text: fields.text({ label: 'Text' }),
+                      href: fields.text({ label: 'Href' }),
+                    },
+                    { label: 'Link' }
+                  ),
+                  { label: 'Links' }
+                ),
+              },
+              { label: 'Explore' }
+            ),
+            company: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                links: fields.array(
+                  fields.object(
+                    {
+                      text: fields.text({ label: 'Text' }),
+                      href: fields.text({ label: 'Href' }),
+                    },
+                    { label: 'Link' }
+                  ),
+                  { label: 'Links' }
+                ),
+              },
+              { label: 'Company' }
+            ),
+            address: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                address: fields.text({ label: 'Address', multiline: true }),
+                email: fields.text({ label: 'Email' }),
+                phone: fields.text({ label: 'Phone' }),
+              },
+              { label: 'Address' }
+            ),
+            social: fields.object(
+              {
+                followText: fields.text({ label: 'Follow Text' }),
+                links: fields.array(
+                  fields.object(
+                    {
+                      platform: fields.text({ label: 'Platform' }),
+                      href: fields.text({ label: 'Href' }),
+                      icon: fields.text({ label: 'Icon' }),
+                    },
+                    { label: 'Social Link' }
+                  ),
+                  { label: 'Links' }
+                ),
+              },
+              { label: 'Social' }
+            ),
             brandText: fields.text({ label: 'Brand Text' }),
           },
           { label: 'Footer' }
         ),
-        // Contact Form
         contactForm: fields.object(
           {
-            step1Question: fields.text({ label: 'Step 1 Question' }),
-            step2Question: fields.text({ label: 'Step 2 Question' }),
-            step3Title: fields.text({ label: 'Step 3 Title' }),
-            step3Description: fields.text({ label: 'Step 3 Description', multiline: true }),
+            step1: fields.object(
+              {
+                question: fields.text({ label: 'Question' }),
+                options: fields.array(fields.text({ label: 'Option' }), { label: 'Options' }),
+              },
+              { label: 'Step 1' }
+            ),
+            step2: fields.object(
+              {
+                question: fields.text({ label: 'Question' }),
+                options: fields.array(fields.text({ label: 'Option' }), { label: 'Options' }),
+              },
+              { label: 'Step 2' }
+            ),
+            step3: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                description: fields.text({ label: 'Description', multiline: true }),
+                fields: fields.object(
+                  {
+                    fullName: fields.text({ label: 'Full Name' }),
+                    email: fields.text({ label: 'Email' }),
+                    title: fields.text({ label: 'Title' }),
+                    companyName: fields.text({ label: 'Company Name' }),
+                    socialContact: fields.text({ label: 'Social Contact' }),
+                  },
+                  { label: 'Fields' }
+                ),
+                submitButton: fields.text({ label: 'Submit Button' }),
+              },
+              { label: 'Step 3' }
+            ),
           },
           { label: 'Contact Form' }
         ),
-        // Full JSON Content (for complex nested structures)
-        fullContent: fields.document({
-          label: 'Full Site Content (JSON)',
-          description: 'Advanced: Edit full content.json structure. Use with caution!',
-          formatting: false,
-          dividers: false,
-          links: false,
-        }),
+        about: fields.object(
+          {
+            hero: fields.object(
+              {
+                subtitle: fields.text({ label: 'Subtitle' }),
+                titlePart1: fields.text({ label: 'Title Part 1' }),
+                titleHighlight: fields.text({ label: 'Title Highlight' }),
+                titlePart2: fields.text({ label: 'Title Part 2' }),
+                titleHighlight2: fields.text({ label: 'Title Highlight 2' }),
+                titlePart3: fields.text({ label: 'Title Part 3' }),
+                buttonText: fields.text({ label: 'Button Text' }),
+              },
+              { label: 'Hero' }
+            ),
+            aboutSection: fields.object(
+              {
+                subtitle: fields.text({ label: 'Subtitle' }),
+                titlePart1: fields.text({ label: 'Title Part 1' }),
+                titleHighlight: fields.text({ label: 'Title Highlight' }),
+                titlePart2: fields.text({ label: 'Title Part 2' }),
+                description: fields.text({ label: 'Description', multiline: true }),
+                stats: fields.array(
+                  fields.object(
+                    {
+                      label: fields.text({ label: 'Label' }),
+                      value: fields.text({ label: 'Value' }),
+                      suffix: fields.text({ label: 'Suffix' }),
+                      description: fields.text({ label: 'Description', multiline: true }),
+                    },
+                    { label: 'Stat' }
+                  ),
+                  { label: 'Stats' }
+                ),
+              },
+              { label: 'About Section' }
+            ),
+            features: fields.array(
+              fields.object(
+                {
+                  value: fields.text({ label: 'Value' }),
+                  description: fields.text({ label: 'Description', multiline: true }),
+                },
+                { label: 'Feature' }
+              ),
+              { label: 'Features' }
+            ),
+            vision: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                description: fields.text({ label: 'Description', multiline: true }),
+              },
+              { label: 'Vision' }
+            ),
+            mission: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                description: fields.text({ label: 'Description', multiline: true }),
+              },
+              { label: 'Mission' }
+            ),
+            team: fields.object(
+              {
+                subtitle: fields.text({ label: 'Subtitle' }),
+                titlePart1: fields.text({ label: 'Title Part 1' }),
+                titleHighlight: fields.text({ label: 'Title Highlight' }),
+                titlePart2: fields.text({ label: 'Title Part 2' }),
+              },
+              { label: 'Team' }
+            ),
+            cta: fields.object(
+              {
+                titlePart1: fields.text({ label: 'Title Part 1' }),
+                titleHighlight: fields.text({ label: 'Title Highlight' }),
+                titlePart2: fields.text({ label: 'Title Part 2' }),
+              },
+              { label: 'CTA' }
+            ),
+          },
+          { label: 'About' }
+        ),
+        services: fields.object(
+          {
+            hero: fields.object(
+              {
+                subtitle: fields.text({ label: 'Subtitle' }),
+                titlePart1: fields.text({ label: 'Title Part 1' }),
+                titleHighlight: fields.text({ label: 'Title Highlight' }),
+                titlePart2: fields.text({ label: 'Title Part 2' }),
+                titlePart3: fields.text({ label: 'Title Part 3' }),
+                titleHighlight2: fields.text({ label: 'Title Highlight 2' }),
+                titlePart4: fields.text({ label: 'Title Part 4' }),
+                titleHighlight3: fields.text({ label: 'Title Highlight 3' }),
+              },
+              { label: 'Hero' }
+            ),
+            moveText: fields.array(fields.text({ label: 'Text' }), { label: 'Move Text' }),
+            localPartners: fields.object(
+              {
+                subtitle: fields.text({ label: 'Subtitle' }),
+                titlePart1: fields.text({ label: 'Title Part 1' }),
+                titleHighlight: fields.text({ label: 'Title Highlight' }),
+                titlePart2: fields.text({ label: 'Title Part 2' }),
+                titleHighlight2: fields.text({ label: 'Title Highlight 2' }),
+              },
+              { label: 'Local Partners' }
+            ),
+            tabs: fields.array(
+              fields.object(
+                {
+                  name: fields.text({ label: 'Name' }),
+                  description: fields.text({ label: 'Description', multiline: true }),
+                  items: fields.array(
+                    fields.object(
+                      {
+                        number: fields.text({ label: 'Number' }),
+                        title: fields.text({ label: 'Title' }),
+                        description: fields.text({ label: 'Description', multiline: true }),
+                      },
+                      { label: 'Item' }
+                    ),
+                    { label: 'Items' }
+                  ),
+                },
+                { label: 'Tab' }
+              ),
+              { label: 'Tabs' }
+            ),
+            cta: fields.object(
+              {
+                titlePart1: fields.text({ label: 'Title Part 1' }),
+                titleHighlight: fields.text({ label: 'Title Highlight' }),
+                titlePart2: fields.text({ label: 'Title Part 2' }),
+              },
+              { label: 'CTA' }
+            ),
+          },
+          { label: 'Services' }
+        ),
+        contact: fields.object(
+          {
+            hero: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                description: fields.text({ label: 'Description', multiline: true }),
+              },
+              { label: 'Hero' }
+            ),
+            form: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                fields: fields.object(
+                  {
+                    firstName: fields.text({ label: 'First Name' }),
+                    lastName: fields.text({ label: 'Last Name' }),
+                    email: fields.text({ label: 'Email' }),
+                    company: fields.text({ label: 'Company' }),
+                    service: fields.text({ label: 'Service' }),
+                    budget: fields.text({ label: 'Budget' }),
+                    message: fields.text({ label: 'Message' }),
+                    messagePlaceholder: fields.text({ label: 'Message Placeholder' }),
+                  },
+                  { label: 'Fields' }
+                ),
+                submitButton: fields.text({ label: 'Submit Button' }),
+                serviceOptions: fields.array(fields.text({ label: 'Option' }), { label: 'Service Options' }),
+                budgetOptions: fields.array(fields.text({ label: 'Option' }), { label: 'Budget Options' }),
+              },
+              { label: 'Form' }
+            ),
+            info: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                description: fields.text({ label: 'Description', multiline: true }),
+                email: fields.object(
+                  {
+                    label: fields.text({ label: 'Label' }),
+                    value: fields.text({ label: 'Value' }),
+                  },
+                  { label: 'Email' }
+                ),
+                phone: fields.object(
+                  {
+                    label: fields.text({ label: 'Label' }),
+                    value: fields.text({ label: 'Value' }),
+                  },
+                  { label: 'Phone' }
+                ),
+                address: fields.object(
+                  {
+                    label: fields.text({ label: 'Label' }),
+                    value: fields.text({ label: 'Value', multiline: true }),
+                  },
+                  { label: 'Address' }
+                ),
+                hours: fields.object(
+                  {
+                    label: fields.text({ label: 'Label' }),
+                    values: fields.array(fields.text({ label: 'Value' }), { label: 'Values' }),
+                  },
+                  { label: 'Hours' }
+                ),
+                followText: fields.text({ label: 'Follow Text' }),
+              },
+              { label: 'Info' }
+            ),
+          },
+          { label: 'Contact' }
+        ),
+        news: fields.object(
+          {
+            breadcrumb: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                home: fields.text({ label: 'Home' }),
+                current: fields.text({ label: 'Current' }),
+              },
+              { label: 'Breadcrumb' }
+            ),
+            sidebar: fields.object(
+              {
+                search: fields.object(
+                  {
+                    placeholder: fields.text({ label: 'Placeholder' }),
+                  },
+                  { label: 'Search' }
+                ),
+                categories: fields.object(
+                  {
+                    title: fields.text({ label: 'Title' }),
+                  },
+                  { label: 'Categories' }
+                ),
+                recentPosts: fields.object(
+                  {
+                    title: fields.text({ label: 'Title' }),
+                  },
+                  { label: 'Recent Posts' }
+                ),
+                tags: fields.object(
+                  {
+                    title: fields.text({ label: 'Title' }),
+                    items: fields.array(fields.text({ label: 'Item' }), { label: 'Items' }),
+                  },
+                  { label: 'Tags' }
+                ),
+              },
+              { label: 'Sidebar' }
+            ),
+            readMore: fields.text({ label: 'Read More' }),
+          },
+          { label: 'News' }
+        ),
+        blog: fields.object(
+          {
+            hero: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                description: fields.text({ label: 'Description', multiline: true }),
+              },
+              { label: 'Hero' }
+            ),
+            featured: fields.object(
+              {
+                badge: fields.text({ label: 'Badge' }),
+                loadMore: fields.text({ label: 'Load More' }),
+              },
+              { label: 'Featured' }
+            ),
+            newsletter: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                description: fields.text({ label: 'Description', multiline: true }),
+                placeholder: fields.text({ label: 'Placeholder' }),
+                button: fields.text({ label: 'Button' }),
+              },
+              { label: 'Newsletter' }
+            ),
+          },
+          { label: 'Blog' }
+        ),
+        career: fields.object(
+          {
+            breadcrumb: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                home: fields.text({ label: 'Home' }),
+                current: fields.text({ label: 'Current' }),
+              },
+              { label: 'Breadcrumb' }
+            ),
+            applyButton: fields.text({ label: 'Apply Button' }),
+            jobMeta: fields.object(
+              {
+                location: fields.text({ label: 'Location' }),
+                type: fields.text({ label: 'Type' }),
+                experience: fields.text({ label: 'Experience' }),
+              },
+              { label: 'Job Meta' }
+            ),
+          },
+          { label: 'Career' }
+        ),
+        program: fields.object(
+          {
+            hero: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+              },
+              { label: 'Hero' }
+            ),
+            upcomingEvents: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+              },
+              { label: 'Upcoming Events' }
+            ),
+            filters: fields.object(
+              {
+                eventStatus: fields.object(
+                  {
+                    label: fields.text({ label: 'Label' }),
+                    options: fields.array(fields.text({ label: 'Option' }), { label: 'Options' }),
+                  },
+                  { label: 'Event Status' }
+                ),
+                location: fields.object(
+                  {
+                    label: fields.text({ label: 'Label' }),
+                    options: fields.array(fields.text({ label: 'Option' }), { label: 'Options' }),
+                  },
+                  { label: 'Location' }
+                ),
+                year: fields.object(
+                  {
+                    label: fields.text({ label: 'Label' }),
+                    options: fields.array(fields.text({ label: 'Option' }), { label: 'Options' }),
+                  },
+                  { label: 'Year' }
+                ),
+                searchButton: fields.text({ label: 'Search Button' }),
+              },
+              { label: 'Filters' }
+            ),
+            eventStatus: fields.object(
+              {
+                upcoming: fields.text({ label: 'Upcoming' }),
+                completed: fields.text({ label: 'Completed' }),
+              },
+              { label: 'Event Status' }
+            ),
+            followText: fields.text({ label: 'Follow Text' }),
+          },
+          { label: 'Program' }
+        ),
+        meta: fields.object(
+          {
+            siteTitle: fields.text({ label: 'Site Title' }),
+            defaultDescription: fields.text({ label: 'Default Description', multiline: true }),
+            defaultKeywords: fields.text({ label: 'Default Keywords', multiline: true }),
+          },
+          { label: 'Meta' }
+        ),
       },
     }),
   },
