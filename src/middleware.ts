@@ -1,5 +1,6 @@
 /**
  * Middleware to fix Keystatic OAuth issues on Cloudflare
+ * Handles: authorization (with repo scope), callback, and refresh-token
  */
 import { defineMiddleware } from 'astro:middleware';
 
@@ -23,8 +24,24 @@ export const onRequest = defineMiddleware(async (context, next) => {
     };
 
     // ============================================
-    // Handle OAuth Callback - Step 1: Show success page to set cookie via JS
-    // Using a different approach: render HTML that sets cookie client-side
+    // Handle OAuth Login - Redirect to GitHub with correct scopes
+    // ============================================
+    if (url.pathname === '/api/keystatic/github/login') {
+        if (!clientId) {
+            return new Response('Missing KEYSTATIC_GITHUB_CLIENT_ID', { status: 500 });
+        }
+
+        const callbackUrl = `${url.origin}/api/keystatic/github/oauth/callback`;
+        const authUrl = new URL('https://github.com/login/oauth/authorize');
+        authUrl.searchParams.set('client_id', clientId);
+        authUrl.searchParams.set('redirect_uri', callbackUrl);
+        authUrl.searchParams.set('scope', 'repo'); // THIS IS THE FIX - request repo scope!
+
+        return Response.redirect(authUrl.toString(), 302);
+    }
+
+    // ============================================
+    // Handle OAuth Callback
     // ============================================
     if (url.pathname === '/api/keystatic/github/oauth/callback' && url.searchParams.has('code')) {
         const code = url.searchParams.get('code');
@@ -65,8 +82,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
             const accessToken = tokenData.access_token;
 
-            // Return HTML page that stores token in localStorage (Keystatic uses localStorage!)
-            // and then redirects to /keystatic
+            // Store token in localStorage (Keystatic uses this) and cookie
             return new Response(`
         <!DOCTYPE html>
         <html>
@@ -74,9 +90,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
         <body>
           <p>Logging you in...</p>
           <script>
-            // Keystatic stores the GitHub token in localStorage
             localStorage.setItem('keystatic-gh-access-token', '${accessToken}');
-            // Also set as cookie for server-side access
             document.cookie = 'keystatic-gh-access-token=${accessToken}; path=/; max-age=2592000; secure; samesite=lax';
             window.location.href = '/keystatic';
           </script>
@@ -102,14 +116,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
         const accessToken = getTokenFromCookie();
 
         if (!accessToken) {
-            // Let the client-side handle it if no server cookie
             return new Response(JSON.stringify({ error: 'No token' }), {
                 status: 401,
                 headers: { 'Content-Type': 'application/json' },
             });
         }
 
-        // Validate token and get user info
         try {
             const userResponse = await fetch('https://api.github.com/user', {
                 headers: {
