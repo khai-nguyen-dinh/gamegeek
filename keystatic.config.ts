@@ -1,24 +1,22 @@
 import { config, fields, collection, singleton } from '@keystatic/core';
 
-const githubToken = import.meta.env.KEYSTATIC_GITHUB_TOKEN || '';
-const useGithubStorage = Boolean(githubToken);
+// Check if running in production (Cloudflare)
+const isProduction = import.meta.env.PROD;
 
 export default config({
-  storage: useGithubStorage
-    ? {
-        kind: 'github',
-        repo: {
-          owner: 'khai-nguyen-dinh',
-          name: 'gamegeek',
-        },
-        branch: 'main',
-        // Use a fine-grained PAT with repo contents write.
-        token: githubToken,
-      }
-    : {
-        // Fallback for local dev when no token is available.
-        kind: 'local',
-      },
+  storage: {
+    kind: 'github',
+    repo: {
+      owner: 'khai-nguyen-dinh',
+      name: 'gamegeek',
+    },
+  },
+  // IMPORTANT: For Cloudflare deployments, ui.kind must be 'github'
+  // This redirects the admin UI to use GitHub's OAuth flow
+  // instead of trying to use the local API (which doesn't work on Cloudflare)
+  ui: {
+    kind: 'github',
+  },
   collections: {
     // News Posts Collection
     posts: collection({
