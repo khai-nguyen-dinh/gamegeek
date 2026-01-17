@@ -1,13 +1,6 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { load as loadYaml } from 'js-yaml';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const rootDir = path.resolve(__dirname, '..', '..');
-const keystaticContentPath = path.join(rootDir, 'src/keystatic/site-content.yaml');
-const legacyContentPath = path.join(rootDir, 'src/data/content.json');
+import siteContentRaw from '../keystatic/site-content.yaml?raw';
+import contentData from '../data/content.json';
 
 let cachedContent: any | null = null;
 
@@ -18,14 +11,12 @@ function getContentData(): any {
 
   let data: any = null;
 
-  if (fs.existsSync(keystaticContentPath)) {
-    const yamlContent = fs.readFileSync(keystaticContentPath, 'utf8');
-    data = loadYaml(yamlContent) ?? null;
+  if (siteContentRaw && typeof siteContentRaw === 'string') {
+    data = loadYaml(siteContentRaw) ?? null;
   }
 
-  if (!data && fs.existsSync(legacyContentPath)) {
-    const jsonContent = fs.readFileSync(legacyContentPath, 'utf8');
-    data = JSON.parse(jsonContent);
+  if (!data) {
+    data = contentData || null;
   }
 
   if (!import.meta.env.DEV) {
