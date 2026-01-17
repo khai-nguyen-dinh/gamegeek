@@ -1,6 +1,6 @@
 /**
  * Custom GitHub OAuth callback handler for Keystatic on Cloudflare
- * This overrides Keystatic's built-in callback to fix the redirect_uri issue
+ * Shows detailed errors in browser for debugging
  */
 import type { APIRoute } from 'astro';
 
@@ -9,32 +9,41 @@ export const GET: APIRoute = async (context) => {
     const url = new URL(request.url);
     const code = url.searchParams.get('code');
 
-    console.log('=== Custom OAuth Callback Hit ===');
-    console.log('URL:', url.toString());
-    console.log('Code received:', code ? 'yes' : 'no');
+    const debugInfo: string[] = [];
+    debugInfo.push('=== OAuth Debug Info ===');
+    debugInfo.push(`Time: ${new Date().toISOString()}`);
+    debugInfo.push(`Code received: ${code ? 'yes' : 'no'}`);
 
     if (!code) {
-        return new Response('Missing authorization code', { status: 400 });
+        return new Response(`<h1>Error: Missing authorization code</h1><pre>${debugInfo.join('\n')}</pre>`, {
+            status: 400,
+            headers: { 'Content-Type': 'text/html' }
+        });
     }
 
-    // Get environment variables - on Cloudflare they're in the platform runtime
-    // @ts-ignore - Cloudflare runtime binding
-    const env = context.locals?.runtime?.env || import.meta.env;
+    // Get environment variables - try multiple methods for Cloudflare
+    // @ts-ignore
+    const runtime = context.locals?.runtime;
+    // @ts-ignore
+    const cfEnv = runtime?.env || {};
 
-    const clientId = env.KEYSTATIC_GITHUB_CLIENT_ID;
-    const clientSecret = env.KEYSTATIC_GITHUB_CLIENT_SECRET;
+    const clientId = cfEnv.KEYSTATIC_GITHUB_CLIENT_ID || import.meta.env.KEYSTATIC_GITHUB_CLIENT_ID;
+    const clientSecret = cfEnv.KEYSTATIC_GITHUB_CLIENT_SECRET || import.meta.env.KEYSTATIC_GITHUB_CLIENT_SECRET;
 
-    console.log('Client ID available:', clientId ? 'yes' : 'no');
-    console.log('Client Secret available:', clientSecret ? 'yes' : 'no');
+    debugInfo.push(`Client ID found: ${clientId ? 'yes (' + clientId.substring(0, 8) + '...)' : 'NO!'}`);
+    debugInfo.push(`Client Secret found: ${clientSecret ? 'yes' : 'NO!'}`);
 
     if (!clientId || !clientSecret) {
-        console.error('Missing GitHub OAuth credentials');
-        return new Response('Server configuration error: Missing OAuth credentials', { status: 500 });
+        return new Response(
+            `<h1>Error: Missing OAuth credentials</h1>
+       <p>Please set KEYSTATIC_GITHUB_CLIENT_ID and KEYSTATIC_GITHUB_CLIENT_SECRET in Cloudflare environment variables.</p>
+       <pre>${debugInfo.join('\n')}</pre>`,
+            { status: 500, headers: { 'Content-Type': 'text/html' } }
+        );
     }
 
-    // Construct the callback URL (must match exactly what was sent in authorization)
     const callbackUrl = `${url.origin}/api/keystatic/github/oauth/callback`;
-    console.log('Callback URL:', callbackUrl);
+    debugInfo.push(`Callback URL: ${callbackUrl}`);
 
     try {
         const tokenRequestBody = {
@@ -44,12 +53,6 @@ export const GET: APIRoute = async (context) => {
             redirect_uri: callbackUrl,
         };
 
-        console.log('Token request body (without secret):', {
-            ...tokenRequestBody,
-            client_secret: '[REDACTED]'
-        });
-
-        // Exchange code for access token
         const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
             method: 'POST',
             headers: {
@@ -61,50 +64,57 @@ export const GET: APIRoute = async (context) => {
         });
 
         const tokenText = await tokenResponse.text();
-        console.log('Token response status:', tokenResponse.status);
-        console.log('Token response:', tokenText.substring(0, 200));
+        debugInfo.push(`GitHub response status: ${tokenResponse.status}`);
 
         let tokenData;
         try {
             tokenData = JSON.parse(tokenText);
         } catch {
-            console.error('Failed to parse token response as JSON');
-            return new Response(`Authorization failed: Invalid response from GitHub`, { status: 401 });
+            debugInfo.push(`GitHub response (not JSON): ${tokenText}`);
+            return new Response(
+                `<h1>Error: Invalid response from GitHub</h1><pre>${debugInfo.join('\n')}</pre>`,
+                { status: 401, headers: { 'Content-Type': 'text/html' } }
+            );
         }
 
         if (tokenData.error) {
-            console.error('GitHub OAuth error:', tokenData);
+            debugInfo.push(`GitHub error: ${tokenData.error}`);
+            debugInfo.push(`GitHub error description: ${tokenData.error_description || 'none'}`);
             return new Response(
-                `Authorization failed: ${tokenData.error_description || tokenData.error}`,
-                { status: 401 }
+                `<h1>GitHub OAuth Error</h1>
+         <p><strong>Error:</strong> ${tokenData.error}</p>
+         <p><strong>Description:</strong> ${tokenData.error_description || 'No description'}</p>
+         <pre>${debugInfo.join('\n')}</pre>`,
+                { status: 401, headers: { 'Content-Type': 'text/html' } }
             );
         }
 
         const accessToken = tokenData.access_token;
 
         if (!accessToken) {
-            console.error('No access token in response:', tokenData);
-            return new Response('No access token received from GitHub', { status: 401 });
+            debugInfo.push(`Response data: ${JSON.stringify(tokenData)}`);
+            return new Response(
+                `<h1>Error: No access token</h1><pre>${debugInfo.join('\n')}</pre>`,
+                { status: 401, headers: { 'Content-Type': 'text/html' } }
+            );
         }
 
-        console.log('Access token received successfully');
-
-        // Store the token in a cookie for Keystatic
+        // Success! Set cookie and redirect
         cookies.set('keystatic-gh-access-token', accessToken, {
             path: '/',
             httpOnly: true,
             secure: true,
             sameSite: 'lax',
-            maxAge: 60 * 60 * 24 * 30, // 30 days
+            maxAge: 60 * 60 * 24 * 30,
         });
 
-        // Redirect to Keystatic admin
         return redirect('/keystatic');
 
     } catch (error) {
-        console.error('OAuth callback error:', error);
-        return new Response(`Authorization failed: ${error instanceof Error ? error.message : 'Unknown error'}`, {
-            status: 500
-        });
+        debugInfo.push(`Exception: ${error instanceof Error ? error.message : String(error)}`);
+        return new Response(
+            `<h1>Error during OAuth</h1><pre>${debugInfo.join('\n')}</pre>`,
+            { status: 500, headers: { 'Content-Type': 'text/html' } }
+        );
     }
 };
