@@ -1,6 +1,6 @@
 /**
  * Middleware to fix Keystatic OAuth issues on Cloudflare
- * Intercepts both the callback and refresh-token endpoints
+ * Intercepts OAuth callback, refresh-token, and user endpoints
  */
 import { defineMiddleware } from 'astro:middleware';
 
@@ -15,6 +15,13 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
     const clientId = env.KEYSTATIC_GITHUB_CLIENT_ID || import.meta.env.KEYSTATIC_GITHUB_CLIENT_ID;
     const clientSecret = env.KEYSTATIC_GITHUB_CLIENT_SECRET || import.meta.env.KEYSTATIC_GITHUB_CLIENT_SECRET;
+
+    // Helper to get token from cookie
+    const getTokenFromCookie = () => {
+        const cookieHeader = context.request.headers.get('cookie') || '';
+        const tokenMatch = cookieHeader.match(/keystatic-gh-access-token=([^;]+)/);
+        return tokenMatch ? tokenMatch[1] : null;
+    };
 
     // ============================================
     // Handle OAuth Callback
@@ -72,13 +79,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
     }
 
     // ============================================
-    // Handle Refresh Token - just validate the existing token
+    // Handle Refresh Token
     // ============================================
     if (url.pathname === '/api/keystatic/github/refresh-token' && context.request.method === 'POST') {
-        // Get the access token from cookie
-        const cookieHeader = context.request.headers.get('cookie') || '';
-        const tokenMatch = cookieHeader.match(/keystatic-gh-access-token=([^;]+)/);
-        const accessToken = tokenMatch ? tokenMatch[1] : null;
+        const accessToken = getTokenFromCookie();
 
         if (!accessToken) {
             return new Response(JSON.stringify({ error: 'No token' }), {
@@ -87,7 +91,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
             });
         }
 
-        // Validate the token by making a request to GitHub
+        // Validate token and get user info
         try {
             const userResponse = await fetch('https://api.github.com/user', {
                 headers: {
@@ -98,7 +102,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
             });
 
             if (!userResponse.ok) {
-                // Token is invalid, clear it
                 const headers = new Headers();
                 headers.set('Set-Cookie', 'keystatic-gh-access-token=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0');
                 headers.set('Content-Type', 'application/json');
@@ -108,9 +111,18 @@ export const onRequest = defineMiddleware(async (context, next) => {
                 });
             }
 
-            // Token is valid, return success with the same token
-            // Keystatic expects { accessToken: string } response
-            return new Response(JSON.stringify({ accessToken: accessToken }), {
+            const user = await userResponse.json();
+
+            // Return in the format Keystatic expects
+            return new Response(JSON.stringify({
+                accessToken: accessToken,
+                user: {
+                    login: user.login,
+                    name: user.name,
+                    email: user.email,
+                    avatar_url: user.avatar_url,
+                }
+            }), {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' },
             });
@@ -121,6 +133,25 @@ export const onRequest = defineMiddleware(async (context, next) => {
                 headers: { 'Content-Type': 'application/json' },
             });
         }
+    }
+
+    // ============================================
+    // Handle Tree/Content API - passthrough to GitHub
+    // ============================================
+    if (url.pathname.startsWith('/api/keystatic/github/')) {
+        const accessToken = getTokenFromCookie();
+
+        if (!accessToken) {
+            return new Response(JSON.stringify({ error: 'No token' }), {
+                status: 401,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
+
+        // For other Keystatic API endpoints, let them pass through to the built-in handler
+        // but ensure the token is available
+        // @ts-ignore
+        context.locals.keystatic_token = accessToken;
     }
 
     // Continue to next middleware/route for all other requests
