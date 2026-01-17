@@ -5,10 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/patch-keystatic-oauth.js && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "postinstall": "node scripts/patch-keystatic-oauth.js",
     "keystatic:sync": "node scripts/keystatic-gitlab-sync.js",
     "migrate:keystatic": "node scripts/migrate-to-keystatic.js"
   },
