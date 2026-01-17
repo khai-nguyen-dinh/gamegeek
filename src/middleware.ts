@@ -1,6 +1,5 @@
 /**
  * Middleware to fix Keystatic OAuth issues on Cloudflare
- * Intercepts OAuth callback, refresh-token, and user endpoints
  */
 import { defineMiddleware } from 'astro:middleware';
 
@@ -24,14 +23,15 @@ export const onRequest = defineMiddleware(async (context, next) => {
     };
 
     // ============================================
-    // Handle OAuth Callback
+    // Handle OAuth Callback - Step 1: Show success page to set cookie via JS
+    // Using a different approach: render HTML that sets cookie client-side
     // ============================================
     if (url.pathname === '/api/keystatic/github/oauth/callback' && url.searchParams.has('code')) {
         const code = url.searchParams.get('code');
 
         if (!clientId || !clientSecret) {
             return new Response(
-                `<h1>Missing OAuth Credentials</h1><p>Set KEYSTATIC_GITHUB_CLIENT_ID and KEYSTATIC_GITHUB_CLIENT_SECRET in Cloudflare.</p>`,
+                `<h1>Missing OAuth Credentials</h1>`,
                 { status: 500, headers: { 'Content-Type': 'text/html' } }
             );
         }
@@ -63,12 +63,29 @@ export const onRequest = defineMiddleware(async (context, next) => {
                 );
             }
 
-            // Set cookie and redirect
-            const headers = new Headers();
-            headers.set('Set-Cookie', `keystatic-gh-access-token=${tokenData.access_token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000`);
-            headers.set('Location', '/keystatic');
+            const accessToken = tokenData.access_token;
 
-            return new Response(null, { status: 302, headers });
+            // Return HTML page that stores token in localStorage (Keystatic uses localStorage!)
+            // and then redirects to /keystatic
+            return new Response(`
+        <!DOCTYPE html>
+        <html>
+        <head><title>Authenticating...</title></head>
+        <body>
+          <p>Logging you in...</p>
+          <script>
+            // Keystatic stores the GitHub token in localStorage
+            localStorage.setItem('keystatic-gh-access-token', '${accessToken}');
+            // Also set as cookie for server-side access
+            document.cookie = 'keystatic-gh-access-token=${accessToken}; path=/; max-age=2592000; secure; samesite=lax';
+            window.location.href = '/keystatic';
+          </script>
+        </body>
+        </html>
+      `, {
+                status: 200,
+                headers: { 'Content-Type': 'text/html' },
+            });
 
         } catch (error) {
             return new Response(
@@ -85,6 +102,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
         const accessToken = getTokenFromCookie();
 
         if (!accessToken) {
+            // Let the client-side handle it if no server cookie
             return new Response(JSON.stringify({ error: 'No token' }), {
                 status: 401,
                 headers: { 'Content-Type': 'application/json' },
@@ -102,27 +120,13 @@ export const onRequest = defineMiddleware(async (context, next) => {
             });
 
             if (!userResponse.ok) {
-                const headers = new Headers();
-                headers.set('Set-Cookie', 'keystatic-gh-access-token=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0');
-                headers.set('Content-Type', 'application/json');
                 return new Response(JSON.stringify({ error: 'Invalid token' }), {
                     status: 401,
-                    headers,
+                    headers: { 'Content-Type': 'application/json' },
                 });
             }
 
-            const user = await userResponse.json();
-
-            // Return in the format Keystatic expects
-            return new Response(JSON.stringify({
-                accessToken: accessToken,
-                user: {
-                    login: user.login,
-                    name: user.name,
-                    email: user.email,
-                    avatar_url: user.avatar_url,
-                }
-            }), {
+            return new Response(JSON.stringify({ accessToken }), {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' },
             });
@@ -135,25 +139,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
         }
     }
 
-    // ============================================
-    // Handle Tree/Content API - passthrough to GitHub
-    // ============================================
-    if (url.pathname.startsWith('/api/keystatic/github/')) {
-        const accessToken = getTokenFromCookie();
-
-        if (!accessToken) {
-            return new Response(JSON.stringify({ error: 'No token' }), {
-                status: 401,
-                headers: { 'Content-Type': 'application/json' },
-            });
-        }
-
-        // For other Keystatic API endpoints, let them pass through to the built-in handler
-        // but ensure the token is available
-        // @ts-ignore
-        context.locals.keystatic_token = accessToken;
-    }
-
-    // Continue to next middleware/route for all other requests
+    // Continue to next middleware/route
     return next();
 });
