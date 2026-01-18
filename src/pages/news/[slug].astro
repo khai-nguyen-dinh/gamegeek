@@ -36,9 +36,15 @@ const allPosts = posts.map(post => ({
   category: categoryMap.get(post.category) || post.category
 }));
 
+const getDateTime = (value) => {
+  if (!value || typeof value !== 'string') return 0;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? 0 : parsed.getTime();
+};
+
 const recentPosts = allPosts
   .filter(post => post.slug !== slug)
-  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .sort((a, b) => getDateTime(b.date) - getDateTime(a.date))
   .slice(0, 3);
 
 // Get related posts (same category, exclude current)
@@ -55,9 +61,11 @@ posts.forEach(post => {
 });
 
 // Extract day and month from date
-const dateParts = date.split(' ');
-const displayDay = dateParts[1]?.replace(',', '') || '';
-const displayMonth = dateParts[0]?.substring(0, 3) || '';
+const dateTime = getDateTime(date);
+const displayDay = dateTime ? new Date(dateTime).getDate().toString().padStart(2, '0') : '';
+const displayMonth = dateTime
+  ? new Date(dateTime).toLocaleString('en-US', { month: 'short' })
+  : '';
 ---
 
 <Layout title={`${title} - GameGeek`}>
