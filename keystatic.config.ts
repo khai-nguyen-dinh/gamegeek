@@ -29,10 +29,9 @@ export default config({
           label: 'ID',
           description: 'Unique identifier for the post',
         }),
-        title: fields.slug({ name: { label: 'Title' } }),
-        slug: fields.text({ 
-          label: 'Slug',
-          description: 'URL-friendly identifier (auto-generated from title)',
+        title: fields.text({ 
+          label: 'Title',
+          validation: { isRequired: true },
         }),
         date: fields.date({ 
           label: 'Publish Date',
