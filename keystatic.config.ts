@@ -616,6 +616,43 @@ export default config({
               { label: 'Hero' }
             ),
             moveText: fields.array(fields.text({ label: 'Text' }), { label: 'Move Text' }),
+            globalPartners: fields.object(
+              {
+                subtitle: fields.text({ label: 'Subtitle' }),
+                titlePart1: fields.text({ label: 'Title Part 1' }),
+                titleHighlight: fields.text({ label: 'Title Highlight' }),
+                titlePart2: fields.text({ label: 'Title Part 2' }),
+                titleHighlight2: fields.text({ label: 'Title Highlight 2' }),
+              },
+              { label: 'Global Partners' }
+            ),
+            globalPartnersTabs: fields.array(
+              fields.object(
+                {
+                  name: fields.text({ label: 'Name' }),
+                  description: fields.text({ label: 'Description', multiline: true }),
+                  image: fields.image({
+                    label: 'Image',
+                    directory: 'public/images',
+                    publicPath: '/images',
+                    validation: { isRequired: false },
+                  }),
+                  items: fields.array(
+                    fields.object(
+                      {
+                        number: fields.text({ label: 'Number' }),
+                        title: fields.text({ label: 'Title' }),
+                        description: fields.text({ label: 'Description', multiline: true }),
+                      },
+                      { label: 'Item' }
+                    ),
+                    { label: 'Items' }
+                  ),
+                },
+                { label: 'Tab' }
+              ),
+              { label: 'Global Partners Tabs' }
+            ),
             localPartners: fields.object(
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
@@ -631,6 +668,12 @@ export default config({
                 {
                   name: fields.text({ label: 'Name' }),
                   description: fields.text({ label: 'Description', multiline: true }),
+                  image: fields.image({
+                    label: 'Image',
+                    directory: 'public/images',
+                    publicPath: '/images',
+                    validation: { isRequired: false },
+                  }),
                   items: fields.array(
                     fields.object(
                       {

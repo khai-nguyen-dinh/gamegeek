@@ -1,39 +1,34 @@
 {
   "categories": [
     {
+      "id": "game-industry",
+      "name": "Game Industry",
+      "slug": "game-industry"
+    },
+    {
       "id": "vietnam-game-scene",
       "name": "Vietnam's Game Scene",
       "slug": "vietnam-game-scene"
     },
     {
       "id": "it-services",
-      "name": "IT Services",
-      "slug": "it-services"
-    },
-    {
-      "id": "database-security",
-      "name": "Database Security",
-      "slug": "database-security"
+      "name": "Announcements",
+      "slug": "announcements"
     },
     {
       "id": "it-consultancy",
-      "name": "IT Consultancy",
-      "slug": "it-consultancy"
+      "name": "Case study",
+      "slug": "case-study"
     },
     {
       "id": "app-development",
-      "name": "App Development",
-      "slug": "app-development"
+      "name": "Know-how",
+      "slug": "know-how"
     },
     {
       "id": "ui-ux-design",
-      "name": "UI/UX Design",
-      "slug": "ui-ux-design"
-    },
-    {
-      "id": "cyber-security",
-      "name": "Cyber Security",
-      "slug": "cyber-security"
+      "name": "Community",
+      "slug": "community"
     }
   ],
   "posts": [

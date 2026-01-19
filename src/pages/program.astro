@@ -3,12 +3,192 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import { getContent, getContentObject } from '../utils/content.ts';
+import { load } from 'js-yaml';
 
+// Helper function to parse frontmatter
+function parseFrontmatter(content: string) {
+  const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+  const match = content.match(frontmatterRegex);
+  
+  if (!match) {
+    return { data: {}, content: content.trim() };
+  }
+  
+  const yamlContent = match[1];
+  const bodyContent = match[2];
+  
+  try {
+    const data = load(yamlContent) as any;
+    return { data: data || {}, content: bodyContent.trim() };
+  } catch (error) {
+    return { data: {}, content: bodyContent.trim() };
+  }
+}
+
+// Helper function to fetch file from GitHub
+async function fetchFromGitHub(path: string): Promise<string | null> {
+  try {
+    const repo = 'khai-nguyen-dinh/gamegeek';
+    const branch = 'main';
+    const url = `https://raw.githubusercontent.com/${repo}/${branch}/${path}`;
+    const response = await fetch(url);
+    if (response.ok) {
+      return await response.text();
+    }
+    return null;
+  } catch (error) {
+    console.error(`Error fetching from GitHub: ${path}`, error);
+    return null;
+  }
+}
+
+// Helper function to list files in a GitHub directory
+async function listGitHubFiles(path: string): Promise<string[]> {
+  try {
+    const repo = 'khai-nguyen-dinh/gamegeek';
+    const branch = 'main';
+    const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
+    const response = await fetch(url, {
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'Astro-Keystatic-App',
+      }
+    });
+    if (response.ok) {
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        return data
+          .filter((item: any) => item.type === 'file' && item.name.endsWith('.mdoc'))
+          .map((item: any) => item.name.replace('.mdoc', ''));
+      }
+    }
+    return [];
+  } catch (error) {
+    console.error(`Error listing GitHub files: ${path}`, error);
+    return [];
+  }
+}
+
+// Helper function to read event files
+async function readEventFile(slug: string) {
+  if (!slug) return null;
+  
+  const fileContent = await fetchFromGitHub(`src/keystatic/events/${slug}.mdoc`);
+  
+  if (!fileContent) return null;
+  
+  const { data, content } = parseFrontmatter(fileContent);
+  
+  if (!data || Object.keys(data).length === 0) {
+    return null;
+  }
+  
+  return {
+    ...data,
+    description: content || '',
+    slug: slug
+  };
+}
+
+// Helper function to get all events
+async function getAllEvents() {
+  // Try to import from local filesystem first (for dev mode)
+  try {
+    const eventModules = import.meta.glob('../keystatic/events/*.mdoc?raw', { eager: true });
+    const localEvents = Object.entries(eventModules).map(([path, module]: [string, any]) => {
+      const slug = path.split('/').pop()?.replace('.mdoc?raw', '') || '';
+      const content = typeof module === 'string' ? module : (module.default || '');
+      const { data, content: bodyContent } = parseFrontmatter(content);
+      
+      if (!data || Object.keys(data).length === 0) {
+        return null;
+      }
+      
+      return {
+        ...data,
+        description: bodyContent || '',
+        slug: slug
+      };
+    }).filter(e => e !== null);
+    
+    if (localEvents.length > 0) {
+      console.log(`Loaded ${localEvents.length} events from local filesystem`);
+      return localEvents;
+    }
+  } catch (error) {
+    console.log('Could not load events from local filesystem, trying GitHub...', error);
+  }
+  
+  // Fallback to GitHub fetch
+  const slugs = await listGitHubFiles('src/keystatic/events');
+  const events = await Promise.all(
+    slugs.map(async (slug) => {
+      const event = await readEventFile(slug);
+      if (event) {
+        event.slug = slug;
+      }
+      return event;
+    })
+  );
+  return events.filter(e => e !== null);
+}
+
+// Get all events
+const allEvents = await getAllEvents();
+
+// Debug: log events count
+console.log('Events loaded:', allEvents.length);
+
+// Get program content
 const programContent = getContentObject('program');
 const heroContent = programContent?.hero || {};
 const upcomingEvents = programContent?.upcomingEvents || {};
 const filters = programContent?.filters || {};
 const eventStatus = programContent?.eventStatus || {};
+
+// Sort events by date (newest first)
+const sortedEvents = allEvents.sort((a, b) => {
+  const dateA = a.date ? new Date(a.date).getTime() : 0;
+  const dateB = b.date ? new Date(b.date).getTime() : 0;
+  return dateB - dateA;
+});
+
+// Get featured events for hero slider (first 3 featured events, or first 3 if none featured)
+const featuredEvents = sortedEvents.filter(e => e.featured).slice(0, 3);
+const heroEvents = featuredEvents.length > 0 ? featuredEvents : sortedEvents.slice(0, 3);
+
+// Get all events for display (excluding featured ones from main list)
+const displayEvents = sortedEvents.filter(e => !e.featured || featuredEvents.length === 0);
+
+// Helper to format date
+function formatDate(date: any): string {
+  if (!date) return '';
+  if (typeof date === 'string') return date;
+  if (date instanceof Date) {
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+  return String(date);
+}
+
+// Helper to get year from date
+function getYear(date: any): string {
+  if (!date) return '';
+  if (typeof date === 'string') {
+    const parsed = new Date(date);
+    return parsed.getFullYear().toString();
+  }
+  if (date instanceof Date) {
+    return date.getFullYear().toString();
+  }
+  return '';
+}
+
+// Helper to check if event is upcoming
+function isUpcoming(date: any): boolean {
+  if (!date) return false;
+  const eventDate = date instanceof Date ? date : new Date(date);
+  return eventDate >= new Date();
+}
 ---
 
 <Layout title="GameGeek | Connecting the Game Industry of Vietnam">
@@ -35,52 +215,48 @@ const eventStatus = programContent?.eventStatus || {};
                 <div class="br-three position-absolute top-0 z-n1"></div>
                 <div class="container">
                     
-                    <div class="hero-slider-one swiper swiper-fade swiper-initialized swiper-horizontal swiper-autoheight swiper-watch-progress swiper-backface-hidden"
-                        data-cue="slideInUp" data-show="true"
-                        style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
-                        <div class="swiper-wrapper" style="height: 732px;" id="swiper-wrapper-43c94ed6e5119c65"
-                            aria-live="polite">
-                            <div class="swiper-slide swiper-slide-visible swiper-slide-fully-visible swiper-slide-active"
-                                style="width: 1475px; opacity: 1; transform: translate3d(0px, 0px, 0px);" role="group"
-                                aria-label="1 / 3" data-swiper-slide-index="0">
-                                <div
-                                    class="hero-slide-item bg-1 bg-f d-flex flex-column justify-content-end position-relative overflow-hidden z-1 round-30">
-                                    <div class="hero-slide-title text-center mb-40">
-                                        <h2 class="fs-32 fw-bold text-white">Vietnam Game Connect 2025</h2>
-                                    </div>
-                                </div>
+                    {heroEvents.length > 0 ? (
+                        <div class="hero-slider-one swiper swiper-fade swiper-initialized swiper-horizontal swiper-autoheight swiper-watch-progress swiper-backface-hidden"
+                            data-cue="slideInUp" data-show="true"
+                            style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                            <div class="swiper-wrapper" style="height: 732px;" id="swiper-wrapper-43c94ed6e5119c65"
+                                aria-live="polite">
+                                {heroEvents.map((event, index) => {
+                                    const slideClass = index === 0 ? 'swiper-slide swiper-slide-visible swiper-slide-fully-visible swiper-slide-active' : index === 1 ? 'swiper-slide swiper-slide-next' : 'swiper-slide';
+                                    const slideStyle = `width: 1475px; opacity: ${index === 0 ? '1' : '0'}; transform: translate3d(${index * -1475}px, 0px, 0px);`;
+                                    const bgClass = `bg-${(index % 3) + 1}`;
+                                    const bgStyle = event.image ? `background-image: url('${event.image}'); background-size: cover; background-position: center;` : '';
+                                    
+                                    return (
+                                        <div class={slideClass}
+                                            style={slideStyle} role="group"
+                                            aria-label={`${index + 1} / ${heroEvents.length}`} data-swiper-slide-index={index}>
+                                            <div
+                                                class={`hero-slide-item ${bgClass} bg-f d-flex flex-column justify-content-end position-relative overflow-hidden z-1 round-30`}
+                                                style={bgStyle}>
+                                                <div class="hero-slide-title text-center mb-40">
+                                                    <h2 class="fs-32 fw-bold text-white">{event.title || 'Event'}</h2>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
-                            <div class="swiper-slide swiper-slide-next"
-                                style="width: 1475px; opacity: 0; transform: translate3d(-1475px, 0px, 0px);"
-                                role="group" aria-label="2 / 3" data-swiper-slide-index="1">
-                                <div
-                                    class="hero-slide-item bg-2 bg-f d-flex flex-column justify-content-end position-relative overflow-hidden z-1 round-30">
-                                    <div class="hero-slide-title text-center mb-40">
-                                        <h2 class="fs-32 fw-bold text-white">Global game Jam 2024</h2>
-                                    </div>
-                                </div>
+                            <div
+                                class="hero-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal">
+                                {heroEvents.map((event, index) => (
+                                    <span class={`swiper-pagination-bullet ${index === 0 ? 'swiper-pagination-bullet-active' : ''}`} tabindex="0"
+                                        aria-current={index === 0 ? 'true' : undefined}
+                                        title={event.title || `Event ${index + 1}`}>{String(index + 1).padStart(2, '0')}</span>
+                                ))}
                             </div>
-                            <div class="swiper-slide" role="group" aria-label="3 / 3"
-                                style="width: 1475px; opacity: 0; transform: translate3d(-2950px, 0px, 0px);"
-                                data-swiper-slide-index="2">
-                                <div
-                                    class="hero-slide-item bg-3 bg-f d-flex flex-column justify-content-end position-relative overflow-hidden z-1 round-30">
-                                    <div class="hero-slide-title text-center mb-40">
-                                        <h2 class="fs-32 fw-bold text-white">Growth &amp; Expansion</h2>
-                                    </div>
-                                </div>
-                            </div>
+                            <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
                         </div>
-                        <div
-                            class="hero-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal">
-                            <span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0"
-                                aria-current="true" title="Strategic Advisory">01</span><span
-                                class="swiper-pagination-bullet" tabindex="0"
-                                title="Market Execution & Operations">02</span><span class="swiper-pagination-bullet"
-                                tabindex="0" title="Growth & Expansion">03</span>
+                    ) : (
+                        <div class="text-center py-5">
+                            <h2 class="fs-32 fw-bold text-title">No featured events available</h2>
                         </div>
-                        <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
-                    </div>
+                    )}
                 </div>
                 <div class="post-share d-flex flex-wrap align-items-center justify-content-md-end">
                     <span class="text-title fw-semibold">{programContent.followText || 'Follow Us:'}</span>
@@ -136,78 +312,35 @@ const eventStatus = programContent?.eventStatus || {};
                     </div>
                 </div>
                 <div class="row justify-content-center">
-                    <div class="col-xl-4 col-md-6">
-                        <div class="project-card style-four bg-1 position-relative overflow-hidden z-1 round-10 mb-45">
-                            <img src="/renius/image/project-bg-5.jpg" alt="Project" class="project-card-img position-absolute top-0 start-0 w-100 h-100">
-                            <div class="project-header d-flex flex-wrap align-items-center justify-content-between mb-3">
-                                <span class="project-status transition">{eventStatus.upcoming || 'Upcoming'}</span>
-                                <span class="project-counter transition">2024</span>
-                            </div>
-                            <div class="project-title d-flex flex-wrap align-items-center justify-content-between">
-                                <h3 class="fs-24 fw-semibold mb-0"><a href="/program" class="text-title hover-text-primary transition">Greenview Apartments</a></h3>
-                            </div>
+                    {displayEvents.length > 0 ? (
+                        displayEvents.map((event, index) => {
+                            const bgClass = `bg-${(index % 4) + 1}`;
+                            const eventYear = getYear(event.date);
+                            const status = isUpcoming(event.date) ? (eventStatus.upcoming || 'Upcoming') : (eventStatus.completed || 'Completed');
+                            const imageUrl = event.image || `/renius/image/project-bg-${(index % 4) + 5}.jpg`;
+                            
+                            return (
+                                <div class="col-xl-4 col-md-6">
+                                    <div class={`project-card style-four ${bgClass} position-relative overflow-hidden z-1 round-10 mb-45`}>
+                                        <img src={imageUrl} alt={event.title || 'Event'} class="project-card-img position-absolute top-0 start-0 w-100 h-100" style="object-fit: cover;">
+                                        <div class="project-header d-flex flex-wrap align-items-center justify-content-between mb-3">
+                                            <span class="project-status transition">{status}</span>
+                                            <span class="project-counter transition">{eventYear}</span>
+                                        </div>
+                                        <div class="project-title d-flex flex-wrap align-items-center justify-content-between">
+                                            <h3 class="fs-24 fw-semibold mb-0">
+                                                <a href={`/program/${event.slug}`} class="text-title hover-text-primary transition">{event.title || 'Event'}</a>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })
+                    ) : (
+                        <div class="col-12 text-center">
+                            <p class="text-para">No events available at the moment.</p>
                         </div>
-                    </div>
-                    <div class="col-xl-4 col-md-6">
-                        <div class="project-card style-four bg-2 position-relative overflow-hidden z-1 round-10 mb-45">
-                            <img src="/renius/image/project-bg-6.jpg" alt="Project" class="project-card-img position-absolute top-0 start-0 w-100 h-100">
-                            <div class="project-header d-flex flex-wrap align-items-center justify-content-between mb-3">
-                                <span class="project-status transition">{eventStatus.completed || 'Completed'}</span>
-                                <span class="project-counter transition">2025</span>
-                            </div>
-                            <div class="project-title d-flex flex-wrap align-items-center justify-content-between">
-                                <h3 class="fs-24 fw-semibold mb-0"><a href="/program" class="text-title hover-text-primary transition">Premier Office Tower</a></h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-md-6">
-                        <div class="project-card style-four bg-3 position-relative overflow-hidden z-1 round-10 mb-45">
-                            <img src="/renius/image/project-bg-7.jpg" alt="Project" class="project-card-img position-absolute top-0 start-0 w-100 h-100">
-                            <div class="project-header d-flex flex-wrap align-items-center justify-content-between mb-3">
-                                <span class="project-status transition">{eventStatus.upcoming || 'Upcoming'}</span>
-                                <span class="project-counter transition">2024</span>
-                            </div>
-                            <div class="project-title d-flex flex-wrap align-items-center justify-content-between">
-                                <h3 class="fs-24 fw-semibold mb-0"><a href="/program" class="text-title hover-text-primary transition">Urban height Residence</a></h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-md-6">
-                        <div class="project-card style-four bg-4 position-relative overflow-hidden z-1 round-10 mb-45">
-                            <img src="/renius/image/project-bg-6.jpg" alt="Project" class="project-card-img position-absolute top-0 start-0 w-100 h-100">
-                            <div class="project-header d-flex flex-wrap align-items-center justify-content-between mb-3">
-                                <span class="project-status transition">{eventStatus.completed || 'Completed'}</span>
-                                <span class="project-counter transition">2025</span>
-                            </div>
-                            <div class="project-title d-flex flex-wrap align-items-center justify-content-between">
-                                <h3 class="fs-24 fw-semibold mb-0"><a href="/program" class="text-title hover-text-primary transition">Hitech Eco Tower</a></h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-md-6">
-                        <div class="project-card style-four bg-1 position-relative overflow-hidden z-1 round-10 mb-45">
-                            <img src="/renius/image/project-bg-8.jpg" alt="Project" class="project-card-img position-absolute top-0 start-0 w-100 h-100">
-                            <div class="project-header d-flex flex-wrap align-items-center justify-content-between mb-3">
-                                <span class="project-status transition">{eventStatus.upcoming || 'Upcoming'}</span>
-                                <span class="project-counter transition">2024</span>
-                            </div>
-                            <div class="project-title d-flex flex-wrap align-items-center justify-content-between">
-                                <h3 class="fs-24 fw-semibold mb-0"><a href="/program" class="text-title hover-text-primary transition">St. Height Residence</a></h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-md-6">
-                        <div class="project-card style-four bg-2 position-relative overflow-hidden z-1 round-10 mb-45">
-                            <img src="/renius/image/project-bg-7.jpg" alt="Project" class="project-card-img position-absolute top-0 start-0 w-100 h-100">
-                            <div class="project-header d-flex flex-wrap align-items-center justify-content-between mb-3">
-                                <span class="project-status transition">{eventStatus.completed || 'Completed'}</span>
-                                <span class="project-counter transition">2025</span>
-                            </div>
-                            <div class="project-title d-flex flex-wrap align-items-center justify-content-between">
-                                <h3 class="fs-24 fw-semibold mb-0"><a href="/program" class="text-title hover-text-primary transition">Turkin Tower</a></h3>
-                            </div>
-                        </div>
-                    </div>
+                    )}
                 </div>
                  <ul class="page-nav pagination justify-content-center mb-0 mt-lg-4">
                     <li class="page-item">

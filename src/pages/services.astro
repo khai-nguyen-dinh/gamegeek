@@ -6,6 +6,8 @@ import { getContent, getContentObject } from '../utils/content.ts';
 
 const servicesContent = getContentObject('services');
 const heroContent = servicesContent?.hero || {};
+const globalPartners = servicesContent?.globalPartners || {};
+const globalPartnersTabs = servicesContent?.globalPartnersTabs || [];
 const localPartners = servicesContent?.localPartners || {};
 const tabs = servicesContent?.tabs || [];
 const cta = servicesContent?.cta || {};
@@ -234,6 +236,86 @@ const serviceCards = servicesContent?.serviceCards || [
                             <h6 class="section-subtitle style-two d-inline-block fs-13 ls-1 font-optional fw-semibold position-relative text_primary mb-20"
                                 data-cue="slideInUp" data-show="true"
                                 style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                                {globalPartners.subtitle || 'GLOBAL PARTNERS'}</h6>
+                            <h2 class="section-title style-one fw-normal text-title px-xxl-5 mb-40" data-cue="slideInUp"
+                                data-delay="300" data-show="true"
+                                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;" set:html={`${globalPartners.titlePart1 || 'Your '}<span class="fw-black">${globalPartners.titleHighlight || 'Bridge '}</span>${globalPartners.titlePart2 || ' to the '}<span class="fw-black">${globalPartners.titleHighlight2 || 'Global Stage'}</span>`}></h2>
+                        </div>
+                    </div>
+                    <ul class="nav nav-tabs list-unstyled feature-tablist global-partners-tablist d-flex flex-wrap align-items-center fs-14 justify-content-between mb-40"
+                        role="tablist" data-cue="slideInUp" data-show="true"
+                        style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                        {globalPartnersTabs.map((tab, index) => (
+                          <li class="nav-item border-0" role="presentation">
+                            <button class={`nav-link border-0 ${index === 0 ? 'active' : ''}`} data-bs-toggle="tab" data-bs-target={`#global_tab_${index + 1}`}
+                                type="button" role="tab" aria-selected={index === 0 ? 'true' : 'false'} tabindex={index === 0 ? '0' : '-1'}>{tab.name}</button>
+                          </li>
+                        ))}
+                    </ul>
+                    <div class="tab-content feature-tab-content" data-cue="slideInUp" data-show="true"
+                        style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                        {globalPartnersTabs.map((tab, index) => (
+                          <div class={`tab-pane fade ${index === 0 ? 'active show' : ''}`} id={`global_tab_${index + 1}`} role="tabpanel">
+                            <div class="row">
+                              <div class="col-xxl-5 col-lg-6 pe-xxl-0">
+                                <div class="feature-content mb-md-30">
+                                  <p class="mb-35">{tab.description}</p>
+                                  <ul class="feature-timeline list-unstyled mb-0 w-75 pe-xxl-5">
+                                    {tab.items?.map((item) => (
+                                      <li class="position-relative fs-xxl-18 fw-medium text-title">
+                                        <span class="d-flex flex-column align-items-center justify-content-center rounded-circle text_primary bg-white fs-15 fw-semibold text_primary">{item.number}</span>
+                                        <div class="feature-timeline-text">
+                                          <h5 class="fs-18 fw-semibold mb-6" set:html={item.title.replace('&amp;', '&')}></h5>
+                                          <p class="mb-0">{item.description}</p>
+                                        </div>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
+                              <div class="col-xxl-7 col-lg-6 ps-xxl-5">
+                                <div class="feature-img-wrap position-relative z-1">
+                                  <img src={tab.image || '/renius/image/service2.jpg'} alt={tab.name || 'Image'} class="round-20">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            <!-- CTA Section Start -->
+            <div class="cta-area style-three bg-f position-relative overflow-hidden z-1 mb-50" data-cue="slideInUp"
+                data-show="true"
+                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                <img src="/renius/image/shape-1.png" alt="Shape"
+                    class="section-shape position-absolute bottom-0 end-0 z-0">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 col-md-7 mb-sm-20">
+                            <h2 class="section-title style-two fw-normal text-white mb-0" set:html={`${cta.titlePart1 || 'Vietnam - A Rising Hub for '}<span class="fw-black">${cta.titleHighlight || 'Game Production'}</span>${cta.titlePart2 || ' in Asia'}`}></h2>
+                        </div>
+                        <div class="col-lg-6 col-md-5">
+                            <div
+                                class="circle-text-wrap position-relative bg-transparent rounded-circle overflow-hidden z-1 ms-md-auto me-md-0 ms-auto me-auto">
+                                <img src="/renius/image/circle-text.png" alt="Circle Text"
+                                    class="rotate position-relative z-2 d-block mx-auto">
+                                <img src="/renius/image/up-right-arrow-white-small.svg" alt="Icon"
+                                    class="arrow-icon position-absolute z-n1">
+                                <a href="/contact" class="position-absolute top-0 start-0 w-100 h-100 z-2"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- CTA Section End -->
+             <div class="feature-area style-three position-relative z-2 pt-50 mt-50">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-8 offset-xl-2 col-md-10 offset-md-1 text-center">
+                            <h6 class="section-subtitle style-two d-inline-block fs-13 ls-1 font-optional fw-semibold position-relative text_primary mb-20"
+                                data-cue="slideInUp" data-show="true"
+                                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
                                 {localPartners.subtitle || 'LOCAL PARTNERS'}</h6>
                             <h2 class="section-title style-one fw-normal text-title px-xxl-5 mb-40" data-cue="slideInUp"
                                 data-delay="300" data-show="true"
@@ -282,31 +364,6 @@ const serviceCards = servicesContent?.serviceCards || [
                     </div>
                 </div>
             </div>
-            <!-- CTA Section Start -->
-            <div class="cta-area style-three bg-f position-relative overflow-hidden z-1 mb-50" data-cue="slideInUp"
-                data-show="true"
-                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
-                <img src="/renius/image/shape-1.png" alt="Shape"
-                    class="section-shape position-absolute bottom-0 end-0 z-0">
-                <div class="container">
-                    <div class="row align-items-center">
-                        <div class="col-lg-6 col-md-7 mb-sm-20">
-                            <h2 class="section-title style-two fw-normal text-white mb-0" set:html={`${cta.titlePart1 || 'Vietnam - A Rising Hub for '}<span class="fw-black">${cta.titleHighlight || 'Game Production'}</span>${cta.titlePart2 || ' in Asia'}`}></h2>
-                        </div>
-                        <div class="col-lg-6 col-md-5">
-                            <div
-                                class="circle-text-wrap position-relative bg-transparent rounded-circle overflow-hidden z-1 ms-md-auto me-md-0 ms-auto me-auto">
-                                <img src="/renius/image/circle-text.png" alt="Circle Text"
-                                    class="rotate position-relative z-2 d-block mx-auto">
-                                <img src="/renius/image/up-right-arrow-white-small.svg" alt="Icon"
-                                    class="arrow-icon position-absolute z-n1">
-                                <a href="/contact" class="position-absolute top-0 start-0 w-100 h-100 z-2"></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- CTA Section End -->
             <!-- About Section Start -->
             <!-- <div class="container pt-120">
                 <div class="row">

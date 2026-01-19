@@ -308,6 +308,73 @@ services:
     - TRUSTED
     - TRANSPARENCY
     - EXPERT
+  globalPartners:
+    subtitle: GLOBAL PARTNERS
+    titlePart1: 'Your '
+    titleHighlight: 'Bridge '
+    titlePart2: ' to the '
+    titleHighlight2: Global Stage
+  globalPartnersTabs:
+    - name: Strategic Advisory
+      description: >-
+        Comprehensive strategic guidance to help you navigate Vietnam's gaming
+        market with confidence and clarity.
+      image: /renius/image/service2.jpg
+      items:
+        - number: '01'
+          title: Market Entry & Go-to-Market Strategy
+          description: >-
+            Crafting your bespoke roadmap for a successful launch and long-term
+            growth in Vietnam.
+        - number: '02'
+          title: Market Intelligence & Trend Analysis
+          description: >-
+            Providing data-driven insights to inform your strategic decisions.
+        - number: '03'
+          title: Regulatory Compliance & Guidance
+          description: >-
+            Ensuring your business navigates the local legal framework with
+            confidence.
+    - name: Market Execution & Operations
+      description: >-
+        Operational excellence through strategic partnerships, brand building, and
+        talent acquisition.
+      image: /renius/image/service2.jpg
+      items:
+        - number: '01'
+          title: Strategic Alliances & Partnering
+          description: >-
+            Connecting you with a curated network of reliable local partners to
+            ensure operational excellence.
+        - number: '02'
+          title: Brand Establishment & Growth
+          description: >-
+            Building a powerful brand presence through targeted marketing and
+            community engagement.
+        - number: '03'
+          title: Talent Acquisition & Team Building
+          description: >-
+            Accessing the right talent to build a high-performing local team.
+    - name: Growth & Expansion
+      description: >-
+        Accelerating growth through revenue optimization, capital access, and
+        strategic ventures.
+      image: /renius/image/service2.jpg
+      items:
+        - number: '01'
+          title: Revenue Acceleration & Monetization
+          description: >-
+            Optimizing your game's performance and maximizing profitability in
+            the local market.
+        - number: '02'
+          title: Capital & Investment Opportunities
+          description: >-
+            Facilitating connections for fundraising and strategic investments.
+        - number: '03'
+          title: M&A and Strategic Ventures
+          description: >-
+            Identifying and advising on high-value merger, acquisition, and
+            partnership deals.
   localPartners:
     subtitle: LOCAL PARTNERS
     titlePart1: 'Your '

@@ -2595,6 +2595,9 @@ body {
   background-color: var(--primaryColor);
   color: var(--whiteColor);
 }
+.global-partners-tablist .nav-item {
+  width: calc((100% - 20px) / 3);
+}
 .feature-tab-content .feature-img-wrap .exp-box {
   top: 25%;
   width: 218px;
@@ -4322,6 +4325,13 @@ body {
   font-size: 15px;
   font-weight: 500;
   color: var(--paraColor);
+}
+.category-widget ul li a i {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
 }
 .category-widget ul li a img {
   top: 1px;

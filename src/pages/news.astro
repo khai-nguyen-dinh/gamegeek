@@ -14,9 +14,21 @@ const { posts, categories } = newsData;
 
 // Map category IDs to category names
 const categoryMap = new Map(categories.map(cat => [cat.id, cat.name]));
+// Map category slugs to category IDs for filtering
+const categorySlugToIdMap = new Map(categories.map(cat => [cat.slug, cat.id]));
+
+// Get category filter from URL query parameter
+const categorySlug = Astro.url.searchParams.get('category');
+const selectedCategoryId = categorySlug ? categorySlugToIdMap.get(categorySlug) : null;
+
+// Filter posts by category if category is selected
+let filteredPosts = posts;
+if (selectedCategoryId) {
+  filteredPosts = posts.filter(post => post.category === selectedCategoryId);
+}
 
 // Transform posts to include category name and format date for display
-const transformedPosts = posts.map(post => {
+const transformedPosts = filteredPosts.map(post => {
   const categoryName = categoryMap.get(post.category) || post.category;
   // Extract day and month from date string (e.g., "August 28, 2025" -> "28" and "Aug")
   const dateParts = post.date.split(' ');
