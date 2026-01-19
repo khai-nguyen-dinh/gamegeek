@@ -4,10 +4,6 @@ import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import { load } from 'js-yaml';
 
-// Check if running in Node.js environment (build time) or Cloudflare (runtime)
-const isNode = typeof process !== 'undefined' && process.versions?.node;
-const isCloudflare = typeof globalThis !== 'undefined' && 'caches' in globalThis;
-
 // Helper function to parse frontmatter
 function parseFrontmatter(content: string) {
   const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
@@ -28,7 +24,7 @@ function parseFrontmatter(content: string) {
   }
 }
 
-// Helper function to fetch file from GitHub (for Cloudflare runtime)
+// Helper function to fetch file from GitHub
 async function fetchFromGitHub(path: string): Promise<string | null> {
   try {
     const repo = 'khai-nguyen-dinh/gamegeek';
@@ -45,27 +41,11 @@ async function fetchFromGitHub(path: string): Promise<string | null> {
   }
 }
 
-// Helper function to read mdoc files (works in both Node.js and Cloudflare)
+// Helper function to read mdoc files - always use GitHub fetch (works in both build and runtime)
 async function readMdocFile(slug: string) {
   if (!slug) return null;
   
-  let fileContent: string | null = null;
-  
-  if (isNode) {
-    // Node.js environment (build time)
-    try {
-      const { readFileSync } = await import('fs');
-      const { join } = await import('path');
-      const filePath = join(process.cwd(), 'src/keystatic/posts', `${slug}.mdoc`);
-      fileContent = readFileSync(filePath, 'utf-8');
-    } catch (error) {
-      console.error(`Error reading file:`, error);
-      return null;
-    }
-  } else {
-    // Cloudflare runtime - fetch from GitHub
-    fileContent = await fetchFromGitHub(`src/keystatic/posts/${slug}.mdoc`);
-  }
+  const fileContent = await fetchFromGitHub(`src/keystatic/posts/${slug}.mdoc`);
   
   if (!fileContent) return null;
   
@@ -83,9 +63,9 @@ async function readMdocFile(slug: string) {
   };
 }
 
-// Helper function to get all posts
+// Helper function to get all posts - always use GitHub fetch
 async function getAllPosts() {
-  // List of known post slugs (can be generated at build time or fetched)
+  // List of known post slugs
   const knownSlugs = [
     'vietnam-has-topped-the-world-in-mobile-game-exports-momentum-peaks-at-vietnam-game-connect-2025',
     'future-of-web-development-2025',
@@ -98,44 +78,19 @@ async function getAllPosts() {
     'test-test'
   ];
   
-  if (isNode) {
-    // Node.js: read from filesystem
-    try {
-      const { readdirSync } = await import('fs');
-      const { join } = await import('path');
-      const postsDir = join(process.cwd(), 'src/keystatic/posts');
-      const files = readdirSync(postsDir).filter(f => f.endsWith('.mdoc'));
-      const posts = await Promise.all(
-        files.map(async (file) => {
-          const fileSlug = file.replace('.mdoc', '');
-          const post = await readMdocFile(fileSlug);
-          if (post) {
-            post.slug = fileSlug;
-          }
-          return post;
-        })
-      );
-      return posts.filter(p => p !== null);
-    } catch (error) {
-      console.error('Error reading posts directory:', error);
-      return [];
-    }
-  } else {
-    // Cloudflare: fetch from GitHub
-    const posts = await Promise.all(
-      knownSlugs.map(async (slug) => {
-        const post = await readMdocFile(slug);
-        if (post) {
-          post.slug = slug;
-        }
-        return post;
-      })
-    );
-    return posts.filter(p => p !== null);
-  }
+  const posts = await Promise.all(
+    knownSlugs.map(async (slug) => {
+      const post = await readMdocFile(slug);
+      if (post) {
+        post.slug = slug;
+      }
+      return post;
+    })
+  );
+  return posts.filter(p => p !== null);
 }
 
-// Helper function to get all categories
+// Helper function to get all categories - always use GitHub fetch
 async function getAllCategories() {
   const knownCategoryFiles = [
     'vietnam-game-scene',
@@ -147,49 +102,23 @@ async function getAllCategories() {
     'cyber-security'
   ];
   
-  if (isNode) {
-    // Node.js: read from filesystem
-    try {
-      const { readdirSync } = await import('fs');
-      const { join } = await import('path');
-      const { readFileSync } = await import('fs');
-      const categoriesDir = join(process.cwd(), 'src/keystatic/categories');
-      const files = readdirSync(categoriesDir).filter(f => f.endsWith('.yaml'));
-      const categories = files.map(file => {
-        const filePath = join(categoriesDir, file);
-        const content = readFileSync(filePath, 'utf-8');
+  const categories = await Promise.all(
+    knownCategoryFiles.map(async (slug) => {
+      const content = await fetchFromGitHub(`src/keystatic/categories/${slug}.yaml`);
+      if (!content) return null;
+      try {
         const data = load(content) as any;
         return {
           id: data.id,
           name: data.name,
-          slug: file.replace('.yaml', '')
+          slug: slug
         };
-      });
-      return categories;
-    } catch (error) {
-      console.error('Error reading categories directory:', error);
-      return [];
-    }
-  } else {
-    // Cloudflare: fetch from GitHub
-    const categories = await Promise.all(
-      knownCategoryFiles.map(async (slug) => {
-        const content = await fetchFromGitHub(`src/keystatic/categories/${slug}.yaml`);
-        if (!content) return null;
-        try {
-          const data = load(content) as any;
-          return {
-            id: data.id,
-            name: data.name,
-            slug: slug
-          };
-        } catch (error) {
-          return null;
-        }
-      })
-    );
-    return categories.filter(c => c !== null);
-  }
+      } catch (error) {
+        return null;
+      }
+    })
+  );
+  return categories.filter(c => c !== null);
 }
 
 // Get the slug from the URL params

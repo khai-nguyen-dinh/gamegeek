@@ -15,4 +15,13 @@ export default defineConfig({
       configPath: './keystatic.config.ts',
     }),
   ],
+  vite: {
+    ssr: {
+      noExternal: [],
+      external: ['fs', 'path', 'os', 'crypto', 'stream', 'util', 'events', 'buffer', 'process'],
+    },
+    resolve: {
+      conditions: ['worker', 'browser'],
+    },
+  },
 });
