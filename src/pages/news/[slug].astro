@@ -41,6 +41,28 @@ async function fetchFromGitHub(path: string): Promise<string | null> {
   }
 }
 
+// Helper function to list files in a GitHub directory
+async function listGitHubFiles(path: string): Promise<string[]> {
+  try {
+    const repo = 'khai-nguyen-dinh/gamegeek';
+    const branch = 'main';
+    const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
+    const response = await fetch(url);
+    if (response.ok) {
+      const files = await response.json();
+      if (Array.isArray(files)) {
+        return files
+          .filter((file: any) => file.type === 'file')
+          .map((file: any) => file.name);
+      }
+    }
+    return [];
+  } catch (error) {
+    console.error(`Error listing GitHub files: ${path}`, error);
+    return [];
+  }
+}
+
 // Helper function to read mdoc files - always use GitHub fetch (works in both build and runtime)
 async function readMdocFile(slug: string) {
   if (!slug) return null;
@@ -63,23 +85,15 @@ async function readMdocFile(slug: string) {
   };
 }
 
-// Helper function to get all posts - always use GitHub fetch
+// Helper function to get all posts - fetch from GitHub API
 async function getAllPosts() {
-  // List of known post slugs
-  const knownSlugs = [
-    'vietnam-has-topped-the-world-in-mobile-game-exports-momentum-peaks-at-vietnam-game-connect-2025',
-    'future-of-web-development-2025',
-    'building-scalable-react-applications',
-    'cross-platform-flutter-development',
-    'database-security-best-practices-2025',
-    'modern-ui-ux-design-principles',
-    'cyber-security-threats-and-solutions',
-    'it-consultancy-strategic-approaches',
-    'test-test'
-  ];
+  // Get list of files from GitHub
+  const files = await listGitHubFiles('src/keystatic/posts');
+  const mdocFiles = files.filter(f => f.endsWith('.mdoc'));
   
   const posts = await Promise.all(
-    knownSlugs.map(async (slug) => {
+    mdocFiles.map(async (file) => {
+      const slug = file.replace('.mdoc', '');
       const post = await readMdocFile(slug);
       if (post) {
         post.slug = slug;
@@ -90,20 +104,15 @@ async function getAllPosts() {
   return posts.filter(p => p !== null);
 }
 
-// Helper function to get all categories - always use GitHub fetch
+// Helper function to get all categories - fetch from GitHub API
 async function getAllCategories() {
-  const knownCategoryFiles = [
-    'vietnam-game-scene',
-    'it-services',
-    'database-security',
-    'it-consultancy',
-    'app-development',
-    'ui-ux-design',
-    'cyber-security'
-  ];
+  // Get list of files from GitHub
+  const files = await listGitHubFiles('src/keystatic/categories');
+  const yamlFiles = files.filter(f => f.endsWith('.yaml'));
   
   const categories = await Promise.all(
-    knownCategoryFiles.map(async (slug) => {
+    yamlFiles.map(async (file) => {
+      const slug = file.replace('.yaml', '');
       const content = await fetchFromGitHub(`src/keystatic/categories/${slug}.yaml`);
       if (!content) return null;
       try {
