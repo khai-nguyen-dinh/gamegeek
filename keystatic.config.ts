@@ -59,26 +59,6 @@ export default config({
           directory: 'public/images',
           publicPath: '/images',
         }),
-        thumb: fields.image({
-          label: 'Thumbnail',
-          directory: 'public/images',
-          publicPath: '/images',
-        }),
-        thumb2: fields.image({
-          label: 'Thumbnail 2',
-          directory: 'public/images',
-          publicPath: '/images',
-        }),
-        thumb3: fields.image({
-          label: 'Thumbnail 3',
-          directory: 'public/images',
-          publicPath: '/images',
-        }),
-        breadcrumbBg: fields.image({
-          label: 'Breadcrumb Background',
-          directory: 'public/images',
-          publicPath: '/images',
-        }),
         content: fields.document({
           label: 'Content',
           formatting: true,
