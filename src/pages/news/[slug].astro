@@ -2,9 +2,11 @@
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { load } from 'js-yaml';
+
+// Check if running in Node.js environment (build time) or Cloudflare (runtime)
+const isNode = typeof process !== 'undefined' && process.versions?.node;
+const isCloudflare = typeof globalThis !== 'undefined' && 'caches' in globalThis;
 
 // Helper function to parse frontmatter
 function parseFrontmatter(content: string) {
@@ -26,75 +28,168 @@ function parseFrontmatter(content: string) {
   }
 }
 
-// Helper function to read mdoc files directly
-async function readMdocFile(slug: string) {
-  if (!slug) return null;
-  
-  const filePath = join(process.cwd(), 'src/keystatic/posts', `${slug}.mdoc`);
+// Helper function to fetch file from GitHub (for Cloudflare runtime)
+async function fetchFromGitHub(path: string): Promise<string | null> {
   try {
-    const fileContent = readFileSync(filePath, 'utf-8');
-    const { data, content: fileContentBody } = parseFrontmatter(fileContent);
-    
-    // Ensure we have valid data
-    if (!data || Object.keys(data).length === 0) {
-      return null;
+    const repo = 'khai-nguyen-dinh/gamegeek';
+    const branch = 'main';
+    const url = `https://raw.githubusercontent.com/${repo}/${branch}/${path}`;
+    const response = await fetch(url);
+    if (response.ok) {
+      return await response.text();
     }
-    
-    return {
-      ...data,
-      content: fileContentBody || '',
-      slug: slug
-    };
+    return null;
   } catch (error) {
-    console.error(`Error reading file ${filePath}:`, error);
+    console.error(`Error fetching from GitHub: ${path}`, error);
     return null;
   }
 }
 
-// Helper function to create slug from title (matching Keystatic behavior)
-function createSlugFromTitle(title: string): string {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+// Helper function to read mdoc files (works in both Node.js and Cloudflare)
+async function readMdocFile(slug: string) {
+  if (!slug) return null;
+  
+  let fileContent: string | null = null;
+  
+  if (isNode) {
+    // Node.js environment (build time)
+    try {
+      const { readFileSync } = await import('fs');
+      const { join } = await import('path');
+      const filePath = join(process.cwd(), 'src/keystatic/posts', `${slug}.mdoc`);
+      fileContent = readFileSync(filePath, 'utf-8');
+    } catch (error) {
+      console.error(`Error reading file:`, error);
+      return null;
+    }
+  } else {
+    // Cloudflare runtime - fetch from GitHub
+    fileContent = await fetchFromGitHub(`src/keystatic/posts/${slug}.mdoc`);
+  }
+  
+  if (!fileContent) return null;
+  
+  const { data, content: fileContentBody } = parseFrontmatter(fileContent);
+  
+  // Ensure we have valid data
+  if (!data || Object.keys(data).length === 0) {
+    return null;
+  }
+  
+  return {
+    ...data,
+    content: fileContentBody || '',
+    slug: slug
+  };
 }
 
 // Helper function to get all posts
 async function getAllPosts() {
-  const { readdirSync } = await import('fs');
-  const postsDir = join(process.cwd(), 'src/keystatic/posts');
-  const files = readdirSync(postsDir).filter(f => f.endsWith('.mdoc'));
-  const posts = await Promise.all(
-    files.map(async (file) => {
-      const fileSlug = file.replace('.mdoc', '');
-      const post = await readMdocFile(fileSlug);
-      if (post) {
-        // Always use file name as slug (matching Keystatic behavior)
-        post.slug = fileSlug;
-      }
-      return post;
-    })
-  );
-  return posts.filter(p => p !== null);
+  // List of known post slugs (can be generated at build time or fetched)
+  const knownSlugs = [
+    'vietnam-has-topped-the-world-in-mobile-game-exports-momentum-peaks-at-vietnam-game-connect-2025',
+    'future-of-web-development-2025',
+    'building-scalable-react-applications',
+    'cross-platform-flutter-development',
+    'database-security-best-practices-2025',
+    'modern-ui-ux-design-principles',
+    'cyber-security-threats-and-solutions',
+    'it-consultancy-strategic-approaches',
+    'test-test'
+  ];
+  
+  if (isNode) {
+    // Node.js: read from filesystem
+    try {
+      const { readdirSync } = await import('fs');
+      const { join } = await import('path');
+      const postsDir = join(process.cwd(), 'src/keystatic/posts');
+      const files = readdirSync(postsDir).filter(f => f.endsWith('.mdoc'));
+      const posts = await Promise.all(
+        files.map(async (file) => {
+          const fileSlug = file.replace('.mdoc', '');
+          const post = await readMdocFile(fileSlug);
+          if (post) {
+            post.slug = fileSlug;
+          }
+          return post;
+        })
+      );
+      return posts.filter(p => p !== null);
+    } catch (error) {
+      console.error('Error reading posts directory:', error);
+      return [];
+    }
+  } else {
+    // Cloudflare: fetch from GitHub
+    const posts = await Promise.all(
+      knownSlugs.map(async (slug) => {
+        const post = await readMdocFile(slug);
+        if (post) {
+          post.slug = slug;
+        }
+        return post;
+      })
+    );
+    return posts.filter(p => p !== null);
+  }
 }
 
 // Helper function to get all categories
 async function getAllCategories() {
-  const { readdirSync } = await import('fs');
-  const categoriesDir = join(process.cwd(), 'src/keystatic/categories');
-  const files = readdirSync(categoriesDir).filter(f => f.endsWith('.yaml'));
-  const { load } = await import('js-yaml');
-  const categories = files.map(file => {
-    const filePath = join(categoriesDir, file);
-    const content = readFileSync(filePath, 'utf-8');
-    const data = load(content) as any;
-    return {
-      id: data.id,
-      name: data.name,
-      slug: file.replace('.yaml', '')
-    };
-  });
-  return categories;
+  const knownCategoryFiles = [
+    'vietnam-game-scene',
+    'it-services',
+    'database-security',
+    'it-consultancy',
+    'app-development',
+    'ui-ux-design',
+    'cyber-security'
+  ];
+  
+  if (isNode) {
+    // Node.js: read from filesystem
+    try {
+      const { readdirSync } = await import('fs');
+      const { join } = await import('path');
+      const { readFileSync } = await import('fs');
+      const categoriesDir = join(process.cwd(), 'src/keystatic/categories');
+      const files = readdirSync(categoriesDir).filter(f => f.endsWith('.yaml'));
+      const categories = files.map(file => {
+        const filePath = join(categoriesDir, file);
+        const content = readFileSync(filePath, 'utf-8');
+        const data = load(content) as any;
+        return {
+          id: data.id,
+          name: data.name,
+          slug: file.replace('.yaml', '')
+        };
+      });
+      return categories;
+    } catch (error) {
+      console.error('Error reading categories directory:', error);
+      return [];
+    }
+  } else {
+    // Cloudflare: fetch from GitHub
+    const categories = await Promise.all(
+      knownCategoryFiles.map(async (slug) => {
+        const content = await fetchFromGitHub(`src/keystatic/categories/${slug}.yaml`);
+        if (!content) return null;
+        try {
+          const data = load(content) as any;
+          return {
+            id: data.id,
+            name: data.name,
+            slug: slug
+          };
+        } catch (error) {
+          return null;
+        }
+      })
+    );
+    return categories.filter(c => c !== null);
+  }
 }
 
 // Get the slug from the URL params
@@ -257,7 +352,7 @@ if (dateTime) {
                 {recentPosts.map(post => (
                   <div class="rp-post-card d-flex flex-wrap align-items-center">
                     <div class="rp-post-img">
-                      <img src={post.thumb} alt="Post Thumb">
+                      <img src={post.image} alt="Post Thumb">
                     </div>
                     <div class="rp-post-info">
                       <a href={`/news/${post.slug}`} class="fs-15 fw-medium text_primary link-hover-primary d-block mb-1">{post.date}</a>
@@ -296,7 +391,7 @@ if (dateTime) {
               <li class="fs-15 d-inline-block position-relative">{category}</li>
             </ul>
             <div class="single-img position-relative round-10 mb-35">
-              <img src={thumb} alt="Blog" class="round-10">
+              <img src={image} alt="Blog" class="round-10">
               <a href="/news" class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10">
                 <span class="font-secondary fs-24 fw-black d-block">{displayDay}</span>{displayMonth}
               </a>
@@ -309,22 +404,7 @@ if (dateTime) {
                   <h6>Overview & Challenge</h6>
                   <p>Renius Real Estate & Construction Group, we believe knowledge empowers better decisions—whether you're investing in property, managing a build, or exploring industry trends. Our blog is a dedicated space where we share expert insights, project highlights, market updates, and thought leadership on real estate and construction.</p>
                   <p>Whether you're a client, partner, or industry professional, you'll find valuable content that helps you stay informed and make smarter decisions in the world of real estate and construction.</p>
-                  
-                  {thumb2 && thumb3 && (
-                    <div class="row justify-content-center mb-2 mt-4">
-                      <div class="col-md-6">
-                        <div class="single-img round-10 mb-30">
-                          <img src={thumb2} alt="Image" class="round-10">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="single-img round-10 mb-30">
-                          <img src={thumb3} alt="Image" class="round-10">
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  
+                 
                   <h6 class="mt-4">Worker Productivity due to Safety Concerns</h6>
                   <p>begins with a commitment to excellence. From initial planning to final handover, our team works with precision, transparency, and dedication to deliver spaces that serve both function and vision. Backed by years of industry expertise and a deep understanding build as an opportunity to shape communities</p>
                 </>
@@ -367,7 +447,7 @@ if (dateTime) {
                 <div class="col-lg-4 col-md-6">
                   <article class="blog-card">
                     <div class="blog-thumb mb-3">
-                      <img src={post.thumb} alt="Article" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+                      <img src={post.image} alt="Article" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
                     </div>
                     <div class="blog-meta text-sm text-gray-500 mb-2">
                       <span>{post.date}</span>
