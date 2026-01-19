@@ -253,7 +253,6 @@ export default config({
       format: { contentField: 'description' },
       schema: {
         title: fields.text({ label: 'Event Title' }),
-        slug: fields.slug({ name: { label: 'Title' } }),
         date: fields.date({ label: 'Event Date' }),
         location: fields.text({ label: 'Location' }),
         image: fields.image({
