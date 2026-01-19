@@ -275,6 +275,11 @@ export default config({
           label: 'Featured Event',
           defaultValue: false,
         }),
+        isHero: fields.checkbox({
+          label: 'Event Đại Diện (Hero)',
+          description: 'Chọn event này làm event đại diện hiển thị ở phần hero slider',
+          defaultValue: false,
+        }),
       },
     }),
   },

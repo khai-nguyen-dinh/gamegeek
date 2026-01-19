@@ -153,12 +153,17 @@ const sortedEvents = allEvents.sort((a, b) => {
   return dateB - dateA;
 });
 
-// Get featured events for hero slider (first 3 featured events, or first 3 if none featured)
-const featuredEvents = sortedEvents.filter(e => e.featured).slice(0, 3);
-const heroEvents = featuredEvents.length > 0 ? featuredEvents : sortedEvents.slice(0, 3);
+// Get hero events (events đại diện) - lấy tất cả events có isHero = true
+const heroEvents = sortedEvents.filter(e => e.isHero === true);
+// Nếu không có hero events, lấy các featured events hoặc 3 events đầu tiên
+const finalHeroEvents = heroEvents.length > 0 
+  ? heroEvents 
+  : (sortedEvents.filter(e => e.featured).length > 0 
+      ? sortedEvents.filter(e => e.featured).slice(0, 3)
+      : sortedEvents.slice(0, 3));
 
-// Get all events for display (excluding featured ones from main list)
-const displayEvents = sortedEvents.filter(e => !e.featured || featuredEvents.length === 0);
+// Get all events for display (excluding hero events, sorted from newest to oldest)
+const displayEvents = sortedEvents.filter(e => !e.isHero);
 
 // Helper to format date
 function formatDate(date: any): string {
@@ -215,13 +220,13 @@ function isUpcoming(date: any): boolean {
                 <div class="br-three position-absolute top-0 z-n1"></div>
                 <div class="container">
                     
-                    {heroEvents.length > 0 ? (
+                    {finalHeroEvents.length > 0 ? (
                         <div class="hero-slider-one swiper swiper-fade swiper-initialized swiper-horizontal swiper-autoheight swiper-watch-progress swiper-backface-hidden"
                             data-cue="slideInUp" data-show="true"
                             style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
                             <div class="swiper-wrapper" style="height: 732px;" id="swiper-wrapper-43c94ed6e5119c65"
                                 aria-live="polite">
-                                {heroEvents.map((event, index) => {
+                                {finalHeroEvents.map((event, index) => {
                                     const slideClass = index === 0 ? 'swiper-slide swiper-slide-visible swiper-slide-fully-visible swiper-slide-active' : index === 1 ? 'swiper-slide swiper-slide-next' : 'swiper-slide';
                                     const slideStyle = `width: 1475px; opacity: ${index === 0 ? '1' : '0'}; transform: translate3d(${index * -1475}px, 0px, 0px);`;
                                     const bgClass = `bg-${(index % 3) + 1}`;
@@ -230,7 +235,7 @@ function isUpcoming(date: any): boolean {
                                     return (
                                         <div class={slideClass}
                                             style={slideStyle} role="group"
-                                            aria-label={`${index + 1} / ${heroEvents.length}`} data-swiper-slide-index={index}>
+                                            aria-label={`${index + 1} / ${finalHeroEvents.length}`} data-swiper-slide-index={index}>
                                             <div
                                                 class={`hero-slide-item ${bgClass} bg-f d-flex flex-column justify-content-end position-relative overflow-hidden z-1 round-30`}
                                                 style={bgStyle}>
@@ -244,7 +249,7 @@ function isUpcoming(date: any): boolean {
                             </div>
                             <div
                                 class="hero-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal">
-                                {heroEvents.map((event, index) => (
+                                {finalHeroEvents.map((event, index) => (
                                     <span class={`swiper-pagination-bullet ${index === 0 ? 'swiper-pagination-bullet-active' : ''}`} tabindex="0"
                                         aria-current={index === 0 ? 'true' : undefined}
                                         title={event.title || `Event ${index + 1}`}>{String(index + 1).padStart(2, '0')}</span>
