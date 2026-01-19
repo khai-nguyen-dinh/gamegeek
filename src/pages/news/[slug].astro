@@ -2,20 +2,117 @@
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
-import newsData from '../../data/news.json';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { load } from 'js-yaml';
+
+// Helper function to parse frontmatter
+function parseFrontmatter(content: string) {
+  const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+  const match = content.match(frontmatterRegex);
+  
+  if (!match) {
+    return { data: {}, content: content.trim() };
+  }
+  
+  const yamlContent = match[1];
+  const bodyContent = match[2];
+  
+  try {
+    const data = load(yamlContent) as any;
+    return { data: data || {}, content: bodyContent.trim() };
+  } catch (error) {
+    return { data: {}, content: bodyContent.trim() };
+  }
+}
+
+// Helper function to read mdoc files directly
+async function readMdocFile(slug: string) {
+  if (!slug) return null;
+  
+  const filePath = join(process.cwd(), 'src/keystatic/posts', `${slug}.mdoc`);
+  try {
+    const fileContent = readFileSync(filePath, 'utf-8');
+    const { data, content: fileContentBody } = parseFrontmatter(fileContent);
+    
+    // Ensure we have valid data
+    if (!data || Object.keys(data).length === 0) {
+      return null;
+    }
+    
+    return {
+      ...data,
+      content: fileContentBody || '',
+      slug: slug
+    };
+  } catch (error) {
+    console.error(`Error reading file ${filePath}:`, error);
+    return null;
+  }
+}
+
+// Helper function to create slug from title (matching Keystatic behavior)
+function createSlugFromTitle(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+// Helper function to get all posts
+async function getAllPosts() {
+  const { readdirSync } = await import('fs');
+  const postsDir = join(process.cwd(), 'src/keystatic/posts');
+  const files = readdirSync(postsDir).filter(f => f.endsWith('.mdoc'));
+  const posts = await Promise.all(
+    files.map(async (file) => {
+      const fileSlug = file.replace('.mdoc', '');
+      const post = await readMdocFile(fileSlug);
+      if (post) {
+        // Always use file name as slug (matching Keystatic behavior)
+        post.slug = fileSlug;
+      }
+      return post;
+    })
+  );
+  return posts.filter(p => p !== null);
+}
+
+// Helper function to get all categories
+async function getAllCategories() {
+  const { readdirSync } = await import('fs');
+  const categoriesDir = join(process.cwd(), 'src/keystatic/categories');
+  const files = readdirSync(categoriesDir).filter(f => f.endsWith('.yaml'));
+  const { load } = await import('js-yaml');
+  const categories = files.map(file => {
+    const filePath = join(categoriesDir, file);
+    const content = readFileSync(filePath, 'utf-8');
+    const data = load(content) as any;
+    return {
+      id: data.id,
+      name: data.name,
+      slug: file.replace('.yaml', '')
+    };
+  });
+  return categories;
+}
 
 // Get the slug from the URL params
 export async function getStaticPaths() {
-  const { posts, categories } = newsData;
+  const posts = await getAllPosts();
+  const categories = await getAllCategories();
   
   // Map category IDs to category names
   const categoryMap = new Map(categories.map(cat => [cat.id, cat.name]));
   
   // Transform posts to include category name
-  const transformedPosts = posts.map(post => ({
-    ...post,
-    category: categoryMap.get(post.category) || post.category
-  }));
+  const transformedPosts = posts.map(post => {
+    const categoryName = categoryMap.get(post.category) || post.category;
+    return {
+      ...post,
+      category: categoryName
+    };
+  });
 
   return transformedPosts.map((post) => ({
     params: { slug: post.slug },
@@ -24,31 +121,60 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
-const { title, date, category, author, image, thumb, thumb2, thumb3, breadcrumbBg, content } = Astro.props;
+
+// Get current post data - use props if available, otherwise read from file
+let postData = Astro.props;
+if (!postData || !postData.title) {
+  // Fallback: read directly from file
+  if (slug) {
+    postData = await readMdocFile(slug);
+    if (postData) {
+      // Ensure slug is set from filename
+      postData.slug = slug;
+    }
+  }
+}
+
+// If still no data, return 404
+if (!postData || !postData.title) {
+  return Astro.redirect('/news', 404);
+}
+
+const { title, date, category, author, image, thumb, thumb2, thumb3, breadcrumbBg, content } = postData;
 
 // Get all data for sidebar and related posts
-const { posts, categories } = newsData;
-const categoryMap = new Map(categories.map(cat => [cat.id, cat.name]));
+const allPosts = await getAllPosts();
+const categoriesData = await getAllCategories();
+const categoryMap = new Map(categoriesData.map(cat => [cat.id, cat.name]));
 
-// Get recent posts (exclude current post)
-const allPosts = posts.map(post => ({
+// Transform posts
+const posts = allPosts.map(post => ({
   ...post,
   category: categoryMap.get(post.category) || post.category
 }));
+const categories = categoriesData;
 
 const getDateTime = (value) => {
-  if (!value || typeof value !== 'string') return 0;
-  const parsed = new Date(value);
-  return Number.isNaN(parsed.getTime()) ? 0 : parsed.getTime();
+  if (!value) return 0;
+  // Handle Date object from Keystatic
+  if (value instanceof Date) {
+    return value.getTime();
+  }
+  // Handle string date
+  if (typeof value === 'string') {
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? 0 : parsed.getTime();
+  }
+  return 0;
 };
 
-const recentPosts = allPosts
+const recentPosts = posts
   .filter(post => post.slug !== slug)
   .sort((a, b) => getDateTime(b.date) - getDateTime(a.date))
   .slice(0, 3);
 
 // Get related posts (same category, exclude current)
-const relatedPosts = allPosts
+const relatedPosts = posts
   .filter(post => post.slug !== slug && post.category === category)
   .slice(0, 3);
 
@@ -62,10 +188,14 @@ posts.forEach(post => {
 
 // Extract day and month from date
 const dateTime = getDateTime(date);
-const displayDay = dateTime ? new Date(dateTime).getDate().toString().padStart(2, '0') : '';
-const displayMonth = dateTime
-  ? new Date(dateTime).toLocaleString('en-US', { month: 'short' })
-  : '';
+let displayDay = '';
+let displayMonth = '';
+
+if (dateTime) {
+  const dateObj = date instanceof Date ? date : new Date(dateTime);
+  displayDay = dateObj.getDate().toString().padStart(2, '0');
+  displayMonth = dateObj.toLocaleString('en-US', { month: 'short' });
+}
 ---
 
 <Layout title={`${title} - GameGeek`}>
@@ -154,6 +284,7 @@ const displayMonth = dateTime
 
         <div class="col-xl-8 order-xl-2 order-1">
           <div class="blog-desc">
+          
             <h1 class="font-secondary mb-2">{title}</h1>
             <ul class="blog-metainfo list-unstyled mb-20 d-flex flex-wrap align-items-center gap-3">
               <li class="fs-15 d-inline-flex align-items-center gap-2 position-relative">
@@ -249,84 +380,14 @@ const displayMonth = dateTime
               ))}
             </div>
           )}
-
-          <h4 class="fs-20 fw-bold text-title mb-25">Comments (03)</h4>
-          <div class="comment-item-wrap mb-50">
-            <div class="comment-item d-flex flex-wrap">
-              <div class="comment-author-img round-5">
-                <img src="/renius/image/blog-10.jpg" alt="Image" class="round-5">
-              </div>
-              <div class="comment-author-info">
-                <span class="fs-14 d-block mb-8">12 Jul, 2025</span>
-                <h5 class="fs-16 fw-semibold font-primary text-title mb-10">Barret Simpson</h5>
-                <p class="comment-text mb-8">Working with Renius was a game-changer for our commercial development. Their team was transparent, responsive, and incredibly detail-oriented throughout the entire process.</p>
-                <a href="#cmt-form" class="reply-btn link style-one fw-medium">Reply</a>
-              </div>
-            </div>
-            <div class="comment-item d-flex flex-wrap reply">
-              <div class="comment-author-img round-5">
-                <img src="/renius/image/blog-11.jpg" alt="Image" class="round-5">
-              </div>
-              <div class="comment-author-info">
-                <span class="fs-14 d-block mb-8">13 Jul, 2025</span>
-                <h5 class="fs-16 fw-semibold font-primary text-title mb-10">Parker Ballinger</h5>
-                <p class="comment-text mb-8">The final result exceeded our expectations—delivered on time and on budget. We look forward to partnering with them again</p>
-                <a href="#cmt-form" class="reply-btn link style-one fw-medium">Reply</a>
-              </div>
-            </div>
-            <div class="comment-item d-flex flex-wrap">
-              <div class="comment-author-img round-5">
-                <img src="/renius/image/blog-12.jpg" alt="Image" class="round-5">
-              </div>
-              <div class="comment-author-info">
-                <span class="fs-14 d-block mb-8">17 Jul, 2025</span>
-                <h5 class="fs-16 fw-semibold font-primary text-title mb-10">Roan Atkinson</h5>
-                <p class="comment-text mb-8">Renius was a game-changer for our commercial development. Their team was transparent, responsive, and incredibly detail-oriented throughout the entire process.</p>
-                <a href="#cmt-form" class="reply-btn link style-one fw-medium">Reply</a>
-              </div>
-            </div>
-          </div>
-
-          <form action="#" class="comment-form bg-gray form-wrapper round-10" id="cmt-form">
-            <h4 class="fs-20 fw-bold text-title mb-2">Leave A Comment</h4>
-            <p class="mb-25">Your email address will not be published. Required fields are marked</p>
-            <div class="row gx-xl-3">
-              <div class="col-md-6">
-                <div class="form-group position-relative mb-25">
-                  <input type="text" required="" class="w-100 bg-white border-0 outline-0 round-5 text-para" placeholder="Name">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group mb-25">
-                  <input type="email" placeholder="Email" required="" class="w-100 ht-60 bg-white border-0 outline-0 round-5 text-para">
-                </div>
-              </div>
-              <div class="col-12">
-                <div class="form-group mb-25">
-                  <textarea name="messages" id="messages" cols="30" rows="10" placeholder="Comment" class="w-100 ht-152 bg-white border-0 outline-0 round-5 text-para resize-0"></textarea>
-                </div>
-              </div>
-              <div class="col-12">
-                <div class="form-check checkbox style-one mb-25">
-                  <input class="form-check-input" type="checkbox" id="test_2">
-                  <label class="form-check-label" for="test_2">
-                    Save my name, email, and website in this browser for the next time I comment.
-                  </label>
-                </div>
-                <div class="col-xl-5 col-md-6">
-                  <button class="btn style-one d-inline-flex flex-wrap align-items-center p-0">
-                    <span class="btn-text d-inline-block fw-semibold position-relative transition">Post A Comment</span>
-                    <span class="btn-icon position-relative d-flex flex-column align-items-center justify-content-center rounded-circle transition">
-                      <i class="ri-arrow-right-up-line"></i>
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
         </div>
       </div>
     </div>
     <!-- Blog Details End -->
+
+    <!-- Footer Section Start -->
+    <Footer />
+    <!-- Footer End -->
   </div>
 </Layout>
+
