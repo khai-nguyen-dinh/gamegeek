@@ -301,9 +301,7 @@ export default config({
             about: fields.object(
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
-                titlePart1: fields.text({ label: 'Title Part 1' }),
-                titleHighlight: fields.text({ label: 'Title Highlight' }),
-                titlePart2: fields.text({ label: 'Title Part 2' }),
+                title: fields.text({ label: 'Title' }),
                 description: fields.text({ label: 'Description', multiline: true }),
                 buttonText: fields.text({ label: 'Button Text' }),
               },
@@ -313,9 +311,7 @@ export default config({
             services: fields.object(
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
-                titlePart1: fields.text({ label: 'Title Part 1' }),
-                titleHighlight: fields.text({ label: 'Title Highlight' }),
-                titlePart2: fields.text({ label: 'Title Part 2' }),
+                title: fields.text({ label: 'Title' }),
                 items: fields.array(
                   fields.object(
                     {
@@ -333,9 +329,7 @@ export default config({
             network: fields.object(
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
-                titlePart1: fields.text({ label: 'Title Part 1' }),
-                titleHighlight: fields.text({ label: 'Title Highlight' }),
-                titlePart2: fields.text({ label: 'Title Part 2' }),
+                title: fields.text({ label: 'Title' }),
                 buttonText: fields.text({ label: 'Button Text' }),
                 stats: fields.array(
                   fields.object(
@@ -352,9 +346,7 @@ export default config({
             ),
             cta: fields.object(
               {
-                titlePart1: fields.text({ label: 'Title Part 1' }),
-                titleHighlight: fields.text({ label: 'Title Highlight' }),
-                titlePart2: fields.text({ label: 'Title Part 2' }),
+                title: fields.text({ label: 'Title' }),
               },
               { label: 'CTA' }
             ),
@@ -362,16 +354,13 @@ export default config({
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
                 title: fields.text({ label: 'Title' }),
-                titleHighlight: fields.text({ label: 'Title Highlight' }),
               },
               { label: 'Events' }
             ),
             news: fields.object(
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
-                titlePart1: fields.text({ label: 'Title Part 1' }),
-                titleHighlight: fields.text({ label: 'Title Highlight' }),
-                titlePart2: fields.text({ label: 'Title Part 2' }),
+                title: fields.text({ label: 'Title' }),
                 stats: fields.array(
                   fields.object(
                     {
@@ -541,9 +530,7 @@ export default config({
             aboutSection: fields.object(
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
-                titlePart1: fields.text({ label: 'Title Part 1' }),
-                titleHighlight: fields.text({ label: 'Title Highlight' }),
-                titlePart2: fields.text({ label: 'Title Part 2' }),
+                title: fields.text({ label: 'Title' }),
                 description: fields.text({ label: 'Description', multiline: true }),
                 stats: fields.array(
                   fields.object(
@@ -587,17 +574,13 @@ export default config({
             team: fields.object(
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
-                titlePart1: fields.text({ label: 'Title Part 1' }),
-                titleHighlight: fields.text({ label: 'Title Highlight' }),
-                titlePart2: fields.text({ label: 'Title Part 2' }),
+                title: fields.text({ label: 'Title' }),
               },
               { label: 'Team' }
             ),
             cta: fields.object(
               {
-                titlePart1: fields.text({ label: 'Title Part 1' }),
-                titleHighlight: fields.text({ label: 'Title Highlight' }),
-                titlePart2: fields.text({ label: 'Title Part 2' }),
+                title: fields.text({ label: 'Title' }),
               },
               { label: 'CTA' }
             ),
@@ -623,10 +606,7 @@ export default config({
             globalPartners: fields.object(
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
-                titlePart1: fields.text({ label: 'Title Part 1' }),
-                titleHighlight: fields.text({ label: 'Title Highlight' }),
-                titlePart2: fields.text({ label: 'Title Part 2' }),
-                titleHighlight2: fields.text({ label: 'Title Highlight 2' }),
+                title: fields.text({ label: 'Title' }),
               },
               { label: 'Global Partners' }
             ),
@@ -660,10 +640,7 @@ export default config({
             localPartners: fields.object(
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
-                titlePart1: fields.text({ label: 'Title Part 1' }),
-                titleHighlight: fields.text({ label: 'Title Highlight' }),
-                titlePart2: fields.text({ label: 'Title Part 2' }),
-                titleHighlight2: fields.text({ label: 'Title Highlight 2' }),
+                title: fields.text({ label: 'Title' }),
               },
               { label: 'Local Partners' }
             ),
@@ -696,9 +673,7 @@ export default config({
             ),
             cta: fields.object(
               {
-                titlePart1: fields.text({ label: 'Title Part 1' }),
-                titleHighlight: fields.text({ label: 'Title Highlight' }),
-                titlePart2: fields.text({ label: 'Title Part 2' }),
+                title: fields.text({ label: 'Title' }),
               },
               { label: 'CTA' }
             ),

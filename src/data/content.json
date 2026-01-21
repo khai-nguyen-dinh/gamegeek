@@ -7,9 +7,7 @@
     },
     "about": {
       "subtitle": "ABOUT US",
-      "titlePart1": "GAMEGEEK – ",
-      "titleHighlight": "THE GAMING CENTRAL HUB",
-      "titlePart2": " OF VIETNAM",
+      "title": "GAMEGEEK – THE GAMING CENTRAL HUB OF VIETNAM",
       "description": "Founded in 2016, GameGeek is Vietnam's central gaming hub. We bridge local talent with global opportunities, uniting studios, publishers, and investors to drive innovation and position Vietnam as a regional powerhouse.",
       "buttonText": "More About Us"
     },
@@ -23,9 +21,7 @@
     ],
     "services": {
       "subtitle": "OUR SERVICES",
-      "titlePart1": "End-to-End Solutions for ",
-      "titleHighlight": "Global Partners & Your Bridge",
-      "titlePart2": " to the Global Stage",
+      "title": "End-to-End Solutions for Global Partners & Your Bridge to the Global Stage",
       "items": [
         {
           "title": "MARKETING AGENCY",
@@ -58,9 +54,7 @@
     },
     "network": {
       "subtitle": "OUR NETWORK",
-      "titlePart1": "Best Connector in ",
-      "titleHighlight": "Vietnam Market",
-      "titlePart2": "",
+      "title": "Best Connector in Vietnam Market",
       "buttonText": "View All Services",
       "stats": [
         {
@@ -86,20 +80,15 @@
       ]
     },
     "cta": {
-      "titlePart1": "Vietnam - A Rising Hub for ",
-      "titleHighlight": "Game Production",
-      "titlePart2": " in Asia"
+      "title": "Vietnam - A Rising Hub for Game Production in Asia"
     },
     "events": {
       "subtitle": "OUR EVENTS",
-      "title": "UPCOMING EVENTS",
-      "titleHighlight": "EVENTS"
+      "title": "UPCOMING EVENTS"
     },
     "news": {
       "subtitle": "NEWS & INSIGHTS",
-      "titlePart1": "",
-      "titleHighlight": "Vietnam Gaming Landscape",
-      "titlePart2": "",
+      "title": "Vietnam Gaming Landscape",
       "stats": [
         {
           "label": "GLOBAL RANKING",
@@ -343,9 +332,7 @@
     },
     "aboutSection": {
       "subtitle": "WHO ARE WE?",
-      "titlePart1": "Vietnam's ",
-      "titleHighlight": "Gaming Central Hub ",
-      "titlePart2": "",
+      "title": "Vietnam's Gaming Central Hub",
       "description": "Founded in 2016, GameGeek is Vietnam's gaming central hub and trusted gateway that connecting local talent and resources to global opportunities. We unite studios, publishers, service providers, and investors in a collaborative ecosystem that accelerates innovation, empowers growth, and positions Vietnam as a regional powerhouse with global reach in gaming.",
       "stats": [
         {
@@ -412,14 +399,10 @@
     },
     "team": {
       "subtitle": "MEET THE TEAM",
-      "titlePart1": "Connect and scale faster in ",
-      "titleHighlight": "Vietnam's game industry",
-      "titlePart2": ""
+      "title": "Connect and scale faster in Vietnam's game industry"
     },
     "cta": {
-      "titlePart1": "Your Next ",
-      "titleHighlight": "Big Event Starts Here ",
-      "titlePart2": " – Let's Make It Extraordinary!"
+      "title": "Your Next Big Event Starts Here – Let's Make It Extraordinary!"
     }
   },
   "services": {
@@ -443,10 +426,7 @@
     ],
     "localPartners": {
       "subtitle": "LOCAL PARTNERS",
-      "titlePart1": "Your ",
-      "titleHighlight": "Bridge ",
-      "titlePart2": " to the ",
-      "titleHighlight2": "Global Stage"
+      "title": "Your Bridge to the Global Stage"
     },
     "tabs": [
       {
@@ -525,9 +505,7 @@
       }
     ],
     "cta": {
-      "titlePart1": "Vietnam - A Rising Hub for ",
-      "titleHighlight": "Game Production",
-      "titlePart2": " in Asia"
+      "title": "Vietnam - A Rising Hub for Game Production in Asia"
     }
   },
   "contact": {

@@ -1686,7 +1686,6 @@ body {
   background-color: rgba(0, 0, 0, 0.08);
 }
 .hero-area.style-two .br-one:after,
-.hero-area.style-two .br-two:after,
 .hero-area.style-two .br-three:after {
   position: absolute;
   top: 0;

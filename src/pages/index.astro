@@ -13,6 +13,7 @@ const homeContent = getContentObject('home');
 const aboutContent = homeContent?.about || {};
 const servicesContent = homeContent?.services || {};
 const networkContent = homeContent?.network || {};
+const eventsContent = homeContent?.events || {};
 const ctaContent = homeContent?.cta || {};
 const newsContent = homeContent?.news || {};
 const moveText = homeContent?.moveText || [];
@@ -123,7 +124,9 @@ const moveText = homeContent?.moveText || [];
                 <h6
                   class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20">
                   {aboutContent.subtitle || 'ABOUT US'}</h6>
-                <h2 class="section-title style-one fw-normal text-title mb-20" set:html={`${aboutContent.titlePart1 || ''}<span class="fw-black">${aboutContent.titleHighlight || ''}</span>${aboutContent.titlePart2 || ''}`}></h2>
+              <h2 class="section-title style-one fw-normal text-title mb-20">
+                {aboutContent.title || 'GAMEGEEK – THE GAMING CENTRAL HUB OF VIETNAM'}
+              </h2>
                 <p class="mb-28">{aboutContent.description || ''}</p>
 
                 <a href="/about" class="btn style-one d-inline-flex flex-wrap align-items-center p-0"><span
@@ -157,7 +160,9 @@ const moveText = homeContent?.moveText || [];
               <h6
                 class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-25"
                 data-cue="slideInUp">{servicesContent.subtitle || 'OUR SERVICES'}</h6>
-              <h2 class="section-title style-one fw-normal text-title mb-40 services-title-wide" data-cue="slideInUp" data-delay="300" style="max-width: 100%; padding: 0 20px;" set:html={`${servicesContent.titlePart1 || ''}<span class="fw-black">${servicesContent.titleHighlight || ''}</span>${servicesContent.titlePart2 || ''}`}></h2>
+              <h2 class="section-title style-one fw-normal text-title mb-40 services-title-wide" data-cue="slideInUp" data-delay="300" style="max-width: 100%; padding: 0 20px;">
+                {servicesContent.title || 'End-to-End Solutions for Global Partners & Your Bridge to the Global Stage'}
+              </h2>
             </div>
           </div>
           <div class="row">
@@ -166,9 +171,11 @@ const moveText = homeContent?.moveText || [];
                 <div class={`feature-card ${index === 1 ? 'style-five bg-f' : 'style-four'} position-relative z-1 overflow-hidden round-20 mb-30 ${index === 1 ? 'd-flex flex-column align-items-end justify-content-end' : ''}`}>
                   <div class="feature-info">
                     <h3 class={`fs-24 font-primary fw-black ${index === 1 ? 'text-white' : ''}`}>{service.title}</h3>
-                    {service.items?.map((item) => (
-                      <p class={index === 1 ? 'text-alto' : ''}>{item}</p>
-                    ))}
+                    <ul class="mb-12 ps-3" style="list-style: disc; padding-left: 18px;">
+                      {service.items?.map((item, idx) => (
+                        <li class={index === 1 ? 'text-alto' : ''} key={`${service.title}-${idx}`}>{item}</li>
+                      ))}
+                    </ul>
                     <a href="/about" class="link style-one fw-semibold">{service.linkText || 'Discover More'}<img
                       src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
                   </div>
@@ -216,7 +223,9 @@ const moveText = homeContent?.moveText || [];
                 {networkContent.subtitle || 'OUR NETWORK'}</h6>
               <h2 class="section-title style-one fw-normal text-white" data-cue="slideInUp" data-delay="400"
                 data-show="true"
-                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 400ms; animation-direction: normal; animation-fill-mode: both;" set:html={`${networkContent.titlePart1 || ''}<span class="fw-black">${networkContent.titleHighlight || ''}</span>${networkContent.titlePart2 || ''}`}></h2>
+                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 400ms; animation-direction: normal; animation-fill-mode: both;">
+                {networkContent.title || 'Best Connector in Vietnam Market'}
+              </h2>
             </div>
             <div class="col-lg-5 col-md-4 text-md-end">
               <a href="/services" class="btn style-one d-inline-flex flex-wrap align-items-center p-0"><span
@@ -315,16 +324,16 @@ const moveText = homeContent?.moveText || [];
       <!-- Project Section Start -->
       <div class="container">
         <div class="row">
-          <div class="col-xl-6 offset-xl-3 text-center">
+            <div class="col-xl-6 offset-xl-3 text-center">
             <h6
               class="section-subtitle style-two d-inline-block text-center fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-16"
               data-cue="slideInUp" data-show="true"
               style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
-              OUR EVENTS</h6>
+              {eventsContent.subtitle || 'OUR EVENTS'}</h6>
             <h2 class="section-title style-one fw-normal text-title mb-35" data-cue="slideInUp" data-delay="300"
               data-show="true"
-              style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">
-              UPCOMING <span class="fw-black">EVENTS</span></h2>
+                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">
+                {eventsContent.title || 'UPCOMING EVENTS'}</h2>
           </div>
         </div>
       </div>
@@ -406,7 +415,9 @@ const moveText = homeContent?.moveText || [];
         <div class="container">
           <div class="row align-items-center">
             <div class="col-lg-6 col-md-7 mb-sm-20">
-              <h2 class="section-title style-two fw-normal text-white mb-0" set:html={`${ctaContent.titlePart1 || ''}<span class="fw-black">${ctaContent.titleHighlight || ''}</span>${ctaContent.titlePart2 || ''}`}></h2>
+              <h2 class="section-title style-two fw-normal text-white mb-0">
+                {ctaContent.title || 'Vietnam - A Rising Hub for Game Production in Asia'}
+              </h2>
             </div>
             <div class="col-lg-6 col-md-5">
               <div
@@ -538,7 +549,7 @@ const moveText = homeContent?.moveText || [];
                             <div class="col-lg-6">
                                 <div class="wh-content ps-xxl-2">
                                     <h6 class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20" data-cue="slideInUp" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">WHAT WE DO</h6>
-                                    <h2 class="section-title style-one fw-normal text-white" data-cue="slideInUp" data-delay="400" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 400ms; animation-direction: normal; animation-fill-mode: both;">We connect the <span class="fw-black">global and local sides</span> of Vietnam's game industry.</h2>
+                                    <h2 class="section-title style-one fw-normal text-white" data-cue="slideInUp" data-delay="400" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 400ms; animation-direction: normal; animation-fill-mode: both;">We connect the global and local sides of Vietnam's game industry.</h2>
                                     <p class="text-alto mb-28" data-cue="slideInUp" data-delay="400" data-show="true" style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 400ms; animation-direction: normal; animation-fill-mode: both;">GameGeek bridges international partners with Vietnam's thriving game ecosystem, providing end-to-end support from strategy to growth and monetization.</p>
                                     <div class="list-items-area">
                                         <div class="list-items d-flex mb-25" data-cue="slideInUp" data-delay="500">
@@ -587,7 +598,9 @@ const moveText = homeContent?.moveText || [];
                 class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-semibold position-relative text_primary mb-20"
                 data-cue="slideInUp">{newsContent.subtitle || 'NEWS & INSIGHTS'}</h6>
               <h2 class="section-title style-one fw-normal text-title px-xxl-8 mb-0" data-cue="slideInUp"
-                data-delay="300" set:html={`${newsContent.titlePart1 || ''}<span class="fw-black">${newsContent.titleHighlight || 'Vietnam Gaming Landscape'}</span>${newsContent.titlePart2 || ''}`}></h2>
+                data-delay="300">
+                {newsContent.title || 'Vietnam Gaming Landscape'}
+              </h2>
             </div>
           </div>
           <div class="row justify-content-center mb-4">
@@ -633,7 +646,7 @@ const moveText = homeContent?.moveText || [];
               <h2 class="section-title style-one text-center text-title px-xxl-5" data-cue="slideInUp" data-delay="400"
                 data-show="true"
                 style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 400ms; animation-direction: normal; animation-fill-mode: both;">
-                Stay updated with the latest <span class="fw-black">industry insights and discussions</span> </h2>
+                Stay updated with the latest industry insights and discussions </h2>
             </div>
           </div> -->
           <div class="row gx-xxl-25 justify-content-center">

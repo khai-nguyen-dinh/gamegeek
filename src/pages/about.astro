@@ -31,9 +31,9 @@ const cta = aboutContent?.cta || {};
             <div class="col-xl-7 col-lg-7">
               <div class="hero-content">
                 <h6
-                  class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional fw-normal position-relative text_secondary mb-12"
+                  class="section-subtitle style-two d-inline-block fs-17 ls-1 font-optional position-relative text_secondary mb-12"
                   data-cue="slideInUp" data-show="true"
-                  style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
+                  style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both; font-weight: 400;">
                   {heroContent.subtitle || 'THE LOCAL VOICE'}</h6>
                 <h1 class="font-secondary text-white" data-cue="slideInUp" data-delay="300" data-show="true"
                   style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;" set:html={`${heroContent.titlePart1 || 'The '}<span class="fw-black">${heroContent.titleHighlight || 'central hub '}</span>${heroContent.titlePart2 || ' in Vietnam dedicated to the '}<span class="fw-black">${heroContent.titleHighlight2 || 'Vietnamese Game Maker '}</span>${heroContent.titlePart3 || 'Community'}`}></h1>
@@ -70,7 +70,9 @@ const cta = aboutContent?.cta || {};
                   style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both;">
                   <img src="/renius/image/star-3.svg" alt="Icon">{aboutSection.subtitle || 'WHO ARE WE?'}</h6>
                 <h2 class="section-title style-one text-title" data-cue="slideInUp" data-delay="300" data-show="true"
-                  style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;" set:html={`${aboutSection.titlePart1 || "Vietnam's "}<span class="fw-black">${aboutSection.titleHighlight || 'Gaming Central Hub '}</span>${aboutSection.titlePart2 || ''}`}></h2>
+                  style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">
+                  {aboutSection.title || "Vietnam's Gaming Central Hub"}
+                </h2>
                 <div class="about-subcontent" data-cue="slideInUp" data-delay="400" data-show="true"
                   style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 400ms; animation-direction: normal; animation-fill-mode: both;">
                   <p class="text-justify">{aboutSection.description || 'Founded in 2016, GameGeek is Vietnam\'s gaming central hub and trusted gateway that connecting local talent and resources to global opportunities. We unite studios, publishers, service providers, and investors in a collaborative ecosystem that accelerates innovation, empowers growth, and positions Vietnam as a regional powerhouse with global reach in gaming.'}</p>
@@ -211,146 +213,138 @@ const cta = aboutContent?.cta || {};
                 <img src="/renius/image/star-3.svg" alt="Icon">{team.subtitle || 'MEET THE TEAM'}</h6>
               <h2 class="section-title style-one text-title px-xxl-5 mb-40" data-cue="slideInUp" data-delay="300"
                 data-show="true"
-                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;" set:html={`${team.titlePart1 || 'Connect and scale faster in '}<span class="fw-black">${team.titleHighlight || "Vietnam's game industry"}</span>${team.titlePart2 || ''}`}></h2>
+                style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;">
+                {team.title || "Connect and scale faster in Vietnam's game industry"}
+              </h2>
             </div>
           </div>
-          <div
-            class="team-slider-one swiper swiper-initialized swiper-horizontal swiper-autoheight swiper-backface-hidden">
-            <div class="swiper-wrapper" id="swiper-wrapper-team" aria-live="polite">
-              <div class="swiper-slide swiper-slide-active">
-                <div class="team-card style-one img-hover-zoom">
-                  <div class="team-img round-10 img-zoom position-relative overflow-hidden">
-                    <img src="/images/team/anh1.jpg" alt="Image"
-                      class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
-                    <img src="/images/team/anh1.jpg" alt="Image" class="round-10 transition">
+          <div class="row g-4 justify-content-center mb-30">
+            <div class="col-lg-4 col-md-6">
+              <div class="team-card style-one img-hover-zoom h-100">
+                <div class="team-img round-10 img-zoom position-relative overflow-hidden">
+                  <img src="/images/team/anh1.jpg" alt="Image"
+                    class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
+                  <img src="/images/team/anh1.jpg" alt="Image" class="round-10 transition">
+                </div>
+                <div class="team-info d-flex flex-wrap justify-content-between">
+                  <div>
+                    <h3 class="fw-bold mb-1"><a href="/about"
+                        class="text-title link-hover-primary transition">Ha Nhu Dong</a></h3>
+                    <span>Founder</span>
                   </div>
-                  <div class="team-info d-flex flex-wrap justify-content-between">
-                    <div>
-                      <h3 class="fw-bold mb-1"><a href="/about"
-                          class="text-title link-hover-primary transition">Ha Nhu Dong</a></h3>
-                      <span>Founder</span>
-                    </div>
-                    <ul class="social-profile style-two list-unstyled mb-0">
-                      <li><a href="https://www.facebook.com"
-                          class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
-                            class="ri-facebook-fill"></i></a></li>
-                      <li><a href="https://x.com/"
-                          class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
-                            class="ri-twitter-x-line"></i></a></li>
-                    </ul>
-                  </div>
+                  <ul class="social-profile style-two list-unstyled mb-0">
+                    <li><a href="https://www.facebook.com"
+                        class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                          class="ri-facebook-fill"></i></a></li>
+                    <li><a href="https://x.com/"
+                        class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                          class="ri-twitter-x-line"></i></a></li>
+                  </ul>
                 </div>
               </div>
-              <div class="swiper-slide swiper-slide-next">
-                <div class="team-card style-one img-hover-zoom">
-                  <div class="team-img round-10 img-zoom position-relative overflow-hidden">
-                    <img src="/images/team/anh2.jpg" alt="Image"
-                      class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
-                    <img src="/images/team/anh2.jpg" alt="Image" class="round-10 transition">
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="team-card style-one img-hover-zoom h-100">
+                <div class="team-img round-10 img-zoom position-relative overflow-hidden">
+                  <img src="/images/team/anh2.jpg" alt="Image"
+                    class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
+                  <img src="/images/team/anh2.jpg" alt="Image" class="round-10 transition">
+                </div>
+                <div class="team-info d-flex flex-wrap justify-content-between">
+                  <div>
+                    <h3 class="fw-bold mb-1"><a href="/about"
+                        class="text-title link-hover-primary transition">Hanh Minh Vu</a></h3>
+                    <span>CEO</span>
                   </div>
-                  <div class="team-info d-flex flex-wrap justify-content-between">
-                    <div>
-                      <h3 class="fw-bold mb-1"><a href="/about"
-                          class="text-title link-hover-primary transition">Hanh Minh Vu</a></h3>
-                      <span>CEO</span>
-                    </div>
-                    <ul class="social-profile style-two list-unstyled mb-0">
-                      <li><a href="https://www.facebook.com"
-                          class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
-                            class="ri-facebook-fill"></i></a></li>
-                      <li><a href="https://x.com/"
-                          class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
-                            class="ri-twitter-x-line"></i></a></li>
-                    </ul>
-                  </div>
+                  <ul class="social-profile style-two list-unstyled mb-0">
+                    <li><a href="https://www.facebook.com"
+                        class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                          class="ri-facebook-fill"></i></a></li>
+                    <li><a href="https://x.com/"
+                        class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                          class="ri-twitter-x-line"></i></a></li>
+                  </ul>
                 </div>
               </div>
-              <div class="swiper-slide">
-                <div class="team-card style-one img-hover-zoom">
-                  <div class="team-img round-10 img-zoom position-relative overflow-hidden">
-                    <img src="/images/team/anh3.jpg" alt="Image"
-                      class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
-                    <img src="/images/team/anh3.jpg" alt="Image" class="round-10 transition">
-                  </div>
-                  <div class="team-info d-flex flex-wrap justify-content-between">
-                    <div>
-                      <h3 class="fw-bold mb-1"><a href="/about"
-                          class="text-title link-hover-primary transition">Hai Xuan Trinh</a></h3>
-                      <span>Head Of Partnership</span>
-                    </div>
-                    <ul class="social-profile style-two list-unstyled mb-0">
-                      <li><a href="https://www.facebook.com"
-                          class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
-                            class="ri-facebook-fill"></i></a></li>
-                      <li><a href="https://x.com/"
-                          class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
-                            class="ri-twitter-x-line"></i></a></li>
-                    </ul>
-                  </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="team-card style-one img-hover-zoom h-100">
+                <div class="team-img round-10 img-zoom position-relative overflow-hidden">
+                  <img src="/images/team/anh3.jpg" alt="Image"
+                    class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
+                  <img src="/images/team/anh3.jpg" alt="Image" class="round-10 transition">
                 </div>
-              </div>
-              <div class="swiper-slide">
-                <div class="team-card style-one img-hover-zoom">
-                  <div class="team-img round-10 img-zoom position-relative overflow-hidden">
-                    <img src="/images/team/anh4.jpg" alt="Image"
-                      class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
-                    <img src="/images/team/anh4.jpg" alt="Image" class="round-10 transition">
+                <div class="team-info d-flex flex-wrap justify-content-between">
+                  <div>
+                    <h3 class="fw-bold mb-1"><a href="/about"
+                        class="text-title link-hover-primary transition">Hai Xuan Trinh</a></h3>
+                    <span>Head Of Partnership</span>
                   </div>
-                  <div class="team-info d-flex flex-wrap justify-content-between">
-                    <div>
-                      <h3 class="fw-bold mb-1"><a href="/about"
-                          class="text-title link-hover-primary transition">Hoa Thai Do</a></h3>
-                      <span>Business Development</span>
-                    </div>
-                    <ul class="social-profile style-two list-unstyled mb-0">
-                      <li><a href="https://www.facebook.com"
-                          class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
-                            class="ri-facebook-fill"></i></a></li>
-                      <li><a href="https://x.com/"
-                          class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
-                            class="ri-twitter-x-line"></i></a></li>
-                    </ul>
-                  </div>
+                  <ul class="social-profile style-two list-unstyled mb-0">
+                    <li><a href="https://www.facebook.com"
+                        class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                          class="ri-facebook-fill"></i></a></li>
+                    <li><a href="https://x.com/"
+                        class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                          class="ri-twitter-x-line"></i></a></li>
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="slider-btn style-one d-flex flex-wrap justify-content-md-end">
-          <button
-            class="prev-btn team-prev border-0 d-flex flex-column align-items-center justify-content-center rounded-circle me-2 z-1"
-            tabindex="0" aria-label="Previous slide" aria-controls="swiper-wrapper-team"><img
-              src="/renius/image/left-long-arrow-orange.svg" alt="Icon"></button>
-          <button
-            class="next-btn team-next border-0 d-flex flex-column align-items-center justify-content-center rounded-circle ms-2 z-1"
-            tabindex="0" aria-label="Next slide" aria-controls="swiper-wrapper-team"><img
-              src="/renius/image/right-long-arrow-orange.svg" alt="Icon"></button>
+          <div class="row g-4 justify-content-center">
+            <div class="col-lg-4 col-md-6">
+              <div class="team-card style-one img-hover-zoom h-100">
+                <div class="team-img round-10 img-zoom position-relative overflow-hidden">
+                  <img src="/images/team/anh4.jpg" alt="Image"
+                    class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
+                  <img src="/images/team/anh4.jpg" alt="Image" class="round-10 transition">
+                </div>
+                <div class="team-info d-flex flex-wrap justify-content-between">
+                  <div>
+                    <h3 class="fw-bold mb-1"><a href="/about"
+                        class="text-title link-hover-primary transition">Anh Hoang Thao</a></h3>
+                    <span>CMO</span>
+                  </div>
+                  <ul class="social-profile style-two list-unstyled mb-0">
+                    <li><a href="https://www.facebook.com"
+                        class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                          class="ri-facebook-fill"></i></a></li>
+                    <li><a href="https://x.com/"
+                        class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                          class="ri-twitter-x-line"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="team-card style-one img-hover-zoom h-100">
+                <div class="team-img round-10 img-zoom position-relative overflow-hidden">
+                  <img src="/images/team/anh5.jpg" alt="Image"
+                    class="position-absolute top-0 bottom-0 start-0 end-0 z-1 round-10 transition">
+                  <img src="/images/team/anh5.jpg" alt="Image" class="round-10 transition">
+                </div>
+                <div class="team-info d-flex flex-wrap justify-content-between">
+                  <div>
+                    <h3 class="fw-bold mb-1"><a href="/about"
+                        class="text-title link-hover-primary transition">Hoa Thai Do</a></h3>
+                    <span>Business Development</span>
+                  </div>
+                  <ul class="social-profile style-two list-unstyled mb-0">
+                    <li><a href="https://www.facebook.com"
+                        class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                          class="ri-facebook-fill"></i></a></li>
+                    <li><a href="https://x.com/"
+                        class="d-flex flex-column align-items-center justify-content-center rounded-circle"><i
+                          class="ri-twitter-x-line"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <!-- Team Section End -->
-
-      <!-- CTA Section Start -->
-      <div class="cta-area style-one bg-f position-relative overflow-hidden z-1 mx-xxl-4 mx-2 round-40 mb-50">
-        <img src="/renius/image/shape-1.png" alt="Shape" class="section-shape position-absolute bottom-0 end-0 z-0">
-        <div class="container">
-          <div class="row align-items-center">
-            <div class="col-lg-6 col-md-7 mb-sm-20">
-              <h2 class="section-title style-two fw-normal text-white mb-0" set:html={`${cta.titlePart1 || 'Your Next '}<span class="fw-black">${cta.titleHighlight || 'Big Event Starts Here '}</span>${cta.titlePart2 || ' – Let\'s Make It Extraordinary!'}`}></h2>
-            </div>
-            <div class="col-lg-6 col-md-5">
-              <div
-                class="circle-text-wrap position-relative bg_primary rounded-circle overflow-hidden z-1 ms-md-auto me-md-0 ms-auto me-auto">
-                <img src="/renius/image/circle-text.png" alt="Circle Text"
-                  class="rotate position-relative z-1 d-block mx-auto">
-                <img src="/renius/image/up-right-arrow-white-small.svg" alt="Icon"
-                  class="arrow-icon position-absolute z-n1">
-                <a href="/contact" class="position-absolute top-0 start-0 w-100 h-100 z-1"></a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- CTA Section End -->
 
 
 
@@ -511,37 +505,6 @@ const cta = aboutContent?.cta || {};
       if (counterSection) {
         observer.observe(counterSection);
       }
-    });
-
-    // Team Slider
-    document.addEventListener('DOMContentLoaded', function () {
-      const teamSlider = new Swiper('.team-slider-one', {
-        slidesPerView: 1,
-        spaceBetween: 25,
-        loop: true,
-        autoplay: {
-          delay: 3000,
-          disableOnInteraction: false,
-        },
-        navigation: {
-          nextEl: '.team-next',
-          prevEl: '.team-prev',
-        },
-        breakpoints: {
-          768: {
-            slidesPerView: 2,
-            spaceBetween: 25,
-          },
-          1024: {
-            slidesPerView: 3,
-            spaceBetween: 25,
-          },
-          1200: {
-            slidesPerView: 4,
-            spaceBetween: 25,
-          },
-        },
-      });
     });
 
     // Testimonial Slider
