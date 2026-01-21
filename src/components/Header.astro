@@ -44,9 +44,9 @@ import { Icon } from 'astro-icon/components';
               <i class="bi bi-search"></i>
             </a>
             <div class="header-button ms-4">
-              <a class="theme-btn" href="/contact">
+              <button type="button" class="theme-btn" onclick="window.dispatchEvent(new Event('openContactModal'))">
                 <span>Get Started<i class="bi bi-arrow-right"></i></span>
-              </a>
+              </button>
             </div>
           </div>
         </div>

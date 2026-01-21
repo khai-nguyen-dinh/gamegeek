@@ -4,7 +4,6 @@ import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import { getContent, getContentObject } from '../utils/content.ts';
 import { load } from 'js-yaml';
-import eventsData from '../data/events.json';
 
 // Helper function to parse frontmatter
 function parseFrontmatter(content: string) {
@@ -26,62 +25,169 @@ function parseFrontmatter(content: string) {
   }
 }
 
+// Helper function to fetch file from GitHub
+async function fetchFromGitHub(path: string): Promise<string | null> {
+  try {
+    const repo = 'khai-nguyen-dinh/gamegeek';
+    const branch = 'main';
+    const url = `https://raw.githubusercontent.com/${repo}/${branch}/${path}`;
+    const response = await fetch(url);
+    if (response.ok) {
+      return await response.text();
+    }
+    return null;
+  } catch (error) {
+    console.error(`Error fetching from GitHub: ${path}`, error);
+    return null;
+  }
+}
+
+// Helper function to list files in a GitHub directory
+async function listGitHubFiles(path: string): Promise<string[]> {
+  try {
+    const repo = 'khai-nguyen-dinh/gamegeek';
+    const branch = 'main';
+    const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
+    const response = await fetch(url);
+    if (response.ok) {
+      const files = await response.json();
+      if (Array.isArray(files)) {
+        return files
+          .filter((file: any) => file.type === 'file')
+          .map((file: any) => file.name);
+      }
+    }
+    return [];
+  } catch (error) {
+    console.error(`Error listing GitHub files: ${path}`, error);
+    return [];
+  }
+}
+
+// Helper function to read mdoc file from GitHub
+async function readMdocFile(slug: string) {
+  if (!slug) return null;
+  
+  const fileContent = await fetchFromGitHub(`src/keystatic/events/${slug}.mdoc`);
+  
+  if (!fileContent) return null;
+  
+  const { data, content: fileContentBody } = parseFrontmatter(fileContent);
+  
+  // Ensure we have valid data
+  if (!data || Object.keys(data).length === 0) {
+    return null;
+  }
+  
+  return {
+    ...data,
+    description: fileContentBody || '',
+    slug: slug
+  };
+}
+
 // Helper function to get all events
 async function getAllEvents() {
-  // Try to import from local filesystem first (for dev mode and production)
+  let events: any[] = [];
+  
+  // Always try GitHub API first for consistency (works in both dev and production)
   try {
-    const eventModules = import.meta.glob('../keystatic/events/*.mdoc?raw', { eager: true });
-    const moduleEntries = Object.entries(eventModules);
+    const files = await listGitHubFiles('src/keystatic/events');
+    const mdocFiles = files.filter(f => f.endsWith('.mdoc'));
     
-    if (moduleEntries.length > 0) {
-      const localEvents = moduleEntries.map((entry) => {
-        const path = entry[0];
-        const module = entry[1];
-        const slug = path.split('/').pop()?.replace('.mdoc?raw', '') || '';
-        
-        let content = '';
-        if (typeof module === 'string') {
-          content = module;
-        } else if (module && typeof module === 'object' && 'default' in module) {
-          content = typeof module.default === 'string' ? module.default : '';
-        }
-        
-        if (!content) {
-          return null;
-        }
-        
-        const parsed = parseFrontmatter(content);
-        const data = parsed.data;
-        const bodyContent = parsed.content;
-        
-        if (!data || Object.keys(data).length === 0) {
-          return null;
-        }
-        
-        return {
-          ...data,
-          description: bodyContent || '',
-          slug: slug
-        };
-      }).filter(e => e !== null);
+    if (mdocFiles.length > 0) {
+      const githubEvents = await Promise.all(
+        mdocFiles.map(async (file) => {
+          try {
+            const slug = file.replace('.mdoc', '');
+            const event = await readMdocFile(slug);
+            if (event) {
+              event.slug = slug;
+            }
+            return event;
+          } catch (err) {
+            console.error(`Error loading event ${file}:`, err);
+            return null;
+          }
+        })
+      );
       
-      if (localEvents.length > 0) {
-        console.log(`Loaded ${localEvents.length} events from local filesystem`);
-        return localEvents;
+      const validEvents = githubEvents.filter(e => e !== null);
+      if (validEvents.length > 0) {
+        console.log(`Loaded ${validEvents.length} events from GitHub`);
+        events = validEvents;
       }
     }
   } catch (error) {
-    console.log('Could not load events from local filesystem:', error);
+    console.log('Could not load events from GitHub:', error);
   }
   
-  // Fallback to static JSON
-  if (eventsData && Array.isArray(eventsData) && eventsData.length > 0) {
-    console.log(`Loaded ${eventsData.length} events from JSON fallback`);
-    return eventsData;
+  // Fallback to local filesystem if GitHub fails
+  if (events.length === 0) {
+    try {
+      const eventModules = import.meta.glob('../keystatic/events/*.mdoc?raw', { eager: true });
+      const moduleEntries = Object.entries(eventModules);
+      
+      if (moduleEntries.length > 0) {
+        const localEvents = moduleEntries.map((entry) => {
+          try {
+            const path = entry[0];
+            const module = entry[1];
+            const slug = path.split('/').pop()?.replace('.mdoc?raw', '') || '';
+            
+            let content = '';
+            if (typeof module === 'string') {
+              content = module;
+            } else if (module && typeof module === 'object') {
+              // Handle different module formats
+              if ('default' in module) {
+                content = typeof module.default === 'string' ? module.default : '';
+              } else {
+                // Try to stringify if it's an object
+                content = JSON.stringify(module);
+              }
+            }
+            
+            if (!content || content.trim().length === 0) {
+              return null;
+            }
+            
+            const parsed = parseFrontmatter(content);
+            const data = parsed.data;
+            const bodyContent = parsed.content;
+            
+            if (!data || Object.keys(data).length === 0) {
+              return null;
+            }
+            
+            return {
+              ...data,
+              description: bodyContent || '',
+              slug: slug
+            };
+          } catch (err) {
+            console.error('Error parsing event:', err);
+            return null;
+          }
+        }).filter(e => e !== null);
+        
+        if (localEvents.length > 0) {
+          console.log(`Loaded ${localEvents.length} events from local filesystem`);
+          events = localEvents;
+        }
+      }
+    } catch (error) {
+      console.log('Could not load events from local filesystem:', error);
+    }
   }
   
-  console.warn('No events loaded from any source');
-  return [];
+  if (events.length === 0) {
+    console.warn('No events loaded from any source');
+  } else {
+    console.log(`Total events loaded: ${events.length}`);
+  }
+  
+  return events;
 }
 
 // Get all events
@@ -114,7 +220,10 @@ const finalHeroEvents = heroEvents.length > 0
       : sortedEvents.slice(0, 3));
 
 // Get all events for display (excluding hero events, sorted from newest to oldest)
-const displayEvents = sortedEvents.filter(e => !e.isHero);
+// If no hero events, show all events; otherwise exclude hero events
+const displayEvents = heroEvents.length > 0 
+  ? sortedEvents.filter(e => !e.isHero)
+  : sortedEvents;
 
 // Helper to format date
 function formatDate(date: any): string {
@@ -281,13 +390,14 @@ function isUpcoming(date: any): boolean {
                                 <div class="col-xl-4 col-md-6">
                                     <div class={`project-card style-four ${bgClass} position-relative overflow-hidden z-1 round-10 mb-45`} style="min-height: 420px; box-shadow: none !important;">
                                         <img src={imageUrl} alt={event.title || 'Event'} class="position-absolute top-0 start-0 w-100 h-100" style="object-fit: cover; box-shadow: none !important; filter: none !important; z-index: 1;">
+                                        <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.85) 100%); z-index: 2;"></div>
                                         <div class="project-header position-absolute top-0 start-0 w-100 d-flex flex-wrap align-items-center justify-content-between" style="padding: 8px 12px; z-index: 3;">
                                             <span class="project-status transition text-white bg-primary px-3 py-1 rounded-2 fw-semibold" style="font-size: 15px; text-shadow: 0 2px 6px rgba(0,0,0,0.6);">{status}</span>
                                             <span class="project-counter transition text-white fw-semibold" style="font-size: 15px; text-shadow: 0 2px 6px rgba(0,0,0,0.6);">{eventYear}</span>
                                         </div>
                                         <div class="project-title position-absolute bottom-0 start-0 w-100 d-flex flex-wrap align-items-center justify-content-between" style="padding: 20px; z-index: 3;">
                                             <h3 class="fs-24 fw-semibold mb-0 text-white" style="text-shadow: 0 2px 6px rgba(0,0,0,0.6);">
-                                                <a href={`/program/${event.slug}`} class="text-white hover-text-primary transition" style="text-shadow: 0 2px 6px rgba(0,0,0,0.6);">{event.title || 'Event'}</a>
+                                                <a href={`/event-detail/${event.slug}`} class="text-white hover-text-primary transition" style="text-shadow: 0 2px 6px rgba(0,0,0,0.6);">{event.title || 'Event'}</a>
                                             </h3>
                                         </div>
                                     </div>

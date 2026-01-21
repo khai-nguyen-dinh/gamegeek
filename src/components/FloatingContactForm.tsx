@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface FormData {
   objectType: string;
@@ -24,6 +24,33 @@ const FloatingContactForm = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  // Listen for open modal event from external links
+  useEffect(() => {
+    const handleOpenModal = () => {
+      setIsOpen(true);
+      setCurrentStep(1);
+      setFormData({
+        objectType: '',
+        interest: '',
+        fullName: '',
+        email: '',
+        title: '',
+        companyName: '',
+        socialContact: '',
+      });
+    };
+
+    window.addEventListener('openContactModal', handleOpenModal);
+    
+    // Also expose global function for easier access
+    (window as any).openContactModal = handleOpenModal;
+
+    return () => {
+      window.removeEventListener('openContactModal', handleOpenModal);
+      delete (window as any).openContactModal;
+    };
+  }, []);
 
   const objectTypes = [
     'Studio / Publisher',

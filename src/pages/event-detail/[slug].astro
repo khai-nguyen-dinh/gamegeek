@@ -1,10 +1,213 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import { Fragment } from 'astro/jsx-runtime';
+import { load } from 'js-yaml';
+
+// Simple markdown to HTML converter for headings and paragraphs
+function markdownToHtml(markdown: string): string {
+  if (!markdown) return '';
+  
+  let html = markdown;
+  
+  // Convert ## headings to h4 (must be at start of line)
+  html = html.replace(/^## (.+)$/gm, '<h4 class="mt-5 mb-3">$1</h4>');
+  
+  // Split by double newlines to get paragraphs
+  const paragraphs = html.split(/\n\n+/);
+  
+  html = paragraphs.map(para => {
+    para = para.trim();
+    if (!para) return '';
+    
+    // If already converted to h4, return as is
+    if (para.startsWith('<h4')) return para;
+    
+    // If it's a heading that wasn't converted, convert it
+    if (para.startsWith('## ')) {
+      return para.replace(/^## (.+)$/, '<h4 class="mt-5 mb-3">$1</h4>');
+    }
+    
+    // Regular paragraph
+    // Replace single newlines with <br> for line breaks within paragraph
+    para = para.replace(/\n/g, '<br>');
+    return `<p class="mb-3">${para}</p>`;
+  }).join('\n');
+  
+  return html;
+}
+
+// Helper function to parse frontmatter
+function parseFrontmatter(content: string) {
+  const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+  const match = content.match(frontmatterRegex);
+  
+  if (!match) {
+    return { data: {}, content: content.trim() };
+  }
+  
+  const yamlContent = match[1];
+  const bodyContent = match[2];
+  
+  try {
+    const data = load(yamlContent) as any;
+    return { data: data || {}, content: bodyContent.trim() };
+  } catch (error) {
+    return { data: {}, content: bodyContent.trim() };
+  }
+}
+
+// Helper function to fetch file from GitHub
+async function fetchFromGitHub(path: string): Promise<string | null> {
+  try {
+    const repo = 'khai-nguyen-dinh/gamegeek';
+    const branch = 'main';
+    const url = `https://raw.githubusercontent.com/${repo}/${branch}/${path}`;
+    const response = await fetch(url);
+    if (response.ok) {
+      return await response.text();
+    }
+    return null;
+  } catch (error) {
+    console.error(`Error fetching from GitHub: ${path}`, error);
+    return null;
+  }
+}
+
+// Helper function to list files in a GitHub directory
+async function listGitHubFiles(path: string): Promise<string[]> {
+  try {
+    const repo = 'khai-nguyen-dinh/gamegeek';
+    const branch = 'main';
+    const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
+    const response = await fetch(url);
+    if (response.ok) {
+      const files = await response.json();
+      if (Array.isArray(files)) {
+        return files
+          .filter((file: any) => file.type === 'file')
+          .map((file: any) => file.name);
+      }
+    }
+    return [];
+  } catch (error) {
+    console.error(`Error listing GitHub files: ${path}`, error);
+    return [];
+  }
+}
+
+// Helper function to read mdoc file from GitHub
+async function readMdocFile(slug: string) {
+  if (!slug) return null;
+  
+  const fileContent = await fetchFromGitHub(`src/keystatic/events/${slug}.mdoc`);
+  
+  if (!fileContent) return null;
+  
+  const { data, content: fileContentBody } = parseFrontmatter(fileContent);
+  
+  // Ensure we have valid data
+  if (!data || Object.keys(data).length === 0) {
+    return null;
+  }
+  
+  // Extract first paragraph as description, rest as content
+  const firstParagraph = fileContentBody.split('\n\n')[0] || fileContentBody.substring(0, 200) || '';
+  const fullContent = fileContentBody || '';
+  
+  return {
+    ...data,
+    description: firstParagraph,
+    content: fullContent,
+    slug: slug
+  };
+}
+
+// Helper function to get all events
+async function getAllEvents() {
+  try {
+    const eventModules = import.meta.glob('../../keystatic/events/*.mdoc?raw', { eager: true });
+    const moduleEntries = Object.entries(eventModules);
+    
+    if (moduleEntries.length > 0) {
+      const localEvents = moduleEntries.map((entry) => {
+        const path = entry[0];
+        const module = entry[1];
+        const slug = path.split('/').pop()?.replace('.mdoc?raw', '') || '';
+        
+        let content = '';
+        if (typeof module === 'string') {
+          content = module;
+        } else if (module && typeof module === 'object' && 'default' in module) {
+          content = typeof module.default === 'string' ? module.default : '';
+        }
+        
+        if (!content) {
+          return null;
+        }
+        
+        const parsed = parseFrontmatter(content);
+        const data = parsed.data;
+        const bodyContent = parsed.content;
+        
+        if (!data || Object.keys(data).length === 0) {
+          return null;
+        }
+        
+        // Extract first paragraph as description, rest as content
+        const firstParagraph = bodyContent.split('\n\n')[0] || bodyContent.substring(0, 200) || '';
+        const fullContent = bodyContent || '';
+        
+        return {
+          ...data,
+          description: firstParagraph,
+          content: fullContent,
+          slug: slug
+        };
+      }).filter(e => e !== null);
+      
+      if (localEvents.length > 0) {
+        return localEvents;
+      }
+    }
+  } catch (error) {
+    console.log('Could not load events from local filesystem:', error);
+  }
+  
+  // Fallback to GitHub API
+  try {
+    const files = await listGitHubFiles('src/keystatic/events');
+    const mdocFiles = files.filter(f => f.endsWith('.mdoc'));
+    
+    const events = await Promise.all(
+      mdocFiles.map(async (file) => {
+        const slug = file.replace('.mdoc', '');
+        const event = await readMdocFile(slug);
+        if (event) {
+          event.slug = slug;
+        }
+        return event;
+      })
+    );
+    
+    const validEvents = events.filter(e => e !== null);
+    if (validEvents.length > 0) {
+      return validEvents;
+    }
+  } catch (error) {
+    console.log('Could not load events from GitHub:', error);
+  }
+  
+  return [];
+}
 
 // Get the slug from the URL params
 export async function getStaticPaths() {
-  // Sample event data
-  const events = [
+  const allEvents = await getAllEvents();
+  
+  // Sample event data with full content (for events that have detailed content)
+  const eventsWithContent = [
     {
       slug: 'vietnam-game-connect-2025',
       title: 'Vietnam Game Connect 2025',
@@ -89,8 +292,8 @@ export async function getStaticPaths() {
       type: 'Event'
     },
     {
-      slug: 'gaming-industry-summit',
-      title: 'Gaming Industry Summit',
+      slug: 'gaming-industry-summit-2025',
+      title: 'Gaming Industry Summit 2025',
       date: 'April 20, 2025',
       location: 'Hanoi',
       image: '/images/blogThumb1_2.jpg',
@@ -104,230 +307,344 @@ export async function getStaticPaths() {
       type: 'Event'
     }
   ];
+  
+  // Merge Keystatic data with detailed content
+  const mergedEvents = allEvents.map((keystaticEvent) => {
+    const detailedEvent = eventsWithContent.find(e => e.slug === keystaticEvent.slug);
+    
+    // Use content from Keystatic if available, otherwise use hardcoded content
+    const content = keystaticEvent.content && keystaticEvent.content.length > 0
+      ? keystaticEvent.content 
+      : (detailedEvent?.content || '');
+    
+    // Use speakersList from Keystatic if available, otherwise use hardcoded
+    const speakersList = keystaticEvent.speakersList && keystaticEvent.speakersList.length > 0
+      ? keystaticEvent.speakersList
+      : (detailedEvent?.speakersList || []);
+    
+    // Build complete event object
+    const event = {
+      slug: keystaticEvent.slug,
+      title: keystaticEvent.title || detailedEvent?.title || 'Event',
+      date: keystaticEvent.date || detailedEvent?.date || '',
+      time: keystaticEvent.time || detailedEvent?.time || '',
+      location: keystaticEvent.location || detailedEvent?.location || '',
+      speakers: keystaticEvent.speakers || detailedEvent?.speakers || 0,
+      image: keystaticEvent.image || detailedEvent?.image || '/images/blogThumb1_1.jpg',
+      thumb: keystaticEvent.image || detailedEvent?.thumb || keystaticEvent.image || '/images/blogThumb1_1.jpg',
+      thumb2: detailedEvent?.thumb2 || '/images/blogThumb1_2.jpg',
+      thumb3: detailedEvent?.thumb3 || '/images/blogThumb1_1.jpg',
+      thumb4: detailedEvent?.thumb4 || '/images/blogThumb1_2.jpg',
+      breadcrumbBg: keystaticEvent.image || detailedEvent?.breadcrumbBg || '/images/newsdetail.jpg',
+      sector: keystaticEvent.sector || detailedEvent?.sector || 'Gaming Industry',
+      category: keystaticEvent.category || detailedEvent?.category || 'Event',
+      type: keystaticEvent.type || detailedEvent?.type || 'Event',
+      description: keystaticEvent.description || detailedEvent?.description || '',
+      content: content,
+      speakersList: speakersList,
+    };
+    
+    return event;
+  });
 
-  return events.map((event) => ({
+  // Ensure we return all events, even if getAllEvents returned empty
+  if (mergedEvents.length === 0 && allEvents.length === 0) {
+    // Fallback: return events from eventsWithContent if no Keystatic data
+    return eventsWithContent.map((event) => ({
+      params: { slug: event.slug },
+      props: event
+    }));
+  }
+
+  return mergedEvents.map((event) => ({
     params: { slug: event.slug },
     props: event
   }));
 }
 
 const { slug } = Astro.params;
-const { title, date, time, location, speakers, image, thumb, thumb2, thumb3, thumb4, breadcrumbBg, sector, category, type, description, content, speakersList } = Astro.props;
+
+// Get event data from props, with fallback to direct file read
+let eventData = Astro.props;
+
+// If props are empty or missing title, try to load directly
+if (!eventData || !eventData.title) {
+  if (slug) {
+    // Try to read directly from file first
+    eventData = await readMdocFile(slug);
+    if (eventData) {
+      eventData.slug = slug;
+      // Add default fields if missing
+      eventData.thumb = eventData.image || eventData.thumb || '';
+      eventData.thumb2 = eventData.thumb2 || '';
+      eventData.thumb3 = eventData.thumb3 || '';
+      eventData.thumb4 = eventData.thumb4 || '';
+      eventData.breadcrumbBg = eventData.breadcrumbBg || eventData.image || '';
+      eventData.sector = eventData.sector || 'Gaming Industry';
+      eventData.category = eventData.category || 'Event';
+      eventData.type = eventData.type || 'Event';
+    } else {
+      // Fallback to getAllEvents
+      const allEvents = await getAllEvents();
+      eventData = allEvents.find(e => e.slug === slug);
+    }
+  }
+}
+
+// If still no data, return 404
+if (!eventData || !eventData.title) {
+  return Astro.redirect('/program', 404);
+}
+
+// Ensure all required fields have defaults
+const title = eventData.title || 'Event';
+const date = eventData.date || '';
+const time = eventData.time || '';
+const location = eventData.location || '';
+const speakers = eventData.speakers || 0;
+const image = eventData.image || '/images/blogThumb1_1.jpg';
+const thumb = eventData.thumb || eventData.image || '/images/blogThumb1_1.jpg';
+const thumb2 = eventData.thumb2 || '';
+const thumb3 = eventData.thumb3 || '';
+const thumb4 = eventData.thumb4 || '';
+const breadcrumbBg = eventData.breadcrumbBg || eventData.image || '/images/newsdetail.jpg';
+const sector = eventData.sector || 'Gaming Industry';
+const category = eventData.category || eventData.type || 'Event';
+const type = eventData.type || 'Event';
+const description = eventData.description || '';
+const content = eventData.content || '';
+const speakersList = eventData.speakersList || [];
+
+// Get all events for pagination
+const allEvents = await getAllEvents();
+const sortedEvents = allEvents.sort((a, b) => {
+  const dateA = new Date(a.date || 0).getTime();
+  const dateB = new Date(b.date || 0).getTime();
+  return dateA - dateB;
+});
+
+// Find current event index
+const currentIndex = sortedEvents.findIndex(e => e.slug === slug);
+const prevEvent = currentIndex > 0 ? sortedEvents[currentIndex - 1] : null;
+const nextEvent = currentIndex < sortedEvents.length - 1 ? sortedEvents[currentIndex + 1] : null;
+
+// Determine status based on date
+const getEventStatus = () => {
+  if (!date) return 'Up Coming';
+  const eventDate = new Date(date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  eventDate.setHours(0, 0, 0, 0);
+  return eventDate >= today ? 'Up Coming' : 'Finished';
+};
+
+// Format date for display
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  return `${date.getDate()} ${months[date.getMonth()]}, ${date.getFullYear()}`;
+};
+
+const eventStatus = getEventStatus();
+const formattedDate = formatDate(date);
 ---
 
-<Layout title={`${title} - Gamegeek`}>
-  <div>
-    <div class="breadcumb-section fix">
-      <div class="breadcumb-container-wrapper" data-background={thumb} style={`background-image: url('${thumb}'); background-size: cover; background-position: center; background-repeat: no-repeat;`}>
-        <div class="container">
-          <div class="shape1">
-            <img src="/images/introShape1_1.png" alt="shape">
+<Layout title={`${title} - GameGeek`}>
+  <div id="smooth-content">
+    <!-- Navbar Start -->
+    <Navbar variant="white" />
+    <!-- Navbar End -->
+
+    <!-- Breadcrumb Section Start -->
+    <div class="breadcrumb-area position-relative z-1">
+      <img src="/renius/image/br-line-shape.png" alt="Shape" class="br-line-shape position-absolute top-0 start-0 w-100 h-100 z-n1">
+      <img src="/renius/image/br-shape-1.png" alt="Shape" class="br-shape-one position-absolute z-n1 bounce">
+      <img src="/renius/image/br-shape-2.png" alt="Shape" class="br-shape-two position-absolute bottom-0 z-n1 moveHorizontal">
+      <div class="container-fluid px-xxl-5">
+        <div class="row">
+          <div class="col-md-10 offset-md-1 text-center">
+            <h2 class="section-title style-one fw-black text-title">{title}</h2>
+            <ul class="br-menu list-unstyled">
+              <li><a href="/"><img src="/renius/image/home-icon.svg" alt="Icon">HOME</a></li>
+              <li><a href="/program">PROGRAM</a></li>
+              <li>{title}</li>
+            </ul>
           </div>
-          <div class="shape2">
-            <img src="/images/introShape1_2.png" alt="shape">
-          </div>
-          <div class="breadcumb-wrapper">
-            <div class="page-heading">
-              <h1>{title}</h1>
-              <div class="links">
-                <a href="/" data-discover="true">Home<span class="slash">/</span></a>{title}
+        </div>
+      </div>
+    </div>
+    <!-- Breadcrumb Section End -->
+
+    <div class="container ptb-120">
+      <div class="row">
+        <div class="col-12">
+          <div class="project-desc position-relative z-1 pt-90">
+            <div class="row">
+              <div class="col-xl-10 offset-xl-1">
+                <h1 class="section-title style-one text-title font-secondary fw-bold mb-30">{title}</h1>
+                <ul class="single-project-metainfo d-flex flex-wrap justify-content-md-between list-unstyled mb-45">
+                  <li>
+                    <span class="fw-medium d-block">Status</span>
+                    <span class="text-title fw-semibold d-block">{eventStatus}</span>
+                  </li>
+                  <li>
+                    <span class="fw-medium d-block">Project Type</span>
+                    <span class="text-title fw-semibold d-block">{category || type || 'Event'}</span>
+                  </li>
+                  <li>
+                    <span class="fw-medium d-block">Location</span>
+                    <span class="text-title fw-semibold d-block">{location || 'TBA'}</span>
+                  </li>
+                  <li>
+                    <span class="fw-medium d-block">Commencement Date</span>
+                    <span class="text-title fw-semibold d-block">
+                      {formattedDate || date}
+                      {time && ` • ${time}`}
+                    </span>
+                  </li>
+                  <li>
+                    <span class="fw-medium d-block">Speakers</span>
+                    <span class="text-title fw-semibold d-block">
+                      {speakers ? `${speakers} Speakers` : speakersList?.length ? `${speakersList.length} Speakers` : 'TBA'}
+                    </span>
+                  </li>
+                </ul>
+                <div class="service-desc">
+                  {thumb && (
+                    <div class="single-img round-10 mb-35">
+                      <img src={thumb} alt={title} class="round-10">
+                    </div>
+                  )}
+                  <div class="single-para">
+                    {description && (
+                      <>
+                        <h6>Event Description</h6>
+                        <p>{description}</p>
+                      </>
+                    )}
+                    {content && (
+                      <div class="event-content">
+                        <Fragment set:html={markdownToHtml(content)}></Fragment>
+                      </div>
+                    )}
+                  </div>
+                  {speakersList && speakersList.length > 0 && (
+                    <div class="single-para">
+                      <h6 class="mb-3">Speakers</h6>
+                      <ul class="feature-item-list style-two d-flex flex-wrap list-unstyled pe-xxl-5 me-xxl-5">
+                        {speakersList.map((speaker) => (
+                          <li class="position-relative text-title fw-medium">{speaker.name} - {speaker.title}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {thumb2 && (
+                    <div class="single-para">
+                      <div class="row">
+                        <div class="col-md-6 pe-xxl-0">
+                          <div class="single-img round-10 mb-35">
+                            <img src={thumb2} alt={title} class="round-10">
+                          </div>
+                        </div>
+                        {thumb3 && (
+                          <div class="col-md-6 ps-xxl-4">
+                            <div class="project-highlight-box round-10 mb-35">
+                              <h6 class="mb-3">Event Highlights</h6>
+                              {description && (
+                                <p>{description.substring(0, 200)}...</p>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  <div class="single-para">
+                    <h6 class="mb-4">Frequently Asked Questions</h6>
+                    <div class="accordion style-one mb-50" id="accordionExample_one">
+                      <div class="accordion-item" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour" role="button">
+                        <div class="accordion-header" id="headingFour">
+                          <div class="accordion-button">
+                            <span class="accord-arrow">
+                              <i class="ri-arrow-down-s-fill plus"></i>
+                              <i class="ri-arrow-up-s-fill minus"></i>
+                            </span>
+                            What is the event about?
+                          </div>
+                        </div>
+                        <div id="collapseFour" class="accordion-collapse collapse show" aria-labelledby="headingFour" data-bs-parent="#accordionExample_one">
+                          <div class="accordion-body">
+                            <p class="fs-xx-14">{description || 'This event brings together industry leaders and innovators to discuss the latest trends and opportunities in the gaming industry.'}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item collapsed" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive" role="button">
+                        <div class="accordion-header" id="headingFive">
+                          <div class="accordion-button">
+                            <span class="accord-arrow">
+                              <i class="ri-arrow-down-s-fill plus"></i>
+                              <i class="ri-arrow-up-s-fill minus"></i>
+                            </span>
+                            How can I register for this event?
+                          </div>
+                        </div>
+                        <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample_one">
+                          <div class="accordion-body">
+                            <p class="fs-xx-14">Registration details will be available soon. Please check back for updates or contact us for more information.</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item collapsed" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix" role="button">
+                        <div class="accordion-header" id="headingSix">
+                          <div class="accordion-button">
+                            <span class="accord-arrow">
+                              <i class="ri-arrow-down-s-fill plus"></i>
+                              <i class="ri-arrow-up-s-fill minus"></i>
+                            </span>
+                            Who are the speakers?
+                          </div>
+                        </div>
+                        <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample_one">
+                          <div class="accordion-body">
+                            <p class="fs-xx-14">{speakersList && speakersList.length > 0 ? `We have ${speakersList.length} confirmed speakers including industry experts and thought leaders.` : 'Speaker information will be announced soon.'}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="project-pagination d-flex flex-wrap align-items-center justify-content-between mt-4">
+                  {prevEvent ? (
+                    <a class="prev-project text-para hover-text-primary transition position-relative w-50" href={`/program/${prevEvent.slug}`}>
+                      <img src="/renius/image/left-arrow.svg" alt="Icon" class="position-relative me-3">Prev Event
+                    </a>
+                  ) : (
+                    <div class="w-50"></div>
+                  )}
+                  {nextEvent ? (
+                    <a class="next-project text-para hover-text-primary transition position-relative w-50 text-end" href={`/program/${nextEvent.slug}`}>
+                      Next Event<img src="/renius/image/right-arrow-5.svg" alt="Icon" class="position-relative ms-3">
+                    </a>
+                  ) : (
+                    <div class="w-50"></div>
+                  )}
+                </div>
               </div>
+            </div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <section class="project-details-section section-padding fix">
-      <div class="project-details-container-wrapper">
-        <div class="container">
-          <div class="project-details-wapper">
-            <div class="row">
-              <div class="col-12">
-                <div class="main-thumb">
-                  <img src={thumb} alt="thumb">
-                </div>
-              </div>
-              <div class="col-xl-4 col-md-6">
-                <div class="fancy-box style4">
-                  <div class="content">
-                    <h5>Date</h5>
-                    <p class="text">{date}{time ? ` • ${time}` : ''}</p>
-                  </div>
-                  <div class="icon-box style2">
-                    <img src="/images/calendar.svg" alt="icon">
-                  </div>
-                </div>
-              </div>
-              <div class="col-xl-4 col-md-6">
-                <div class="fancy-box style4">
-                  <div class="content">
-                    <h5>Location</h5>
-                    <p class="text">{location}</p>
-                  </div>
-                  <div class="icon-box style2">
-                    <img src="/images/wcuIcon1_1.svg" alt="icon">
-                  </div>
-                </div>
-              </div>
-              <div class="col-xl-4 col-md-6">
-                <div class="fancy-box style4">
-                  <div class="content">
-                    <h5>{speakers ? 'Speakers' : 'Category'}</h5>
-                    <p class="text">{speakers ? `${speakers} Speakers` : category}</p>
-                  </div>
-                  <div class="icon-box style2">
-                    <img src="/images/wcuIcon1_2.svg" alt="icon">
-                  </div>
-                </div>
-              </div>
-              
-              <div class="single-desc">
-                <div class="row gy-5">
-                  <div class="col-12">
-                    <h3 class="single-desc-title">About the Event</h3>
-                    {description && (
-                      <p class="text1 mb-4" style="font-size: 18px; font-weight: 500;">
-                        {description}
-                      </p>
-                    )}
-                    {content ? (
-                      <Fragment set:html={content}></Fragment>
-                    ) : (
-                      <>
-                        <p class="text1">
-                          There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which do not look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there is not anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary.
-                        </p>
-                        <p class="text2">
-                          There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which do not look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there is not anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary.
-                        </p>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-              
-              {speakersList && speakersList.length > 0 && (
-                <div class="team-page-section section-padding fix">
-                  <div class="team-page-container-wrapper style1">
-                    <div class="container">
-                      <div class="section-title text-center mxw-685 mx-auto mb-60">
-                        <h3 class="single-desc-title wow fadeInUp" data-wow-delay=".2s">Speakers</h3>
-                      </div>
-                      <div class="team-page-wrapper style1">
-                        <div class="row gy-5">
-                          {speakersList.map((speaker, index) => (
-                            <div class="col-xl-4 col-md-6 wow fadeInUp" data-wow-delay={`${(index % 6) * 0.2 + 0.2}s`}>
-                              <div class="team-card style1">
-                                <div class="team-thumb">
-                                  <img src={speaker.image || '/images/team/anh1.png'} alt={speaker.name}>
-                                </div>
-                                <div class="team-card-content">
-                                  <h3><a href="#" data-discover="true">{speaker.name}</a></h3>
-                                  <p class="designation">{speaker.title}</p>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- Footer Section Start -->
+    <Footer />
+    <!-- Footer Section End -->
   </div>
 </Layout>
 
 <style>
-  .breadcumb-section {
-    position: relative;
-    min-height: 400px;
-    display: flex;
-    align-items: center;
-  }
-
-  .breadcumb-container-wrapper {
-    position: relative;
-    width: 100%;
-    min-height: 400px;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    display: flex;
-    align-items: center;
-  }
-
-  .breadcumb-container-wrapper::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1;
-  }
-
-  .breadcumb-container-wrapper .shape1,
-  .breadcumb-container-wrapper .shape2 {
-    position: absolute;
-    z-index: 2;
-    pointer-events: none;
-  }
-
-  .breadcumb-container-wrapper .shape1 {
-    top: 20%;
-    left: 10%;
-  }
-
-  .breadcumb-container-wrapper .shape2 {
-    bottom: 20%;
-    right: 10%;
-  }
-
-  .breadcumb-wrapper {
-    position: relative;
-    z-index: 3;
-    width: 100%;
-  }
-
-  .page-heading h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 20px;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  }
-
-  .page-heading .links {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: #ffffff;
-    font-size: 16px;
-  }
-
-  .page-heading .links a {
-    color: #ffffff;
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-
-  .page-heading .links a:hover {
-    color: #ff6b35;
-  }
-
-  .page-heading .links .slash {
-    margin: 0 5px;
-  }
-
   .project-details-section {
     padding: 120px 0;
   }

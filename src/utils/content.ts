@@ -1,6 +1,5 @@
 import { load as loadYaml } from 'js-yaml';
 import siteContentRaw from '../keystatic/site-content.yaml?raw';
-import contentData from '../data/content.json';
 
 let cachedContent: any | null = null;
 
@@ -13,10 +12,6 @@ function getContentData(): any {
 
   if (siteContentRaw && typeof siteContentRaw === 'string') {
     data = loadYaml(siteContentRaw) ?? null;
-  }
-
-  if (!data) {
-    data = contentData || null;
   }
 
   if (!import.meta.env.DEV) {

@@ -2,68 +2,191 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
-import newsData from '../data/news.json';
-import { getContent, getContentObject } from '../utils/content.ts';
+import { load } from 'js-yaml';
+import { getContentObject } from '../utils/content.ts';
+
+// Helper to parse frontmatter from mdoc content
+function parseFrontmatter(content: string) {
+  const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+  const match = content.match(frontmatterRegex);
+  if (!match) return { data: {}, content: content.trim() };
+
+  const yamlContent = match[1];
+  const bodyContent = match[2];
+
+  try {
+    const data = load(yamlContent) as any;
+    return { data: data || {}, content: bodyContent.trim() };
+  } catch (error) {
+    return { data: {}, content: bodyContent.trim() };
+  }
+}
+
+// Fetch raw file from GitHub (works in build and runtime)
+async function fetchFromGitHub(path: string): Promise<string | null> {
+  try {
+    const repo = 'khai-nguyen-dinh/gamegeek';
+    const branch = 'main';
+    const url = `https://raw.githubusercontent.com/${repo}/${branch}/${path}`;
+    const response = await fetch(url);
+    if (response.ok) {
+      return await response.text();
+    }
+    return null;
+  } catch (error) {
+    console.error(`Error fetching from GitHub: ${path}`, error);
+    return null;
+  }
+}
+
+// List files in a GitHub directory
+async function listGitHubFiles(path: string): Promise<string[]> {
+  try {
+    const repo = 'khai-nguyen-dinh/gamegeek';
+    const branch = 'main';
+    const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
+    const response = await fetch(url);
+    if (response.ok) {
+      const files = await response.json();
+      if (Array.isArray(files)) {
+        return files.filter((file: any) => file.type === 'file').map((file: any) => file.name);
+      }
+    }
+    return [];
+  } catch (error) {
+    console.error(`Error listing GitHub files: ${path}`, error);
+    return [];
+  }
+}
+
+// Read a single post mdoc by slug
+async function readMdocFile(slug: string) {
+  if (!slug) return null;
+  const fileContent = await fetchFromGitHub(`src/keystatic/posts/${slug}.mdoc`);
+  if (!fileContent) return null;
+
+  const { data, content: fileContentBody } = parseFrontmatter(fileContent);
+  if (!data || Object.keys(data).length === 0) return null;
+
+  return {
+    ...data,
+    content: fileContentBody || '',
+    slug,
+  };
+}
+
+// Get all posts from Keystatic (via GitHub)
+async function getAllPosts() {
+  const files = await listGitHubFiles('src/keystatic/posts');
+  const mdocFiles = files.filter((f) => f.endsWith('.mdoc'));
+
+  const posts = await Promise.all(
+    mdocFiles.map(async (file) => {
+      const slug = file.replace('.mdoc', '');
+      const post = await readMdocFile(slug);
+      if (post) post.slug = slug;
+      return post;
+    })
+  );
+  return posts.filter((p) => p !== null);
+}
+
+// Get all categories from Keystatic (via GitHub)
+async function getAllCategories() {
+  const files = await listGitHubFiles('src/keystatic/categories');
+  const yamlFiles = files.filter((f) => f.endsWith('.yaml'));
+
+  const categories = await Promise.all(
+    yamlFiles.map(async (file) => {
+      const slug = file.replace('.yaml', '');
+      const content = await fetchFromGitHub(`src/keystatic/categories/${slug}.yaml`);
+      if (!content) return null;
+      try {
+        const data = load(content) as any;
+        return {
+          id: data.id,
+          name: data.name,
+          slug,
+        };
+      } catch (error) {
+        return null;
+      }
+    })
+  );
+  return categories.filter((c) => c !== null);
+}
+
+// Helpers for date handling
+const getDateTime = (value: any) => {
+  if (!value) return 0;
+  if (value instanceof Date) return value.getTime();
+  if (typeof value === 'string') {
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? 0 : parsed.getTime();
+  }
+  return 0;
+};
+
+const getDisplayDate = (value: any) => {
+  const time = getDateTime(value);
+  if (!time) return { displayDay: '', displayMonth: '' };
+  const dateObj = new Date(time);
+  const day = String(dateObj.getDate());
+  const month = dateObj.toLocaleString('en-US', { month: 'short' });
+  return { displayDay: day, displayMonth: month };
+};
 
 const newsContent = getContentObject('news');
 const breadcrumb = newsContent?.breadcrumb || {};
 const sidebar = newsContent?.sidebar || {};
 
-// Get posts and categories from JSON
-const { posts, categories } = newsData;
+// Load categories and posts from Keystatic (GitHub)
+const categories = await getAllCategories();
+const categoryMap = new Map(categories.map((cat) => [cat.id, cat.name]));
+const categorySlugToIdMap = new Map(categories.map((cat) => [cat.slug, cat.id]));
 
-// Map category IDs to category names
-const categoryMap = new Map(categories.map(cat => [cat.id, cat.name]));
-// Map category slugs to category IDs for filtering
-const categorySlugToIdMap = new Map(categories.map(cat => [cat.slug, cat.id]));
+const allPosts = await getAllPosts();
+const postsWithMeta = allPosts.map((post) => {
+  const categoryId = post.category;
+  const categoryName = categoryMap.get(categoryId) || categoryId;
+  const { displayDay, displayMonth } = getDisplayDate(post.date);
+  return {
+    ...post,
+    categoryId,
+    category: categoryName,
+    displayDay,
+    displayMonth,
+    // Map image to thumb for compatibility
+    thumb: post.image || post.thumb || '',
+  };
+});
 
 // Get category filter from URL query parameter
 const categorySlug = Astro.url.searchParams.get('category');
 const selectedCategoryId = categorySlug ? categorySlugToIdMap.get(categorySlug) : null;
 
 // Filter posts by category if category is selected
-let filteredPosts = posts;
+let filteredPosts = postsWithMeta;
 if (selectedCategoryId) {
-  filteredPosts = posts.filter(post => post.category === selectedCategoryId);
+  filteredPosts = postsWithMeta.filter((post) => post.categoryId === selectedCategoryId);
 }
 
-// Transform posts to include category name and format date for display
-const transformedPosts = filteredPosts.map(post => {
-  const categoryName = categoryMap.get(post.category) || post.category;
-  // Extract day and month from date string (e.g., "August 28, 2025" -> "28" and "Aug")
-  const dateParts = post.date.split(' ');
-  const day = dateParts[1]?.replace(',', '') || '';
-  const month = dateParts[0]?.substring(0, 3) || '';
-  
-  return {
-    ...post,
-    category: categoryName,
-    displayDay: day,
-    displayMonth: month
-  };
-});
-
-// Sort posts by date (newest first) - simple string comparison
-const sortedPosts = [...transformedPosts].sort((a, b) => {
-  return new Date(b.date).getTime() - new Date(a.date).getTime();
-});
+// Sort posts by date (newest first)
+const sortedPosts = [...filteredPosts].sort((a, b) => getDateTime(b.date) - getDateTime(a.date));
 
 // Get recent posts (first 3)
 const recentPosts = sortedPosts.slice(0, 3);
 
-// Split posts for new layout:
-// - Featured post (News 1): first post
-// - Two rows of 2 posts each (News 2): posts 2-5
-// - Three vertical posts (3): posts 6-8
+// Split posts for layout
 const featuredPost = sortedPosts[0];
-const twoByTwoPosts = sortedPosts.slice(1, 5); // Posts 2-5
-const verticalPosts = sortedPosts.slice(5, 8); // Posts 6-8
+const twoByTwoPosts = sortedPosts.slice(1, 5);
+const verticalPosts = sortedPosts.slice(5, 8);
 
-// Count posts per category
-const categoryCounts = new Map();
-posts.forEach(post => {
-  const count = categoryCounts.get(post.category) || 0;
-  categoryCounts.set(post.category, count + 1);
+// Count posts per category (based on all posts)
+const categoryCounts = new Map<string, number>();
+postsWithMeta.forEach((post) => {
+  const count = categoryCounts.get(post.categoryId) || 0;
+  categoryCounts.set(post.categoryId, count + 1);
 });
 ---
 

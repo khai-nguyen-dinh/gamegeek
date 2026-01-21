@@ -173,7 +173,15 @@ if (!postData || !postData.title) {
   return Astro.redirect('/news', 404);
 }
 
-const { title, date, category, author, image, thumb, thumb2, thumb3, breadcrumbBg, content } = postData;
+// Map image to thumb fields for compatibility
+const imageUrl = postData.image || postData.thumb || '';
+const image = imageUrl;
+const thumb = imageUrl;
+const thumb2 = postData.thumb2 || imageUrl;
+const thumb3 = postData.thumb3 || imageUrl;
+const breadcrumbBg = postData.breadcrumbBg || imageUrl;
+
+const { title, date, category, author, content } = postData;
 
 // Get all data for sidebar and related posts
 const allPosts = await getAllPosts();
@@ -183,7 +191,10 @@ const categoryMap = new Map(categoriesData.map(cat => [cat.id, cat.name]));
 // Transform posts
 const posts = allPosts.map(post => ({
   ...post,
-  category: categoryMap.get(post.category) || post.category
+  category: categoryMap.get(post.category) || post.category,
+  // Map image to thumb for compatibility
+  thumb: post.image || post.thumb || '',
+  image: post.image || post.thumb || '',
 }));
 const categories = categoriesData;
 

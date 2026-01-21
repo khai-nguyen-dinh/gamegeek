@@ -2,11 +2,119 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
-import slidesData from '../data/slides.json';
 import { getContent, getContentObject } from '../utils/content';
+import { load } from 'js-yaml';
 
-// Sort slides by order
-const slides = slidesData.slides.sort((a, b) => a.order - b.order);
+// Helper function to fetch file from GitHub
+async function fetchFromGitHub(path: string): Promise<string | null> {
+  try {
+    const repo = 'khai-nguyen-dinh/gamegeek';
+    const branch = 'main';
+    const url = `https://raw.githubusercontent.com/${repo}/${branch}/${path}`;
+    const response = await fetch(url);
+    if (response.ok) {
+      return await response.text();
+    }
+    return null;
+  } catch (error) {
+    console.error(`Error fetching from GitHub: ${path}`, error);
+    return null;
+  }
+}
+
+// Helper function to list files in a GitHub directory
+async function listGitHubFiles(path: string): Promise<string[]> {
+  try {
+    const repo = 'khai-nguyen-dinh/gamegeek';
+    const branch = 'main';
+    const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
+    const response = await fetch(url);
+    if (response.ok) {
+      const files = await response.json();
+      if (Array.isArray(files)) {
+        return files
+          .filter((file: any) => file.type === 'file')
+          .map((file: any) => file.name);
+      }
+    }
+    return [];
+  } catch (error) {
+    console.error(`Error listing GitHub files: ${path}`, error);
+    return [];
+  }
+}
+
+// Helper function to get all slides
+async function getAllSlides() {
+  // Try to import from local filesystem first
+  try {
+    const slideModules = import.meta.glob('../keystatic/slides/*.yaml?raw', { eager: true });
+    const moduleEntries = Object.entries(slideModules);
+    
+    if (moduleEntries.length > 0) {
+      const localSlides = moduleEntries.map((entry) => {
+        const path = entry[0];
+        const module = entry[1];
+        
+        let content = '';
+        if (typeof module === 'string') {
+          content = module;
+        } else if (module && typeof module === 'object' && 'default' in module) {
+          content = typeof module.default === 'string' ? module.default : '';
+        }
+        
+        if (!content) {
+          return null;
+        }
+        
+        try {
+          const data = load(content) as any;
+          return data;
+        } catch (error) {
+          return null;
+        }
+      }).filter(s => s !== null && s.active !== false);
+      
+      if (localSlides.length > 0) {
+        return localSlides;
+      }
+    }
+  } catch (error) {
+    console.log('Could not load slides from local filesystem:', error);
+  }
+  
+  // Fallback to GitHub API
+  try {
+    const files = await listGitHubFiles('src/keystatic/slides');
+    const yamlFiles = files.filter(f => f.endsWith('.yaml'));
+    
+    const slides = await Promise.all(
+      yamlFiles.map(async (file) => {
+        const content = await fetchFromGitHub(`src/keystatic/slides/${file}`);
+        if (!content) return null;
+        try {
+          const data = load(content) as any;
+          return data;
+        } catch (error) {
+          return null;
+        }
+      })
+    );
+    
+    const validSlides = slides.filter(s => s !== null && s.active !== false);
+    if (validSlides.length > 0) {
+      return validSlides;
+    }
+  } catch (error) {
+    console.log('Could not load slides from GitHub:', error);
+  }
+  
+  return [];
+}
+
+// Get all slides and sort by order
+const allSlides = await getAllSlides();
+const slides = allSlides.sort((a, b) => (a.order || 0) - (b.order || 0));
 
 // Get content from JSON
 const homeContent = getContentObject('home');
@@ -426,7 +534,7 @@ const moveText = homeContent?.moveText || [];
                   class="rotate position-relative z-2 d-block mx-auto">
                 <img src="/renius/image/up-right-arrow-white-small.svg" alt="Icon"
                   class="arrow-icon position-absolute z-n1">
-                <a href="/contact" class="position-absolute top-0 start-0 w-100 h-100 z-2"></a>
+                <button type="button" onclick="window.dispatchEvent(new Event('openContactModal'))" class="position-absolute top-0 start-0 w-100 h-100 z-2 border-0 bg-transparent p-0"></button>
               </div>
             </div>
           </div>

@@ -39,7 +39,7 @@ const buttonText = navbarContent?.buttonText || 'Get Started';
             </div>
             <div class="other-options d-flex flex-wrap align-items-center justify-content-end">
                 <div class="option-item d-lg-block d-none">
-                    <a href="/contact" class="btn style-two d-inline-flex flex-wrap align-items-center p-0"><span class="btn-text d-inline-block fw-semibold position-relative transition">{buttonText}</span><span class="btn-icon position-relative d-flex flex-column align-items-center justify-content-center rounded-circle transition"><i class="ri-arrow-right-up-line"></i></span></a>
+                    <button type="button" onclick="window.dispatchEvent(new Event('openContactModal'))" class="btn style-two d-inline-flex flex-wrap align-items-center p-0 border-0 bg-transparent"><span class="btn-text d-inline-block fw-semibold position-relative transition">{buttonText}</span><span class="btn-icon position-relative d-flex flex-column align-items-center justify-content-center rounded-circle transition"><i class="ri-arrow-right-up-line"></i></span></button>
                 </div>
                 <div class="option-item d-lg-none">
                     <button type="button" class="menu-mobile-trigger">
