@@ -1,0 +1,36 @@
+[
+  {
+    "slug": "vietnam-game-connect-2025",
+    "title": "Vietnam Game Connect 2025",
+    "date": "2025-08-28",
+    "location": "Hanoi, Vietnam",
+    "image": "/images/1748226528-4814542829448199111382598292933028175524248n.jpg",
+    "registrationLink": "https://example.com/vgc-2025",
+    "featured": true,
+    "isHero": false,
+    "description": "Vietnam Game Connect returns with a packed agenda of panels, workshops, and matchmaking sessions for studios, publishers, and platforms looking to expand in Vietnam and the region."
+  },
+  {
+    "slug": "gamegeek-conference-2025",
+    "title": "GameGeek Conference 2025",
+    "date": "2025-03-15",
+    "location": "Ho Chi Minh City, Vietnam",
+    "image": "/images/blogThumb1_1.jpg",
+    "registrationLink": "https://example.com/gamegeek-conf-2025",
+    "featured": true,
+    "isHero": false,
+    "description": "A full-day conference spotlighting publishing strategy, monetization, and data-driven growth for the Vietnam gaming ecosystem, featuring global speakers and local success stories."
+  },
+  {
+    "slug": "gaming-industry-summit-2025",
+    "title": "Gaming Industry Summit 2025",
+    "date": "2025-04-20",
+    "location": "Hanoi, Vietnam",
+    "image": "/images/blogThumb1_2.jpg",
+    "registrationLink": "https://example.com/gaming-industry-summit-2025",
+    "featured": false,
+    "isHero": false,
+    "description": "Summit focused on investment, M&A opportunities, and cross-border partnerships to help studios scale internationally."
+  }
+]
+
