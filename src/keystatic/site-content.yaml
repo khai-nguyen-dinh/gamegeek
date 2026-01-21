@@ -554,7 +554,7 @@ program:
         - '2030'
     searchButton: Search Projects
   eventStatus:
-    upcoming: Upcoming
+    upcoming: Up Coming
     completed: Completed
   followText: 'Follow Us:'
 meta:

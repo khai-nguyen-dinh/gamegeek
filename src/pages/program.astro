@@ -323,18 +323,20 @@ function isUpcoming(date: any): boolean {
                             const eventYear = getYear(event.date);
                             const status = isUpcoming(event.date) ? (eventStatus.upcoming || 'Upcoming') : (eventStatus.completed || 'Completed');
                             const imageUrl = event.image || `/renius/image/project-bg-${(index % 4) + 5}.jpg`;
+                            const description = event.description || '';
+                            const shortDescription = description.length > 120 ? `${description.slice(0, 117)}...` : description;
                             
                             return (
                                 <div class="col-xl-4 col-md-6">
-                                    <div class={`project-card style-four ${bgClass} position-relative overflow-hidden z-1 round-10 mb-45`}>
-                                        <img src={imageUrl} alt={event.title || 'Event'} class="project-card-img position-absolute top-0 start-0 w-100 h-100" style="object-fit: cover;">
-                                        <div class="project-header d-flex flex-wrap align-items-center justify-content-between mb-3">
-                                            <span class="project-status transition">{status}</span>
-                                            <span class="project-counter transition">{eventYear}</span>
+                                    <div class={`project-card style-four ${bgClass} position-relative overflow-hidden z-1 round-10 mb-45`} style="min-height: 420px; box-shadow: none !important;">
+                                        <img src={imageUrl} alt={event.title || 'Event'} class="position-absolute top-0 start-0 w-100 h-100" style="object-fit: cover; box-shadow: none !important; filter: none !important; z-index: 1;">
+                                        <div class="project-header position-absolute top-0 start-0 w-100 d-flex flex-wrap align-items-center justify-content-between" style="padding: 8px 12px; z-index: 3;">
+                                            <span class="project-status transition text-white bg-primary px-3 py-1 rounded-2 fw-semibold" style="font-size: 15px; text-shadow: 0 2px 6px rgba(0,0,0,0.6);">{status}</span>
+                                            <span class="project-counter transition text-white fw-semibold" style="font-size: 15px; text-shadow: 0 2px 6px rgba(0,0,0,0.6);">{eventYear}</span>
                                         </div>
-                                        <div class="project-title d-flex flex-wrap align-items-center justify-content-between">
-                                            <h3 class="fs-24 fw-semibold mb-0">
-                                                <a href={`/program/${event.slug}`} class="text-title hover-text-primary transition">{event.title || 'Event'}</a>
+                                        <div class="project-title position-absolute bottom-0 start-0 w-100 d-flex flex-wrap align-items-center justify-content-between" style="padding: 20px; z-index: 3;">
+                                            <h3 class="fs-24 fw-semibold mb-0 text-white" style="text-shadow: 0 2px 6px rgba(0,0,0,0.6);">
+                                                <a href={`/program/${event.slug}`} class="text-white hover-text-primary transition" style="text-shadow: 0 2px 6px rgba(0,0,0,0.6);">{event.title || 'Event'}</a>
                                             </h3>
                                         </div>
                                     </div>
