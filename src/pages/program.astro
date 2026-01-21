@@ -64,7 +64,7 @@ async function listGitHubFiles(path: string): Promise<string[]> {
   }
 }
 
-// Helper function to read mdoc file from GitHub
+// Helper function to read mdoc file (only from GitHub API)
 async function readMdocFile(slug: string) {
   if (!slug) return null;
   
@@ -82,109 +82,108 @@ async function readMdocFile(slug: string) {
   return {
     ...data,
     description: fileContentBody || '',
+    content: fileContentBody || '',
     slug: slug
   };
 }
 
-// Helper function to get all events
+// Helper function to get all events (local filesystem first, then GitHub API)
 async function getAllEvents() {
   let events: any[] = [];
   
-  // Always try GitHub API first for consistency (works in both dev and production)
+  // Try local filesystem first (for development)
   try {
-    const files = await listGitHubFiles('src/keystatic/events');
-    const mdocFiles = files.filter(f => f.endsWith('.mdoc'));
+    const eventModules = import.meta.glob('../keystatic/events/*.mdoc?raw', { eager: true });
+    const moduleEntries = Object.entries(eventModules);
     
-    if (mdocFiles.length > 0) {
-      const githubEvents = await Promise.all(
-        mdocFiles.map(async (file) => {
-          try {
-            const slug = file.replace('.mdoc', '');
-            const event = await readMdocFile(slug);
-            if (event) {
-              event.slug = slug;
+    if (moduleEntries.length > 0) {
+      const localEvents = moduleEntries.map((entry) => {
+        try {
+          const path = entry[0];
+          const module = entry[1];
+          const slug = path.split('/').pop()?.replace('.mdoc?raw', '') || '';
+          
+          let content = '';
+          if (typeof module === 'string') {
+            content = module;
+          } else if (module && typeof module === 'object') {
+            // Handle different module formats
+            if ('default' in module) {
+              content = typeof module.default === 'string' ? module.default : '';
+            } else {
+              // Try to stringify if it's an object
+              content = JSON.stringify(module);
             }
-            return event;
-          } catch (err) {
-            console.error(`Error loading event ${file}:`, err);
+          }
+          
+          if (!content || content.trim().length === 0) {
             return null;
           }
-        })
-      );
+          
+          const parsed = parseFrontmatter(content);
+          const data = parsed.data;
+          const bodyContent = parsed.content;
+          
+          if (!data || Object.keys(data).length === 0) {
+            return null;
+          }
+          
+          // Extract first paragraph as description, rest as content
+          const firstParagraph = bodyContent.split('\n\n')[0] || bodyContent.substring(0, 200) || '';
+          const fullContent = bodyContent || '';
+          
+          return {
+            ...data,
+            description: firstParagraph,
+            content: fullContent,
+            slug: slug
+          };
+        } catch (err) {
+          console.error('Error parsing event:', err);
+          return null;
+        }
+      }).filter(e => e !== null);
       
-      const validEvents = githubEvents.filter(e => e !== null);
-      if (validEvents.length > 0) {
-        console.log(`Loaded ${validEvents.length} events from GitHub`);
-        events = validEvents;
+      if (localEvents.length > 0) {
+        console.log(`Loaded ${localEvents.length} events from local filesystem`);
+        events = localEvents;
       }
     }
   } catch (error) {
-    console.log('Could not load events from GitHub:', error);
+    console.log('Could not load events from local filesystem:', error);
   }
   
-  // Fallback to local filesystem if GitHub fails
+  // Fallback to GitHub API if local fails (for production)
   if (events.length === 0) {
     try {
-      const eventModules = import.meta.glob('../keystatic/events/*.mdoc?raw', { eager: true });
-      const moduleEntries = Object.entries(eventModules);
+      const files = await listGitHubFiles('src/keystatic/events');
+      const mdocFiles = files.filter(f => f.endsWith('.mdoc'));
       
-      if (moduleEntries.length > 0) {
-        const localEvents = moduleEntries.map((entry) => {
-          try {
-            const path = entry[0];
-            const module = entry[1];
-            const slug = path.split('/').pop()?.replace('.mdoc?raw', '') || '';
-            
-            let content = '';
-            if (typeof module === 'string') {
-              content = module;
-            } else if (module && typeof module === 'object') {
-              // Handle different module formats
-              if ('default' in module) {
-                content = typeof module.default === 'string' ? module.default : '';
-              } else {
-                // Try to stringify if it's an object
-                content = JSON.stringify(module);
+      if (mdocFiles.length > 0) {
+        const githubEvents = await Promise.all(
+          mdocFiles.map(async (file) => {
+            try {
+              const slug = file.replace('.mdoc', '');
+              const event = await readMdocFile(slug);
+              if (event) {
+                event.slug = slug;
               }
-            }
-            
-            if (!content || content.trim().length === 0) {
+              return event;
+            } catch (err) {
+              console.error(`Error loading event ${file}:`, err);
               return null;
             }
-            
-            const parsed = parseFrontmatter(content);
-            const data = parsed.data;
-            const bodyContent = parsed.content;
-            
-            if (!data || Object.keys(data).length === 0) {
-              return null;
-            }
-            
-            return {
-              ...data,
-              description: bodyContent || '',
-              slug: slug
-            };
-          } catch (err) {
-            console.error('Error parsing event:', err);
-            return null;
-          }
-        }).filter(e => e !== null);
+          })
+        );
         
-        if (localEvents.length > 0) {
-          console.log(`Loaded ${localEvents.length} events from local filesystem`);
-          events = localEvents;
+        events = githubEvents.filter(e => e !== null);
+        if (events.length > 0) {
+          console.log(`Loaded ${events.length} events from GitHub`);
         }
       }
     } catch (error) {
-      console.log('Could not load events from local filesystem:', error);
+      console.error('Could not load events from GitHub:', error);
     }
-  }
-  
-  if (events.length === 0) {
-    console.warn('No events loaded from any source');
-  } else {
-    console.log(`Total events loaded: ${events.length}`);
   }
   
   return events;

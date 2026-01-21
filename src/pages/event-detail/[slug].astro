@@ -205,6 +205,8 @@ async function getAllEvents() {
 // Get the slug from the URL params
 export async function getStaticPaths() {
   const allEvents = await getAllEvents();
+  console.log('getStaticPaths - allEvents count:', allEvents.length);
+  console.log('getStaticPaths - allEvents:', allEvents.map(e => ({ slug: e.slug, title: e.title })));
   
   // Sample event data with full content (for events that have detailed content)
   const eventsWithContent = [
@@ -367,11 +369,16 @@ const { slug } = Astro.params;
 // Get event data from props, with fallback to direct file read
 let eventData = Astro.props;
 
+console.log('Event detail - slug:', slug);
+console.log('Event detail - props:', eventData);
+
 // If props are empty or missing title, try to load directly
 if (!eventData || !eventData.title) {
+  console.log('Props empty, trying to load from file...');
   if (slug) {
     // Try to read directly from file first
     eventData = await readMdocFile(slug);
+    console.log('Loaded from file:', eventData);
     if (eventData) {
       eventData.slug = slug;
       // Add default fields if missing
@@ -385,8 +392,11 @@ if (!eventData || !eventData.title) {
       eventData.type = eventData.type || 'Event';
     } else {
       // Fallback to getAllEvents
+      console.log('File read failed, trying getAllEvents...');
       const allEvents = await getAllEvents();
+      console.log('All events:', allEvents);
       eventData = allEvents.find(e => e.slug === slug);
+      console.log('Found event:', eventData);
     }
   }
 }
@@ -482,7 +492,6 @@ const formattedDate = formatDate(date);
           <div class="project-desc position-relative z-1 pt-90">
             <div class="row">
               <div class="col-xl-10 offset-xl-1">
-                <h1 class="section-title style-one text-title font-secondary fw-bold mb-30">{title}</h1>
                 <ul class="single-project-metainfo d-flex flex-wrap justify-content-md-between list-unstyled mb-45">
                   <li>
                     <span class="fw-medium d-block">Status</span>
