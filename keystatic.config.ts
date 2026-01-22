@@ -1,8 +1,5 @@
 import { config, fields, collection, singleton } from '@keystatic/core';
 
-// Check if running in production (Cloudflare)
-const isProduction = import.meta.env.PROD;
-
 export default config({
   storage: {
     kind: 'github',
@@ -27,7 +24,8 @@ export default config({
       schema: {
         id: fields.text({ 
           label: 'ID',
-          description: 'Unique identifier for the post',
+          description: 'Unique identifier (auto-generated from title if left empty)',
+          validation: { isRequired: false },
         }),
         title: fields.text({ 
           label: 'Title',

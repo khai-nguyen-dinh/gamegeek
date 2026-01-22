@@ -96,6 +96,11 @@ async function readMdocFile(slug: string) {
     data.title = slugToTitle(slug);
   }
   
+  // Auto-generate ID from slug if missing
+  if (!data.id) {
+    data.id = slug;
+  }
+  
   return {
     ...data,
     content: fileContentBody || '',
@@ -118,6 +123,10 @@ async function getAllPosts() {
         // Fallback: if title is missing, generate from slug
         if (!post.title) {
           post.title = slugToTitle(slug);
+        }
+        // Auto-generate ID from slug if missing
+        if (!post.id) {
+          post.id = slug;
         }
       }
       return post;
