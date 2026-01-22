@@ -37,18 +37,10 @@ export default config({
           label: 'Publish Date',
           defaultValue: { kind: 'today' },
         }),
-        category: fields.select({
+        category: fields.relationship({
           label: 'Category',
-          options: [
-            { label: "Vietnam's Game Scene", value: 'vietnam-game-scene' },
-            { label: 'IT Services', value: 'it-services' },
-            { label: 'Database Security', value: 'database-security' },
-            { label: 'IT Consultancy', value: 'it-consultancy' },
-            { label: 'App Development', value: 'app-development' },
-            { label: 'UI/UX Design', value: 'ui-ux-design' },
-            { label: 'Cyber Security', value: 'cyber-security' },
-          ],
-          defaultValue: 'it-services',
+          collection: 'categories',
+          validation: { isRequired: true },
         }),
         author: fields.text({ 
           label: 'Author',

@@ -96,81 +96,46 @@ async function readMdocFile(slug: string) {
   };
 }
 
-// Get all posts from Keystatic (local filesystem first, then GitHub API)
+// Get all posts from Keystatic (local filesystem only - from .mdoc files)
 async function getAllPosts() {
-  let posts: any[] = [];
+  const postModules = import.meta.glob('../keystatic/posts/*.mdoc?raw', { eager: true });
+  const moduleEntries = Object.entries(postModules);
   
-  // Try local filesystem first (for development) - using import.meta.glob without ?raw
-  try {
-    // Try with ?raw first
-    const postModulesRaw = import.meta.glob('../keystatic/posts/*.mdoc?raw', { eager: true });
-    const moduleEntriesRaw = Object.entries(postModulesRaw);
-    
-    if (moduleEntriesRaw.length > 0) {
-      const localPosts = moduleEntriesRaw.map((entry) => {
-        try {
-          const path = entry[0];
-          const module = entry[1];
-          const slug = path.split('/').pop()?.replace('.mdoc?raw', '') || '';
-          
-          let content = '';
-          if (typeof module === 'string') {
-            content = module;
-          } else if (module && typeof module === 'object' && 'default' in module) {
-            content = typeof module.default === 'string' ? module.default : '';
-          }
-          
-          if (!content) return null;
-          
-          const { data, content: fileContentBody } = parseFrontmatter(content);
-          if (!data || Object.keys(data).length === 0) return null;
-          
-          return {
-            ...data,
-            content: fileContentBody || '',
-            slug,
-          };
-        } catch (err) {
-          return null;
-        }
-      }).filter(p => p !== null);
-      
-      if (localPosts.length > 0) {
-        posts = localPosts;
-      }
-    }
-  } catch (error) {
-    // Silent fail, fallback to GitHub
-  }
-  
-  // Fallback to GitHub API if local fails (for production or if local doesn't work)
-  if (posts.length === 0) {
+  const posts = moduleEntries.map((entry) => {
     try {
-      const files = await listGitHubFiles('src/keystatic/posts');
-      const mdocFiles = files.filter((f) => f.endsWith('.mdoc'));
-
-      const githubPosts = await Promise.all(
-        mdocFiles.map(async (file) => {
-          const slug = file.replace('.mdoc', '');
-          const post = await readMdocFile(slug);
-          if (post) post.slug = slug;
-          return post;
-        })
-      );
-      posts = githubPosts.filter((p) => p !== null);
-    } catch (error) {
-      // Silent fail
+      const path = entry[0];
+      const module = entry[1];
+      const slug = path.split('/').pop()?.replace('.mdoc?raw', '') || '';
+      
+      let content = '';
+      if (typeof module === 'string') {
+        content = module;
+      } else if (module && typeof module === 'object' && 'default' in module) {
+        content = typeof module.default === 'string' ? module.default : '';
+      }
+      
+      if (!content) return null;
+      
+      const { data, content: fileContentBody } = parseFrontmatter(content);
+      if (!data || Object.keys(data).length === 0) return null;
+      
+      return {
+        ...data,
+        content: fileContentBody || '',
+        slug,
+      };
+    } catch (err) {
+      return null;
     }
-  }
+  }).filter(p => p !== null);
   
   return posts;
 }
 
-// Get all categories from Keystatic (local filesystem first, then GitHub API)
+// Get all categories from Keystatic (local filesystem only)
 async function getAllCategories() {
   let categories: any[] = [];
   
-  // Try local filesystem first (for development)
   try {
     const categoryModules = import.meta.glob('../keystatic/categories/*.yaml?raw', { eager: true });
     const moduleEntries = Object.entries(categoryModules);
@@ -202,41 +167,10 @@ async function getAllCategories() {
         }
       }).filter(c => c !== null);
       
-      if (localCategories.length > 0) {
-        categories = localCategories;
-      }
+      categories = localCategories;
     }
   } catch (error) {
-    // Silent fail, fallback to GitHub
-  }
-  
-  // Fallback to GitHub API if local fails (for production)
-  if (categories.length === 0) {
-    try {
-      const files = await listGitHubFiles('src/keystatic/categories');
-      const yamlFiles = files.filter((f) => f.endsWith('.yaml'));
-
-      const githubCategories = await Promise.all(
-        yamlFiles.map(async (file) => {
-          const slug = file.replace('.yaml', '');
-          const content = await fetchFromGitHub(`src/keystatic/categories/${slug}.yaml`);
-          if (!content) return null;
-          try {
-            const data = load(content) as any;
-            return {
-              id: data.id,
-              name: data.name,
-              slug,
-            };
-          } catch (error) {
-            return null;
-          }
-        })
-      );
-      categories = githubCategories.filter((c) => c !== null);
-    } catch (error) {
-      // Silent fail
-    }
+    // Silent fail
   }
   
   return categories;

@@ -1,0 +1,22 @@
+{
+  "name": "Test JSON File",
+  "description": "This is a test JSON file for the CMS",
+  "version": "1.0.0",
+  "data": {
+    "example": true,
+    "items": [
+      {
+        "id": 1,
+        "name": "Item 1",
+        "value": 100
+      },
+      {
+        "id": 2,
+        "name": "Item 2",
+        "value": 200
+      }
+    ]
+  },
+  "lastUpdated": "2025-01-27T00:00:00.000Z"
+}
+

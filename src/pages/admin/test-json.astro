@@ -1,0 +1,203 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// Default test JSON file path
+const defaultFilePath = 'src/data/test.json';
+const repo = 'khai-nguyen-dinh/gamegeek';
+const branch = 'main';
+---
+
+<Layout title="Test JSON Editor">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="card shadow">
+          <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">JSON File Editor & GitHub Push</h2>
+            <small>Edit JSON file and push to GitHub</small>
+          </div>
+          <div class="card-body">
+            <form id="jsonEditorForm">
+              <div class="mb-3">
+                <label for="filePath" class="form-label">File Path (relative to repo root)</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="filePath" 
+                  name="filePath" 
+                  value={defaultFilePath}
+                  placeholder="src/data/test.json"
+                />
+                <small class="form-text text-muted">Example: src/data/test.json</small>
+              </div>
+
+              <div class="mb-3">
+                <label for="jsonContent" class="form-label">JSON Content</label>
+                <textarea 
+                  class="form-control font-monospace" 
+                  id="jsonContent" 
+                  name="jsonContent" 
+                  rows="15"
+                  placeholder='{"test": "data", "example": true}'
+                ></textarea>
+                <small class="form-text text-muted">Enter valid JSON content</small>
+              </div>
+
+              <div class="mb-3">
+                <label for="commitMessage" class="form-label">Commit Message</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="commitMessage" 
+                  name="commitMessage" 
+                  value="Update JSON file via CMS"
+                  placeholder="Commit message"
+                />
+              </div>
+
+              <div class="d-flex gap-2">
+                <button type="button" class="btn btn-secondary" id="loadBtn">
+                  Load from GitHub
+                </button>
+                <button type="submit" class="btn btn-primary" id="saveBtn">
+                  Save & Push to GitHub
+                </button>
+              </div>
+            </form>
+
+            <div id="statusMessage" class="mt-3"></div>
+          </div>
+        </div>
+
+        <div class="card mt-4">
+          <div class="card-header">
+            <h5 class="mb-0">Instructions</h5>
+          </div>
+          <div class="card-body">
+            <ol>
+              <li>Enter the file path (relative to repository root)</li>
+              <li>Click "Load from GitHub" to load existing file content</li>
+              <li>Edit the JSON content in the textarea</li>
+              <li>Enter a commit message</li>
+              <li>Click "Save & Push to GitHub" to commit and push</li>
+            </ol>
+            <div class="alert alert-warning mt-3">
+              <strong>Note:</strong> You need to set <code>GITHUB_TOKEN</code> environment variable 
+              with a GitHub Personal Access Token that has <code>repo</code> scope.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('jsonEditorForm') as HTMLFormElement;
+    const filePathInput = document.getElementById('filePath') as HTMLInputElement;
+    const jsonContentTextarea = document.getElementById('jsonContent') as HTMLTextAreaElement;
+    const commitMessageInput = document.getElementById('commitMessage') as HTMLInputElement;
+    const loadBtn = document.getElementById('loadBtn') as HTMLButtonElement;
+    const saveBtn = document.getElementById('saveBtn') as HTMLButtonElement;
+    const statusMessage = document.getElementById('statusMessage') as HTMLDivElement;
+
+    function showStatus(message: string, type: 'success' | 'error' | 'info' = 'info') {
+      statusMessage.innerHTML = `
+        <div class="alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info'} alert-dismissible fade show" role="alert">
+          ${message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      `;
+    }
+
+    // Load file from GitHub
+    loadBtn.addEventListener('click', async () => {
+      const filePath = filePathInput.value.trim();
+      if (!filePath) {
+        showStatus('Please enter a file path', 'error');
+        return;
+      }
+
+      loadBtn.disabled = true;
+      loadBtn.textContent = 'Loading...';
+      showStatus('Loading file from GitHub...', 'info');
+
+      try {
+        const response = await fetch(`/api/github/read?path=${encodeURIComponent(filePath)}`);
+        const data = await response.json();
+
+        if (data.success) {
+          // Format JSON with indentation
+          const formatted = JSON.stringify(JSON.parse(data.content), null, 2);
+          jsonContentTextarea.value = formatted;
+          showStatus('File loaded successfully!', 'success');
+        } else {
+          showStatus(`Error: ${data.error}`, 'error');
+        }
+      } catch (error: any) {
+        showStatus(`Error loading file: ${error.message}`, 'error');
+      } finally {
+        loadBtn.disabled = false;
+        loadBtn.textContent = 'Load from GitHub';
+      }
+    });
+
+    // Save and push to GitHub
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const filePath = filePathInput.value.trim();
+      const jsonContent = jsonContentTextarea.value.trim();
+      const commitMessage = commitMessageInput.value.trim() || 'Update JSON file via CMS';
+
+      if (!filePath) {
+        showStatus('Please enter a file path', 'error');
+        return;
+      }
+
+      if (!jsonContent) {
+        showStatus('Please enter JSON content', 'error');
+        return;
+      }
+
+      // Validate JSON
+      try {
+        JSON.parse(jsonContent);
+      } catch (error) {
+        showStatus('Invalid JSON format. Please check your JSON syntax.', 'error');
+        return;
+      }
+
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving...';
+      showStatus('Saving and pushing to GitHub...', 'info');
+
+      try {
+        const response = await fetch('/api/github/push', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            path: filePath,
+            content: jsonContent,
+            message: commitMessage,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showStatus(`Success! File pushed to GitHub. Commit: ${data.commitSha}`, 'success');
+        } else {
+          showStatus(`Error: ${data.error}`, 'error');
+        }
+      } catch (error: any) {
+        showStatus(`Error saving file: ${error.message}`, 'error');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save & Push to GitHub';
+      }
+    });
+  </script>
+</Layout>
+
