@@ -43,16 +43,51 @@ function parseFrontmatter(content: string) {
   }
 }
 
+// Helper to get GitHub token from environment (for Cloudflare)
+function getGitHubToken(): string | null {
+  // In Astro pages, try to get from locals (Cloudflare runtime)
+  try {
+    // @ts-ignore - Astro locals may have runtime
+    const runtime = (Astro.locals as any)?.runtime;
+    // @ts-ignore
+    const env = runtime?.env || {};
+    if (env.GITHUB_TOKEN || env.KEYSTATIC_GITHUB_TOKEN) {
+      return env.GITHUB_TOKEN || env.KEYSTATIC_GITHUB_TOKEN;
+    }
+  } catch (e) {
+    // Ignore
+  }
+  
+  // Fallback to import.meta.env (set in Cloudflare environment variables)
+  return import.meta.env.GITHUB_TOKEN || import.meta.env.KEYSTATIC_GITHUB_TOKEN || null;
+}
+
 // Fetch raw file from GitHub (works in build and runtime)
 async function fetchFromGitHub(path: string): Promise<string | null> {
   try {
     const repo = 'khai-nguyen-dinh/gamegeek';
     const branch = 'main';
     const url = `https://raw.githubusercontent.com/${repo}/${branch}/${path}`;
-    const response = await fetch(url);
+    
+    const headers: HeadersInit = {
+      'Accept': 'application/vnd.github.v3+raw',
+      'User-Agent': 'GameGeek-CMS',
+    };
+    
+    const token = getGitHubToken();
+    if (token) {
+      headers['Authorization'] = `token ${token}`;
+    }
+    
+    const response = await fetch(url, { headers });
     if (response.ok) {
       return await response.text();
     }
+    
+    if (response.status === 403) {
+      console.error(`GitHub API rate limit or forbidden for ${path}`);
+    }
+    
     return null;
   } catch (error) {
     console.error(`Error fetching from GitHub: ${path}`, error);
@@ -66,13 +101,42 @@ async function listGitHubFiles(path: string): Promise<string[]> {
     const repo = 'khai-nguyen-dinh/gamegeek';
     const branch = 'main';
     const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
-    const response = await fetch(url);
-    if (response.ok) {
-      const files = await response.json();
-      if (Array.isArray(files)) {
-        return files.filter((file: any) => file.type === 'file').map((file: any) => file.name);
-      }
+    
+    const headers: HeadersInit = {
+      'Accept': 'application/vnd.github.v3+json',
+      'User-Agent': 'GameGeek-CMS',
+    };
+    
+    const token = getGitHubToken();
+    if (token) {
+      headers['Authorization'] = `token ${token}`;
     }
+    
+    const response = await fetch(url, { headers });
+    
+    if (!response.ok) {
+      if (response.status === 403) {
+        const errorData = await response.json().catch(() => ({}));
+        if (errorData.message?.includes('rate limit')) {
+          console.error(`GitHub API rate limit exceeded for ${path}. Please add GITHUB_TOKEN to environment variables.`);
+        } else {
+          console.error(`GitHub API forbidden for ${path}:`, errorData.message || response.statusText);
+        }
+      } else if (response.status === 404) {
+        console.error(`Directory not found: ${path}`);
+      } else {
+        console.error(`GitHub API error for ${path}: ${response.status} ${response.statusText}`);
+      }
+      return [];
+    }
+    
+    const files = await response.json();
+    if (Array.isArray(files)) {
+      const fileNames = files.filter((file: any) => file.type === 'file').map((file: any) => file.name);
+      return fileNames;
+    }
+    
+    console.warn(`Unexpected response format for ${path}:`, typeof files);
     return [];
   } catch (error) {
     console.error(`Error listing GitHub files: ${path}`, error);
@@ -171,55 +235,61 @@ async function getAllPosts() {
 async function getAllCategories() {
   let categories: any[] = [];
   
-  // Try local filesystem first (for development)
-  try {
-    const categoryModules = import.meta.glob('../keystatic/categories/*.yaml?raw', { eager: true });
-    const moduleEntries = Object.entries(categoryModules);
-    
-    if (moduleEntries.length > 0) {
-      const localCategories = moduleEntries.map((entry) => {
-        const path = entry[0];
-        const module = entry[1];
-        
-        let content = '';
-        if (typeof module === 'string') {
-          content = module;
-        } else if (module && typeof module === 'object' && 'default' in module) {
-          content = typeof module.default === 'string' ? module.default : '';
-        }
-        
-        if (!content) {
-          return null;
-        }
-        
-        try {
-          const data = load(content) as any;
-          const slug = path.split('/').pop()?.replace('.yaml', '') || '';
-          return {
-            id: data.id || slug,
-            name: data.name || slugToTitle(slug),
-            slug: data.slug || slug,
-          };
-        } catch (error) {
-          return null;
-        }
-      }).filter(c => c !== null && c.name);
+  // Only try local filesystem in development (not on Cloudflare/production)
+  const isProduction = import.meta.env.PROD;
+  
+  if (!isProduction) {
+    // Try local filesystem first (for development)
+    try {
+      const categoryModules = import.meta.glob('../keystatic/categories/*.yaml?raw', { eager: true });
+      const moduleEntries = Object.entries(categoryModules);
       
-      if (localCategories.length > 0) {
-        categories = localCategories;
+      if (moduleEntries.length > 0) {
+        const localCategories = moduleEntries.map((entry) => {
+          const path = entry[0];
+          const module = entry[1];
+          
+          let content = '';
+          if (typeof module === 'string') {
+            content = module;
+          } else if (module && typeof module === 'object' && 'default' in module) {
+            content = typeof module.default === 'string' ? module.default : '';
+          }
+          
+          if (!content) {
+            return null;
+          }
+          
+          try {
+            const data = load(content) as any;
+            const slug = path.split('/').pop()?.replace('.yaml', '') || '';
+            return {
+              id: data.id || slug,
+              name: data.name || slugToTitle(slug),
+              slug: data.slug || slug,
+            };
+          } catch (error) {
+            return null;
+          }
+        }).filter(c => c !== null && c.name);
+        
+        if (localCategories.length > 0) {
+          categories = localCategories;
+        }
       }
+    } catch (error) {
+      // Silent fail, fallback to GitHub
     }
-  } catch (error) {
-    // Silent fail, fallback to GitHub
   }
   
-  // Fallback to GitHub API if local fails (for production)
+  // Always use GitHub API in production, or as fallback in development
   if (categories.length === 0) {
     try {
       const files = await listGitHubFiles('src/keystatic/categories');
       const yamlFiles = files.filter(f => f.endsWith('.yaml'));
       
       if (yamlFiles.length === 0) {
+        console.warn('No category files found in GitHub');
         return [];
       }
       
@@ -229,9 +299,17 @@ async function getAllCategories() {
             const slug = file.replace('.yaml', '');
             const content = await fetchFromGitHub(`src/keystatic/categories/${file}`);
             
-            if (!content) return null;
+            if (!content) {
+              console.warn(`Failed to fetch category file: ${file}`);
+              return null;
+            }
             
             const data = load(content) as any;
+            if (!data || !data.name) {
+              console.warn(`Category file ${file} missing name field:`, data);
+              return null;
+            }
+            
             return {
               id: data.id || slug,
               name: data.name || slugToTitle(slug),
@@ -247,6 +325,8 @@ async function getAllCategories() {
       const validCategories = githubCategories.filter(c => c !== null && c.name);
       if (validCategories.length > 0) {
         categories = validCategories;
+      } else {
+        console.warn('No valid categories found after parsing');
       }
     } catch (error) {
       console.error('Error fetching categories from GitHub:', error);
