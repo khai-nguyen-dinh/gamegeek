@@ -589,6 +589,10 @@ export default config({
                 titleHighlight2: fields.text({ label: 'Title Highlight 2' }),
                 titlePart4: fields.text({ label: 'Title Part 4' }),
                 titleHighlight3: fields.text({ label: 'Title Highlight 3' }),
+                tagline: fields.text({ 
+                  label: 'Tagline',
+                  description: 'Hero tagline text (e.g., "leading local gaming market expert & marketing partner")',
+                }),
               },
               { label: 'Hero' }
             ),
