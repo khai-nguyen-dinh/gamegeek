@@ -87,113 +87,39 @@ async function readMdocFile(slug: string) {
   };
 }
 
-// Helper function to get all events (local filesystem first, then GitHub API)
+// Helper function to get all events (GitHub API only)
 async function getAllEvents() {
-  let events: any[] = [];
-  
-  // Try local filesystem first (for development)
   try {
-    const eventModules = import.meta.glob('../keystatic/events/*.mdoc?raw', { eager: true });
-    const moduleEntries = Object.entries(eventModules);
+    const files = await listGitHubFiles('src/keystatic/events');
+    const mdocFiles = files.filter(f => f.endsWith('.mdoc'));
     
-    if (moduleEntries.length > 0) {
-      const localEvents = moduleEntries.map((entry) => {
+    if (mdocFiles.length === 0) {
+      return [];
+    }
+    
+    const events = await Promise.all(
+      mdocFiles.map(async (file) => {
         try {
-          const path = entry[0];
-          const module = entry[1];
-          const slug = path.split('/').pop()?.replace('.mdoc?raw', '') || '';
-          
-          let content = '';
-          if (typeof module === 'string') {
-            content = module;
-          } else if (module && typeof module === 'object') {
-            // Handle different module formats
-            if ('default' in module) {
-              content = typeof module.default === 'string' ? module.default : '';
-            } else {
-              // Try to stringify if it's an object
-              content = JSON.stringify(module);
-            }
+          const slug = file.replace('.mdoc', '');
+          const event = await readMdocFile(slug);
+          if (event) {
+            event.slug = slug;
           }
-          
-          if (!content || content.trim().length === 0) {
-            return null;
-          }
-          
-          const parsed = parseFrontmatter(content);
-          const data = parsed.data;
-          const bodyContent = parsed.content;
-          
-          if (!data || Object.keys(data).length === 0) {
-            return null;
-          }
-          
-          // Extract first paragraph as description, rest as content
-          const firstParagraph = bodyContent.split('\n\n')[0] || bodyContent.substring(0, 200) || '';
-          const fullContent = bodyContent || '';
-          
-          return {
-            ...data,
-            description: firstParagraph,
-            content: fullContent,
-            slug: slug
-          };
+          return event;
         } catch (err) {
-          console.error('Error parsing event:', err);
           return null;
         }
-      }).filter(e => e !== null);
-      
-      if (localEvents.length > 0) {
-        console.log(`Loaded ${localEvents.length} events from local filesystem`);
-        events = localEvents;
-      }
-    }
+      })
+    );
+    
+    return events.filter(e => e !== null);
   } catch (error) {
-    console.log('Could not load events from local filesystem:', error);
+    return [];
   }
-  
-  // Fallback to GitHub API if local fails (for production)
-  if (events.length === 0) {
-    try {
-      const files = await listGitHubFiles('src/keystatic/events');
-      const mdocFiles = files.filter(f => f.endsWith('.mdoc'));
-      
-      if (mdocFiles.length > 0) {
-        const githubEvents = await Promise.all(
-          mdocFiles.map(async (file) => {
-            try {
-              const slug = file.replace('.mdoc', '');
-              const event = await readMdocFile(slug);
-              if (event) {
-                event.slug = slug;
-              }
-              return event;
-            } catch (err) {
-              console.error(`Error loading event ${file}:`, err);
-              return null;
-            }
-          })
-        );
-        
-        events = githubEvents.filter(e => e !== null);
-        if (events.length > 0) {
-          console.log(`Loaded ${events.length} events from GitHub`);
-        }
-      }
-    } catch (error) {
-      console.error('Could not load events from GitHub:', error);
-    }
-  }
-  
-  return events;
 }
 
-// Get all events
+// Get all events from GitHub
 const allEvents = await getAllEvents();
-
-// Debug: log events count
-console.log('Events loaded:', allEvents.length);
 
 // Get program content
 const programContent = getContentObject('program');

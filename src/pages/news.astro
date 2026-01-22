@@ -96,84 +96,78 @@ async function readMdocFile(slug: string) {
   };
 }
 
-// Get all posts from Keystatic (local filesystem only - from .mdoc files)
+// Get all posts from GitHub API only
 async function getAllPosts() {
-  const postModules = import.meta.glob('../keystatic/posts/*.mdoc?raw', { eager: true });
-  const moduleEntries = Object.entries(postModules);
-  
-  const posts = moduleEntries.map((entry) => {
-    try {
-      const path = entry[0];
-      const module = entry[1];
-      const slug = path.split('/').pop()?.replace('.mdoc?raw', '') || '';
-      
-      let content = '';
-      if (typeof module === 'string') {
-        content = module;
-      } else if (module && typeof module === 'object' && 'default' in module) {
-        content = typeof module.default === 'string' ? module.default : '';
-      }
-      
-      if (!content) return null;
-      
-      const { data, content: fileContentBody } = parseFrontmatter(content);
-      if (!data || Object.keys(data).length === 0) return null;
-      
-      return {
-        ...data,
-        content: fileContentBody || '',
-        slug,
-      };
-    } catch (err) {
-      return null;
-    }
-  }).filter(p => p !== null);
-  
-  return posts;
-}
-
-// Get all categories from Keystatic (local filesystem only)
-async function getAllCategories() {
-  let categories: any[] = [];
-  
   try {
-    const categoryModules = import.meta.glob('../keystatic/categories/*.yaml?raw', { eager: true });
-    const moduleEntries = Object.entries(categoryModules);
+    const files = await listGitHubFiles('src/keystatic/posts');
+    const mdocFiles = files.filter(f => f.endsWith('.mdoc'));
     
-    if (moduleEntries.length > 0) {
-      const localCategories = moduleEntries.map((entry) => {
+    if (mdocFiles.length === 0) {
+      return [];
+    }
+    
+    const posts = await Promise.all(
+      mdocFiles.map(async (file) => {
         try {
-          const path = entry[0];
-          const module = entry[1];
-          const slug = path.split('/').pop()?.replace('.yaml?raw', '') || '';
-          
-          let content = '';
-          if (typeof module === 'string') {
-            content = module;
-          } else if (module && typeof module === 'object' && 'default' in module) {
-            content = typeof module.default === 'string' ? module.default : '';
-          }
+          const slug = file.replace('.mdoc', '');
+          const content = await fetchFromGitHub(`src/keystatic/posts/${file}`);
           
           if (!content) return null;
           
-          const data = load(content) as any;
+          const { data, content: fileContentBody } = parseFrontmatter(content);
+          if (!data || Object.keys(data).length === 0) return null;
+          
           return {
-            id: data.id,
-            name: data.name,
+            ...data,
+            content: fileContentBody || '',
             slug,
           };
         } catch (err) {
           return null;
         }
-      }).filter(c => c !== null);
-      
-      categories = localCategories;
-    }
+      })
+    );
+    
+    return posts.filter(p => p !== null);
   } catch (error) {
-    // Silent fail
+    return [];
   }
-  
-  return categories;
+}
+
+// Get all categories from GitHub API only
+async function getAllCategories() {
+  try {
+    const files = await listGitHubFiles('src/keystatic/categories');
+    const yamlFiles = files.filter(f => f.endsWith('.yaml'));
+    
+    if (yamlFiles.length === 0) {
+      return [];
+    }
+    
+    const categories = await Promise.all(
+      yamlFiles.map(async (file) => {
+        try {
+          const slug = file.replace('.yaml', '');
+          const content = await fetchFromGitHub(`src/keystatic/categories/${file}`);
+          
+          if (!content) return null;
+          
+          const data = load(content) as any;
+          return {
+            id: data.id || slug,
+            name: data.name,
+            slug: data.slug || slug,
+          };
+        } catch (err) {
+          return null;
+        }
+      })
+    );
+    
+    return categories.filter(c => c !== null);
+  } catch (error) {
+    return [];
+  }
 }
 
 // Helpers for date handling
