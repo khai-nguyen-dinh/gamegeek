@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async (context) => {
+  const { request, cookies } = context;
   try {
     const { path, content, message } = await request.json();
 
@@ -23,13 +24,33 @@ export const POST: APIRoute = async ({ request }) => {
 
     const repo = 'khai-nguyen-dinh/gamegeek';
     const branch = 'main';
-    const githubToken = import.meta.env.GITHUB_TOKEN;
+    
+    // Try to get token from multiple sources (priority order):
+    // 1. Header X-GitHub-Token (from client-side localStorage)
+    // 2. Cookie (if user logged in via Keystatic OAuth)
+    // 3. Environment variables (GITHUB_TOKEN, KEYSTATIC_GITHUB_TOKEN, etc.)
+    const tokenFromHeader = request.headers.get('X-GitHub-Token');
+    const tokenFromCookie = cookies.get('keystatic-gh-access-token')?.value;
+    
+    // Get environment variables (support Cloudflare runtime)
+    // @ts-ignore
+    const runtime = context.locals?.runtime;
+    // @ts-ignore
+    const env = runtime?.env || {};
+    
+    const githubToken = 
+      tokenFromHeader ||
+      tokenFromCookie || 
+      env.GITHUB_TOKEN || 
+      env.KEYSTATIC_GITHUB_TOKEN ||
+      import.meta.env.GITHUB_TOKEN ||
+      import.meta.env.KEYSTATIC_GITHUB_TOKEN;
 
     if (!githubToken) {
       return new Response(
         JSON.stringify({ 
           success: false, 
-          error: 'GITHUB_TOKEN environment variable is not set. Please set it in your .env file.' 
+          error: 'GitHub token not found. Please either:\n1. Login via Keystatic OAuth (visit /keystatic first)\n2. Set GITHUB_TOKEN or KEYSTATIC_GITHUB_TOKEN environment variable' 
         }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
       );

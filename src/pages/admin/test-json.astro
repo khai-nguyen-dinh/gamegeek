@@ -56,7 +56,10 @@ const branch = 'main';
               </div>
 
               <div class="d-flex gap-2">
-                <button type="button" class="btn btn-secondary" id="loadBtn">
+                <button type="button" class="btn btn-info" id="loadLocalBtn">
+                  Load from Local
+                </button>
+                <button type="button" class="btn btn-secondary" id="loadGitHubBtn">
                   Load from GitHub
                 </button>
                 <button type="submit" class="btn btn-primary" id="saveBtn">
@@ -75,15 +78,24 @@ const branch = 'main';
           </div>
           <div class="card-body">
             <ol>
-              <li>Enter the file path (relative to repository root)</li>
-              <li>Click "Load from GitHub" to load existing file content</li>
+              <li>Enter the file path (relative to repository root, e.g., <code>src/data/test.json</code>)</li>
+              <li>Click <strong>"Load from Local"</strong> to load from local filesystem (if file exists)</li>
+              <li>Or click <strong>"Load from GitHub"</strong> to load from GitHub repository</li>
               <li>Edit the JSON content in the textarea</li>
               <li>Enter a commit message</li>
-              <li>Click "Save & Push to GitHub" to commit and push</li>
+              <li>Click <strong>"Save & Push to GitHub"</strong> to commit and push to GitHub</li>
             </ol>
-            <div class="alert alert-warning mt-3">
-              <strong>Note:</strong> You need to set <code>GITHUB_TOKEN</code> environment variable 
-              with a GitHub Personal Access Token that has <code>repo</code> scope.
+            <div class="alert alert-info mt-3">
+              <strong>Workflow:</strong> Local files → Edit in CMS → Push to GitHub → Deploy
+            </div>
+            <div class="alert alert-info mt-3">
+              <strong>Authentication:</strong> 
+              <ul class="mb-0 mt-2">
+                <li>If you're logged in via <strong>Keystatic OAuth</strong> (visit <code>/keystatic</code> first), 
+                    the token will be used automatically from your session.</li>
+                <li>Or set <code>GITHUB_TOKEN</code> or <code>KEYSTATIC_GITHUB_TOKEN</code> environment variable 
+                    with a GitHub Personal Access Token that has <code>repo</code> scope.</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -96,7 +108,8 @@ const branch = 'main';
     const filePathInput = document.getElementById('filePath') as HTMLInputElement;
     const jsonContentTextarea = document.getElementById('jsonContent') as HTMLTextAreaElement;
     const commitMessageInput = document.getElementById('commitMessage') as HTMLInputElement;
-    const loadBtn = document.getElementById('loadBtn') as HTMLButtonElement;
+    const loadLocalBtn = document.getElementById('loadLocalBtn') as HTMLButtonElement;
+    const loadGitHubBtn = document.getElementById('loadGitHubBtn') as HTMLButtonElement;
     const saveBtn = document.getElementById('saveBtn') as HTMLButtonElement;
     const statusMessage = document.getElementById('statusMessage') as HTMLDivElement;
 
@@ -109,16 +122,48 @@ const branch = 'main';
       `;
     }
 
-    // Load file from GitHub
-    loadBtn.addEventListener('click', async () => {
+    // Load file from Local filesystem
+    loadLocalBtn.addEventListener('click', async () => {
       const filePath = filePathInput.value.trim();
       if (!filePath) {
         showStatus('Please enter a file path', 'error');
         return;
       }
 
-      loadBtn.disabled = true;
-      loadBtn.textContent = 'Loading...';
+      loadLocalBtn.disabled = true;
+      loadLocalBtn.textContent = 'Loading...';
+      showStatus('Loading file from local filesystem...', 'info');
+
+      try {
+        const response = await fetch(`/api/local/read?path=${encodeURIComponent(filePath)}`);
+        const data = await response.json();
+
+        if (data.success) {
+          // Format JSON with indentation
+          const formatted = JSON.stringify(JSON.parse(data.content), null, 2);
+          jsonContentTextarea.value = formatted;
+          showStatus('File loaded from local filesystem!', 'success');
+        } else {
+          showStatus(`Error: ${data.error}`, 'error');
+        }
+      } catch (error: any) {
+        showStatus(`Error loading file: ${error.message}`, 'error');
+      } finally {
+        loadLocalBtn.disabled = false;
+        loadLocalBtn.textContent = 'Load from Local';
+      }
+    });
+
+    // Load file from GitHub
+    loadGitHubBtn.addEventListener('click', async () => {
+      const filePath = filePathInput.value.trim();
+      if (!filePath) {
+        showStatus('Please enter a file path', 'error');
+        return;
+      }
+
+      loadGitHubBtn.disabled = true;
+      loadGitHubBtn.textContent = 'Loading...';
       showStatus('Loading file from GitHub...', 'info');
 
       try {
@@ -129,15 +174,15 @@ const branch = 'main';
           // Format JSON with indentation
           const formatted = JSON.stringify(JSON.parse(data.content), null, 2);
           jsonContentTextarea.value = formatted;
-          showStatus('File loaded successfully!', 'success');
+          showStatus('File loaded from GitHub!', 'success');
         } else {
           showStatus(`Error: ${data.error}`, 'error');
         }
       } catch (error: any) {
         showStatus(`Error loading file: ${error.message}`, 'error');
       } finally {
-        loadBtn.disabled = false;
-        loadBtn.textContent = 'Load from GitHub';
+        loadGitHubBtn.disabled = false;
+        loadGitHubBtn.textContent = 'Load from GitHub';
       }
     });
 
@@ -172,11 +217,21 @@ const branch = 'main';
       showStatus('Saving and pushing to GitHub...', 'info');
 
       try {
+        // Try to get token from localStorage (if user logged in via Keystatic)
+        const tokenFromStorage = localStorage.getItem('keystatic-gh-access-token');
+        
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+        };
+        
+        // Add token to header if available (for server-side cookie fallback)
+        if (tokenFromStorage) {
+          headers['X-GitHub-Token'] = tokenFromStorage;
+        }
+        
         const response = await fetch('/api/github/push', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers,
           body: JSON.stringify({
             path: filePath,
             content: jsonContent,
