@@ -2,12 +2,245 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
-import { getContent, getContentObject } from '../utils/content.ts';
+import { load } from 'js-yaml';
+import { getContentObject } from '../utils/content.ts';
+
+// Helper to parse frontmatter from mdoc content
+function parseFrontmatter(content: string) {
+  const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+  let match = content.match(frontmatterRegex);
+  
+  if (!match) {
+    const firstDash = content.indexOf('---\n');
+    if (firstDash === 0) {
+      const secondDash = content.indexOf('\n---\n', firstDash + 4);
+      if (secondDash > 0) {
+        const yamlContent = content.substring(4, secondDash);
+        const bodyContent = content.substring(secondDash + 5);
+        try {
+          const data = load(yamlContent) as any;
+          return { data: data || {}, content: bodyContent.trim() };
+        } catch (error) {
+          console.error('Error parsing YAML:', error);
+          return { data: {}, content: bodyContent.trim() };
+        }
+      }
+    }
+    return { data: {}, content: content.trim() };
+  }
+
+  const yamlContent = match[1];
+  const bodyContent = match[2];
+
+  try {
+    const data = load(yamlContent) as any;
+    return { data: data || {}, content: bodyContent.trim() };
+  } catch (error) {
+    console.error('Error parsing YAML:', error);
+    return { data: {}, content: bodyContent.trim() };
+  }
+}
+
+// Helper to get GitHub token from environment
+function getGitHubToken(): string | null {
+  try {
+    const runtime = (Astro.locals as any)?.runtime;
+    const env = runtime?.env || {};
+    if (env.GITHUB_TOKEN || env.KEYSTATIC_GITHUB_TOKEN) {
+      return env.GITHUB_TOKEN || env.KEYSTATIC_GITHUB_TOKEN;
+    }
+  } catch (e) {
+    // Ignore
+  }
+  
+  return import.meta.env.GITHUB_TOKEN || import.meta.env.KEYSTATIC_GITHUB_TOKEN || null;
+}
+
+// Fetch raw file from GitHub
+async function fetchFromGitHub(path: string): Promise<string | null> {
+  try {
+    const repo = 'khai-nguyen-dinh/gamegeek';
+    const branch = 'main';
+    const url = `https://raw.githubusercontent.com/${repo}/${branch}/${path}`;
+    
+    const headers: HeadersInit = {
+      'Accept': 'application/vnd.github.v3+raw',
+      'User-Agent': 'GameGeek-CMS',
+    };
+    
+    const token = getGitHubToken();
+    if (token) {
+      headers['Authorization'] = `token ${token}`;
+    }
+    
+    const response = await fetch(url, { headers });
+    if (response.ok) {
+      return await response.text();
+    }
+    
+    return null;
+  } catch (error) {
+    console.error(`Error fetching from GitHub: ${path}`, error);
+    return null;
+  }
+}
+
+// List files in a GitHub directory
+async function listGitHubFiles(path: string): Promise<string[]> {
+  try {
+    const repo = 'khai-nguyen-dinh/gamegeek';
+    const branch = 'main';
+    const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
+    
+    const headers: HeadersInit = {
+      'Accept': 'application/vnd.github.v3+json',
+      'User-Agent': 'GameGeek-CMS',
+    };
+    
+    const token = getGitHubToken();
+    if (token) {
+      headers['Authorization'] = `token ${token}`;
+    }
+    
+    const response = await fetch(url, { headers });
+    if (response.ok) {
+      const files = await response.json();
+      if (Array.isArray(files)) {
+        return files.map((file: any) => file.name).filter((name: string) => name.endsWith('.mdoc'));
+      }
+    }
+    
+    return [];
+  } catch (error) {
+    console.error(`Error listing GitHub files: ${path}`, error);
+    return [];
+  }
+}
+
+// Read a single career mdoc by slug
+async function readCareerFile(slug: string) {
+  if (!slug) return null;
+  const fileContent = await fetchFromGitHub(`src/keystatic/careers/${slug}.mdoc`);
+  if (!fileContent) return null;
+
+  const { data, content: fileContentBody } = parseFrontmatter(fileContent);
+  if (!data || Object.keys(data).length === 0) return null;
+
+  return {
+    ...data,
+    content: fileContentBody || '',
+    slug,
+  };
+}
+
+// Get all careers (local filesystem first, then GitHub API)
+async function getAllCareers() {
+  let careers: any[] = [];
+  
+  // Only try local filesystem in development (not on Cloudflare/production)
+  const isProduction = import.meta.env.PROD;
+  
+  if (!isProduction) {
+    // Try local filesystem first (for development)
+    try {
+      const careerModules = import.meta.glob('../keystatic/careers/*.mdoc?raw', { eager: true });
+      const moduleEntries = Object.entries(careerModules);
+      
+      if (moduleEntries.length > 0) {
+        const localCareers = moduleEntries.map((entry) => {
+          const path = entry[0];
+          const module = entry[1];
+          
+          let content = '';
+          if (typeof module === 'string') {
+            content = module;
+          } else if (module && typeof module === 'object' && 'default' in module) {
+            content = typeof module.default === 'string' ? module.default : '';
+          }
+          
+          if (!content) {
+            return null;
+          }
+          
+          try {
+            const { data, content: fileContentBody } = parseFrontmatter(content);
+            if (!data || Object.keys(data).length === 0) return null;
+            
+            // Only return active careers
+            if (data.active === false) return null;
+            
+            const slug = path.split('/').pop()?.replace('.mdoc', '') || '';
+            return {
+              ...data,
+              content: fileContentBody || '',
+              slug,
+            };
+          } catch (error) {
+            return null;
+          }
+        }).filter(c => c !== null);
+        
+        if (localCareers.length > 0) {
+          careers = localCareers;
+        }
+      }
+    } catch (error) {
+      // Silent fail, fallback to GitHub
+      console.warn('Error reading local careers:', error);
+    }
+  }
+  
+  // Always use GitHub API in production, or as fallback in development
+  if (careers.length === 0) {
+    try {
+      const files = await listGitHubFiles('src/keystatic/careers');
+      const mdocFiles = files.filter(f => f.endsWith('.mdoc'));
+      
+      if (mdocFiles.length === 0) {
+        return [];
+      }
+      
+      const githubCareers = await Promise.all(
+        mdocFiles.map(async (file) => {
+          try {
+            const slug = file.replace('.mdoc', '');
+            const content = await fetchFromGitHub(`src/keystatic/careers/${file}`);
+            
+            if (!content) return null;
+            
+            const { data, content: fileContentBody } = parseFrontmatter(content);
+            if (!data || Object.keys(data).length === 0) return null;
+            
+            // Only return active careers
+            if (data.active === false) return null;
+            
+            return {
+              ...data,
+              content: fileContentBody || '',
+              slug,
+            };
+          } catch (err) {
+            return null;
+          }
+        })
+      );
+      
+      careers = githubCareers.filter(c => c !== null);
+    } catch (error) {
+      console.error('Error fetching careers from GitHub:', error);
+      return [];
+    }
+  }
+  
+  return careers;
+}
 
 const careerContent = getContentObject('career');
 const breadcrumb = careerContent?.breadcrumb || {};
 const jobMeta = careerContent?.jobMeta || {};
----
+
+// Load careers from Keystatic
+const allCareers = await getAllCareers();
 
 <Layout title="Careers | GameGeek">
 
@@ -42,113 +275,65 @@ const jobMeta = careerContent?.jobMeta || {};
 
     <!-- Career Section Start -->
     <div class="container ptb-120">
-      <div class="row justify-content-center">
-        <div class="col-xl-4 col-md-6">
-          <div class="job-card style-one position-relative z-1 round-10 mb-30">
-            <div class="job-info">
-              <h3 class="fs-24 fw-bold"><a href="/career/real-estate-sales-associates" class="text-title link-hover-primary transition">Real Estate Sales Associates</a></h3>
-              <ul class="job-metainfo list-unstyled">
-                <li class="position-relative"><i class="ri-map-pin-line"></i><span class="fw-medium text-title me-1">{jobMeta.location || 'Location:'}</span> Ha Noi</li>
-                <li class="position-relative"><i class="ri-briefcase-line"></i><span class="fw-medium text-title me-1">{jobMeta.type || 'Type:'}</span> Full-Time</li>
-                <li class="position-relative"><i class="ri-user-line"></i><span class="fw-medium text-title me-1">{jobMeta.experience || 'Experience:'}</span>4+ Years</li>
-              </ul>
-              <div class="text-center">
-                <a href="/career/real-estate-sales-associates" class="link style-one fw-semibold">{careerContent.applyButton || 'Apply Now'} <img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
+      {allCareers.length > 0 ? (
+        <div class="row justify-content-center">
+          {allCareers.map((career) => (
+            <div class="col-xl-4 col-md-6">
+              <div class="job-card style-one position-relative z-1 round-10 mb-30">
+                <div class="job-info">
+                  <h3 class="fs-24 fw-bold">
+                    <a href={`/career/${career.slug}`} class="text-title link-hover-primary transition">
+                      {career.title}
+                    </a>
+                  </h3>
+                  <ul class="job-metainfo list-unstyled">
+                    <li class="position-relative">
+                      <i class="ri-map-pin-line"></i>
+                      <span class="fw-medium text-title me-1">{jobMeta.location || 'Location:'}</span> {career.location}
+                    </li>
+                    <li class="position-relative">
+                      <i class="ri-briefcase-line"></i>
+                      <span class="fw-medium text-title me-1">{jobMeta.type || 'Type:'}</span> {career.type}
+                    </li>
+                    <li class="position-relative">
+                      <i class="ri-user-line"></i>
+                      <span class="fw-medium text-title me-1">{jobMeta.experience || 'Experience:'}</span> {career.experience}
+                    </li>
+                  </ul>
+                  <div class="text-center">
+                    <a href={`/career/${career.slug}`} class="link style-one fw-semibold">
+                      {careerContent.applyButton || 'Apply Now'} <img src="/renius/image/right-arrow-small.svg" alt="Icon">
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
+          ))}
+        </div>
+      ) : (
+        <div class="row justify-content-center">
+          <div class="col-12 text-center">
+            <p class="text-muted">No job openings available at the moment. Please check back later.</p>
           </div>
         </div>
-        <div class="col-xl-4 col-md-6">
-          <div class="job-card style-one position-relative z-1 round-10 mb-30">
-            <div class="job-info">
-              <h3 class="fs-24 fw-bold"><a href="/career/construction-project-manager" class="text-title link-hover-primary transition">Construction Project Manager</a></h3>
-              <ul class="job-metainfo list-unstyled">
-                <li class="position-relative"><i class="ri-map-pin-line"></i><span class="fw-medium text-title me-1">Location:</span> Ha Noi</li>
-                <li class="position-relative"><i class="ri-briefcase-line"></i><span class="fw-medium text-title me-1">Type:</span> Full-Time</li>
-                <li class="position-relative"><i class="ri-user-line"></i><span class="fw-medium text-title me-1">Experience:</span>2+ Years</li>
-              </ul>
-              <div class="text-center">
-                <a href="/career/construction-project-manager" class="link style-one fw-semibold">Apply Now <img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-4 col-md-6">
-          <div class="job-card style-one position-relative z-1 round-10 mb-30">
-            <div class="job-info">
-              <h3 class="fs-24 fw-bold"><a href="/career/architectural-assistant" class="text-title link-hover-primary transition">Architectural Assistant</a></h3>
-              <ul class="job-metainfo list-unstyled">
-                <li class="position-relative"><i class="ri-map-pin-line"></i><span class="fw-medium text-title me-1">Location:</span> Ha Noi</li>
-                <li class="position-relative"><i class="ri-briefcase-line"></i><span class="fw-medium text-title me-1">Type:</span> Full-Time</li>
-                <li class="position-relative"><i class="ri-user-line"></i><span class="fw-medium text-title me-1">Experience:</span>5+ Years</li>
-              </ul>
-              <div class="text-center">
-                <a href="#" class="link style-one fw-semibold">Apply Now <img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-4 col-md-6">
-          <div class="job-card style-one position-relative z-1 round-10 mb-30">
-            <div class="job-info">
-              <h3 class="fs-24 fw-bold"><a href="#" class="text-title link-hover-primary transition">Property Manager</a></h3>
-              <ul class="job-metainfo list-unstyled">
-                <li class="position-relative"><i class="ri-map-pin-line"></i><span class="fw-medium text-title me-1">Location:</span> Ho Chi Minh City</li>
-                <li class="position-relative"><i class="ri-briefcase-line"></i><span class="fw-medium text-title me-1">Type:</span> Full-Time</li>
-                <li class="position-relative"><i class="ri-user-line"></i><span class="fw-medium text-title me-1">Experience:</span>4+ Years</li>
-              </ul>
-              <div class="text-center">
-                <a href="#" class="link style-one fw-semibold">Apply Now <img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-4 col-md-6">
-          <div class="job-card style-one position-relative z-1 round-10 mb-30">
-            <div class="job-info">
-              <h3 class="fs-24 fw-bold"><a href="#" class="text-title link-hover-primary transition">Construction Officer</a></h3>
-              <ul class="job-metainfo list-unstyled">
-                <li class="position-relative"><i class="ri-map-pin-line"></i><span class="fw-medium text-title me-1">Location:</span> Ho Chi Minh City</li>
-                <li class="position-relative"><i class="ri-briefcase-line"></i><span class="fw-medium text-title me-1">Type:</span> Full-Time</li>
-                <li class="position-relative"><i class="ri-user-line"></i><span class="fw-medium text-title me-1">Experience:</span>3+ Years</li>
-              </ul>
-              <div class="text-center">
-                <a href="#" class="link style-one fw-semibold">Apply Now <img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-4 col-md-6">
-          <div class="job-card style-one position-relative z-1 round-10 mb-30">
-            <div class="job-info">
-              <h3 class="fs-24 fw-bold"><a href="#" class="text-title link-hover-primary transition">Client Relationship Officer</a></h3>
-              <ul class="job-metainfo list-unstyled">
-                <li class="position-relative"><i class="ri-map-pin-line"></i><span class="fw-medium text-title me-1">Location:</span> Ho Chi Minh City</li>
-                <li class="position-relative"><i class="ri-briefcase-line"></i><span class="fw-medium text-title me-1">Type:</span> Full-Time</li>
-                <li class="position-relative"><i class="ri-user-line"></i><span class="fw-medium text-title me-1">Experience:</span>3+ Years</li>
-              </ul>
-              <div class="text-center">
-                <a href="#" class="link style-one fw-semibold">Apply Now <img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <ul class="page-nav pagination justify-content-center mb-0 mt-lg-5">
-        <li class="page-item">
-          <a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#" aria-label="Previous">
-            <i class="ri-arrow-left-line"></i>
-          </a>
-        </li>
-        <li class="page-item"><a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle active" href="#">01</a></li>
-        <li class="page-item"><a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#">02</a></li>
-        <li class="page-item"><a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#">03</a></li>
-        <li class="page-item">
-          <a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#" aria-label="Next">
-            <i class="ri-arrow-right-line"></i>
-          </a>
-        </li>
-      </ul>
+      )}
+      {allCareers.length > 0 && (
+        <ul class="page-nav pagination justify-content-center mb-0 mt-lg-5">
+          <li class="page-item">
+            <a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#" aria-label="Previous">
+              <i class="ri-arrow-left-line"></i>
+            </a>
+          </li>
+          <li class="page-item"><a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle active" href="#">01</a></li>
+          <li class="page-item"><a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#">02</a></li>
+          <li class="page-item"><a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#">03</a></li>
+          <li class="page-item">
+            <a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#" aria-label="Next">
+              <i class="ri-arrow-right-line"></i>
+            </a>
+          </li>
+        </ul>
+      )}
     </div>
     <!-- Career Section End -->
 

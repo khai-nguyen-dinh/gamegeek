@@ -2,106 +2,250 @@
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
+import { load } from 'js-yaml';
 
-// Get the slug from the URL params
-export async function getStaticPaths() {
-  // Sample career posts data
-  const careers = [
-    {
-      slug: 'construction-project-manager',
-      title: 'Construction Project Manager',
-      location: 'Ha Noi',
-      type: 'Full-Time',
-      experience: '2+ Years',
-      deadline: 'May 12, 2025',
-      salary: 'UP TO 20,000,000',
-      description: 'Renius Real Estate & Construction Group, we believe in building more than just properties—we build careers with purpose. Whether you\'re a seasoned engineer, an aspiring architect, or a driven real estate professional, Renius offers a platform for growth, leadership, and innovation.',
-      responsibilities: [
-        'Assist clients in buying, selling, or renting properties.',
-        'Conduct property evaluations and market research.',
-        'Collaborate with other team members to achieve sales goals.',
-        'Ensure compliance with industry standards and legal requirements.',
-        'Maintain strong client relationships and address inquiries promptly.'
-      ],
-      qualifications: [
-        'Bachelor\'s degree in  or equivalent experience.',
-        '10 years of experience',
-        'Strong skills in communication, negotiation, customer service',
-        'Proficiency in specific tools/software, if needed',
-        'Knowledge of industry-specific standards or regulations'
-      ],
-      offers: [
-        'Competitive salary and bonus structure.',
-        'Opportunities for career growth and development.',
-        'Comprehensive health and wellness benefits.',
-        'Flexible work environment.',
-        'Supportive and inclusive company culture.'
-      ]
-    },
-    {
-      slug: 'real-estate-sales-associates',
-      title: 'Real Estate Sales Associates',
-      location: 'Ha Noi',
-      type: 'Full-Time',
-      experience: '4+ Years',
-      deadline: 'June 15, 2025',
-      salary: 'UP TO 25,000,000',
-      description: 'We are looking for experienced Real Estate Sales Associates to join our team. You will be responsible for helping clients buy, sell, and rent properties while maintaining excellent customer relationships.',
-      responsibilities: [
-        'Assist clients in buying, selling, or renting properties.',
-        'Conduct property evaluations and market research.',
-        'Collaborate with other team members to achieve sales goals.',
-        'Ensure compliance with industry standards and legal requirements.',
-        'Maintain strong client relationships and address inquiries promptly.'
-      ],
-      qualifications: [
-        'Bachelor\'s degree in Real Estate or related field.',
-        '4+ years of experience in real estate sales',
-        'Strong skills in communication, negotiation, customer service',
-        'Proficiency in CRM software and real estate tools',
-        'Valid real estate license'
-      ],
-      offers: [
-        'Competitive salary and bonus structure.',
-        'Opportunities for career growth and development.',
-        'Comprehensive health and wellness benefits.',
-        'Flexible work environment.',
-        'Supportive and inclusive company culture.'
-      ]
-    },
-    {
-      slug: 'architectural-assistant',
-      title: 'Architectural Assistant',
-      location: 'Ha Noi',
-      type: 'Full-Time',
-      experience: '5+ Years',
-      deadline: 'July 20, 2025',
-      salary: 'UP TO 30,000,000',
-      description: 'Join our architectural team as an Architectural Assistant. You will work closely with senior architects to develop design concepts and create detailed architectural drawings.',
-      responsibilities: [
-        'Assist in developing architectural designs and concepts.',
-        'Create detailed architectural drawings and specifications.',
-        'Collaborate with project teams and clients.',
-        'Ensure designs meet building codes and regulations.',
-        'Participate in site visits and project meetings.'
-      ],
-      qualifications: [
-        'Bachelor\'s degree in Architecture or related field.',
-        '5+ years of experience in architectural design',
-        'Proficiency in AutoCAD, Revit, and other design software',
-        'Strong design and technical skills',
-        'Knowledge of building codes and regulations'
-      ],
-      offers: [
-        'Competitive salary and bonus structure.',
-        'Opportunities for career growth and development.',
-        'Comprehensive health and wellness benefits.',
-        'Flexible work environment.',
-        'Supportive and inclusive company culture.'
-      ]
+// Helper to parse frontmatter from mdoc content
+function parseFrontmatter(content: string) {
+  const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+  let match = content.match(frontmatterRegex);
+  
+  if (!match) {
+    const firstDash = content.indexOf('---\n');
+    if (firstDash === 0) {
+      const secondDash = content.indexOf('\n---\n', firstDash + 4);
+      if (secondDash > 0) {
+        const yamlContent = content.substring(4, secondDash);
+        const bodyContent = content.substring(secondDash + 5);
+        try {
+          const data = load(yamlContent) as any;
+          return { data: data || {}, content: bodyContent.trim() };
+        } catch (error) {
+          console.error('Error parsing YAML:', error);
+          return { data: {}, content: bodyContent.trim() };
+        }
+      }
     }
-  ];
+    return { data: {}, content: content.trim() };
+  }
 
+  const yamlContent = match[1];
+  const bodyContent = match[2];
+
+  try {
+    const data = load(yamlContent) as any;
+    return { data: data || {}, content: bodyContent.trim() };
+  } catch (error) {
+    console.error('Error parsing YAML:', error);
+    return { data: {}, content: bodyContent.trim() };
+  }
+}
+
+// Helper to get GitHub token from environment
+function getGitHubToken(): string | null {
+  try {
+    const runtime = (Astro.locals as any)?.runtime;
+    const env = runtime?.env || {};
+    if (env.GITHUB_TOKEN || env.KEYSTATIC_GITHUB_TOKEN) {
+      return env.GITHUB_TOKEN || env.KEYSTATIC_GITHUB_TOKEN;
+    }
+  } catch (e) {
+    // Ignore
+  }
+  
+  return import.meta.env.GITHUB_TOKEN || import.meta.env.KEYSTATIC_GITHUB_TOKEN || null;
+}
+
+// Fetch raw file from GitHub
+async function fetchFromGitHub(path: string): Promise<string | null> {
+  try {
+    const repo = 'khai-nguyen-dinh/gamegeek';
+    const branch = 'main';
+    const url = `https://raw.githubusercontent.com/${repo}/${branch}/${path}`;
+    
+    const headers: HeadersInit = {
+      'Accept': 'application/vnd.github.v3+raw',
+      'User-Agent': 'GameGeek-CMS',
+    };
+    
+    const token = getGitHubToken();
+    if (token) {
+      headers['Authorization'] = `token ${token}`;
+    }
+    
+    const response = await fetch(url, { headers });
+    if (response.ok) {
+      return await response.text();
+    }
+    
+    return null;
+  } catch (error) {
+    console.error(`Error fetching from GitHub: ${path}`, error);
+    return null;
+  }
+}
+
+// List files in a GitHub directory
+async function listGitHubFiles(path: string): Promise<string[]> {
+  try {
+    const repo = 'khai-nguyen-dinh/gamegeek';
+    const branch = 'main';
+    const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
+    
+    const headers: HeadersInit = {
+      'Accept': 'application/vnd.github.v3+json',
+      'User-Agent': 'GameGeek-CMS',
+    };
+    
+    const token = getGitHubToken();
+    if (token) {
+      headers['Authorization'] = `token ${token}`;
+    }
+    
+    const response = await fetch(url, { headers });
+    if (response.ok) {
+      const files = await response.json();
+      if (Array.isArray(files)) {
+        return files.map((file: any) => file.name).filter((name: string) => name.endsWith('.mdoc'));
+      }
+    }
+    
+    return [];
+  } catch (error) {
+    console.error(`Error listing GitHub files: ${path}`, error);
+    return [];
+  }
+}
+
+// Read a single career mdoc by slug (local filesystem first, then GitHub)
+async function readCareerFile(slug: string) {
+  if (!slug) return null;
+  
+  // Try local filesystem first in development
+  const isProduction = import.meta.env.PROD;
+  
+  if (!isProduction) {
+    try {
+      const careerModules = import.meta.glob('../../keystatic/careers/*.mdoc?raw', { eager: true });
+      const moduleEntries = Object.entries(careerModules);
+      
+      for (const [path, module] of moduleEntries) {
+        const fileSlug = path.split('/').pop()?.replace('.mdoc', '') || '';
+        if (fileSlug === slug) {
+          let content = '';
+          if (typeof module === 'string') {
+            content = module;
+          } else if (module && typeof module === 'object' && 'default' in module) {
+            content = typeof module.default === 'string' ? module.default : '';
+          }
+          
+          if (content) {
+            const { data, content: fileContentBody } = parseFrontmatter(content);
+            if (data && Object.keys(data).length > 0) {
+              return {
+                ...data,
+                content: fileContentBody || '',
+                slug,
+              };
+            }
+          }
+        }
+      }
+    } catch (error) {
+      // Silent fail, fallback to GitHub
+    }
+  }
+  
+  // Fallback to GitHub API
+  const fileContent = await fetchFromGitHub(`src/keystatic/careers/${slug}.mdoc`);
+  if (!fileContent) return null;
+
+  const { data, content: fileContentBody } = parseFrontmatter(fileContent);
+  if (!data || Object.keys(data).length === 0) return null;
+
+  return {
+    ...data,
+    content: fileContentBody || '',
+    slug,
+  };
+}
+
+// Get all careers for static paths
+export async function getStaticPaths() {
+  let careers: any[] = [];
+  
+  // Try local filesystem first in development
+  const isProduction = import.meta.env.PROD;
+  
+  if (!isProduction) {
+    try {
+      const careerModules = import.meta.glob('../../keystatic/careers/*.mdoc?raw', { eager: true });
+      const moduleEntries = Object.entries(careerModules);
+      
+      const localCareers = moduleEntries.map((entry) => {
+        const path = entry[0];
+        const module = entry[1];
+        
+        let content = '';
+        if (typeof module === 'string') {
+          content = module;
+        } else if (module && typeof module === 'object' && 'default' in module) {
+          content = typeof module.default === 'string' ? module.default : '';
+        }
+        
+        if (!content) {
+          return null;
+        }
+        
+        try {
+          const { data, content: fileContentBody } = parseFrontmatter(content);
+          if (!data || Object.keys(data).length === 0) return null;
+          
+          // Only return active careers
+          if (data.active === false) return null;
+          
+          const slug = path.split('/').pop()?.replace('.mdoc', '') || '';
+          return {
+            ...data,
+            content: fileContentBody || '',
+            slug,
+          };
+        } catch (error) {
+          return null;
+        }
+      }).filter(c => c !== null);
+      
+      if (localCareers.length > 0) {
+        careers = localCareers;
+      }
+    } catch (error) {
+      // Silent fail, fallback to GitHub
+    }
+  }
+  
+  // Fallback to GitHub API
+  if (careers.length === 0) {
+    try {
+      const files = await listGitHubFiles('src/keystatic/careers');
+      const mdocFiles = files.filter(f => f.endsWith('.mdoc'));
+      
+      const githubCareers = await Promise.all(
+        mdocFiles.map(async (file) => {
+          const slug = file.replace('.mdoc', '');
+          const career = await readCareerFile(slug);
+          if (career && career.active !== false) {
+            return career;
+          }
+          return null;
+        })
+      );
+      
+      careers = githubCareers.filter(c => c !== null);
+    } catch (error) {
+      console.error('Error generating static paths for careers:', error);
+      return [];
+    }
+  }
+  
   return careers.map((career) => ({
     params: { slug: career.slug },
     props: career
@@ -109,6 +253,23 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
+
+// Get current career data - use props if available, otherwise read from file
+let careerData = Astro.props;
+if (!careerData || !careerData.title) {
+  if (slug) {
+    careerData = await readCareerFile(slug);
+    if (careerData) {
+      careerData.slug = slug;
+    }
+  }
+}
+
+// If still no data, return 404
+if (!careerData || !careerData.title) {
+  return Astro.redirect('/career', 404);
+}
+
 const {
   title = '',
   location = '',
@@ -117,14 +278,29 @@ const {
   deadline = '',
   salary = '',
   description = '',
+  content = '',
   responsibilities = [],
   qualifications = [],
   offers = [],
-} = Astro.props ?? {};
+} = careerData;
 
-if (!title) {
-  return new Response('Not found', { status: 404 });
-}
+// Format deadline date if it exists
+const formatDeadline = (deadlineValue: any) => {
+  if (!deadlineValue) return '';
+  if (typeof deadlineValue === 'string') return deadlineValue;
+  if (deadlineValue instanceof Date) {
+    return deadlineValue.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+  // Handle date object from Keystatic
+  if (deadlineValue && typeof deadlineValue === 'object') {
+    const date = new Date(deadlineValue);
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+  return '';
+};
+
+const formattedDeadline = formatDeadline(deadline);
+const displayDescription = description || content;
 ---
 
 <Layout title={`${title} | GameGeek`}>
@@ -178,7 +354,11 @@ if (!title) {
             </div>
             <div class="single-para">
               <h6 class="fs-20 fw-bold">Job Description</h6>
-              <p>{description}</p>
+              {displayDescription ? (
+                <div set:html={displayDescription} />
+              ) : (
+                <p>{description}</p>
+              )}
             </div>
             <div class="single-para">
               <h6 class="fs-20 fw-bold mb-15">Responsibilities:</h6>
@@ -211,13 +391,17 @@ if (!title) {
           <div class="sidebar me-xxl-3 mt-lg-50">
             <div class="sidebar-widget bg-gray round-10 p-0">
               <ul class="job-brief list-unstyled">
-                <li>
-                  <span class="text-title fw-semibold d-block mb-1 lh-1">Deadline For Job Application</span>
-                  {deadline}
-                </li>
-                <li>
-                  <span class="text-title fw-semibold d-block mb-1 lh-1">Salary Range</span>{salary}
-                </li>
+                {formattedDeadline && (
+                  <li>
+                    <span class="text-title fw-semibold d-block mb-1 lh-1">Deadline For Job Application</span>
+                    {formattedDeadline}
+                  </li>
+                )}
+                {salary && (
+                  <li>
+                    <span class="text-title fw-semibold d-block mb-1 lh-1">Salary Range</span>{salary}
+                  </li>
+                )}
               </ul>
             </div>
           </div>

@@ -8,7 +8,7 @@ home:
       sustainable growth across the entire game industry ecosystem.
   about:
     subtitle: ABOUT US
-    title: 'GAMEGEEK – THE GAMING CENTRAL HUB OF VIETNAM'
+    title: 'GameGeek – The Central Hub in Vietnam'
     description: >-
       Founded in 2016, GameGeek is Vietnam's central gaming hub. We bridge local
       talent with global opportunities, uniting studios, publishers, and
@@ -213,11 +213,7 @@ contactForm:
 about:
   hero:
     subtitle: THE LOCAL VOICE
-    titlePart1: 'The '
-    titleHighlight: 'central hub '
-    titlePart2: ' in Vietnam dedicated to the '
-    titleHighlight2: 'Vietnamese Game Maker '
-    titlePart3: Community
+    title: 'The central hub in Vietnam dedicated to the Vietnamese Game Maker Community'
     buttonText: Our Services
   aboutSection:
     subtitle: WHO ARE WE?
@@ -289,7 +285,7 @@ services:
     titleHighlight2: execution,
     titlePart4: ' and'
     titleHighlight3: sustained growth
-    tagline: leading local gaming market expert & marketing partner
+    tagline: Leading Local Gaming Market Expert & Marketing Partner
   moveText:
     - VIETNAM GAME CENTRAL HUB
     - CONNECTED

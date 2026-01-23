@@ -271,6 +271,91 @@ export default config({
         }),
       },
     }),
+
+    // Careers Collection
+    careers: collection({
+      label: 'Careers',
+      slugField: 'title',
+      path: 'src/keystatic/careers/*',
+      format: { contentField: 'description' },
+      schema: {
+        title: fields.text({ 
+          label: 'Job Title',
+          validation: { isRequired: true },
+        }),
+        slug: fields.slug({ name: { label: 'Title' } }),
+        location: fields.text({ 
+          label: 'Location',
+          validation: { isRequired: true },
+        }),
+        type: fields.select({
+          label: 'Job Type',
+          options: [
+            { label: 'Full-Time', value: 'Full-Time' },
+            { label: 'Part-Time', value: 'Part-Time' },
+            { label: 'Contract', value: 'Contract' },
+            { label: 'Internship', value: 'Internship' },
+            { label: 'Freelance', value: 'Freelance' },
+          ],
+          defaultValue: 'Full-Time',
+        }),
+        experience: fields.text({ 
+          label: 'Experience Required',
+          description: 'e.g., "2+ Years", "5+ Years", "Entry Level"',
+          validation: { isRequired: true },
+        }),
+        deadline: fields.date({ 
+          label: 'Application Deadline',
+          validation: { isRequired: false },
+        }),
+        salary: fields.text({ 
+          label: 'Salary Range',
+          description: 'e.g., "UP TO 20,000,000", "Competitive", "Negotiable"',
+          validation: { isRequired: false },
+        }),
+        description: fields.document({
+          label: 'Job Description',
+          formatting: true,
+          dividers: true,
+          links: true,
+          images: {
+            directory: 'public/images',
+            publicPath: '/images',
+          },
+        }),
+        responsibilities: fields.array(
+          fields.text({ label: 'Responsibility' }),
+          { 
+            label: 'Responsibilities',
+            itemLabel: (props) => props.value || 'New Responsibility',
+          }
+        ),
+        qualifications: fields.array(
+          fields.text({ label: 'Qualification' }),
+          { 
+            label: 'Qualifications',
+            itemLabel: (props) => props.value || 'New Qualification',
+          }
+        ),
+        offers: fields.array(
+          fields.text({ label: 'Benefit/Offer' }),
+          { 
+            label: 'What We Offer',
+            itemLabel: (props) => props.value || 'New Offer',
+          }
+        ),
+        featured: fields.checkbox({
+          label: 'Featured Job',
+          description: 'Show this job prominently on the careers page',
+          defaultValue: false,
+        }),
+        active: fields.checkbox({
+          label: 'Active',
+          description: 'Only active jobs will be displayed',
+          defaultValue: true,
+        }),
+      },
+    }),
   },
   singletons: {
     // Site Content - Singleton for managing all page content
@@ -509,10 +594,6 @@ export default config({
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
                 titlePart1: fields.text({ label: 'Title Part 1' }),
-                titleHighlight: fields.text({ label: 'Title Highlight' }),
-                titlePart2: fields.text({ label: 'Title Part 2' }),
-                titleHighlight2: fields.text({ label: 'Title Highlight 2' }),
-                titlePart3: fields.text({ label: 'Title Part 3' }),
                 buttonText: fields.text({ label: 'Button Text' }),
               },
               { label: 'Hero' }
@@ -582,13 +663,8 @@ export default config({
             hero: fields.object(
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
-                titlePart1: fields.text({ label: 'Title Part 1' }),
+                title: fields.text({ label: 'Title' }),
                 titleHighlight: fields.text({ label: 'Title Highlight' }),
-                titlePart2: fields.text({ label: 'Title Part 2' }),
-                titlePart3: fields.text({ label: 'Title Part 3' }),
-                titleHighlight2: fields.text({ label: 'Title Highlight 2' }),
-                titlePart4: fields.text({ label: 'Title Part 4' }),
-                titleHighlight3: fields.text({ label: 'Title Highlight 3' }),
                 tagline: fields.text({ 
                   label: 'Tagline',
                   description: 'Hero tagline text (e.g., "leading local gaming market expert & marketing partner")',

@@ -36,7 +36,7 @@ const cta = aboutContent?.cta || {};
                   style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 0ms; animation-direction: normal; animation-fill-mode: both; font-weight: 400;">
                   {heroContent.subtitle || 'THE LOCAL VOICE'}</h6>
                 <h1 class="font-secondary text-white" data-cue="slideInUp" data-delay="300" data-show="true"
-                  style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;" set:html={`${heroContent.titlePart1 || 'The '}<span class="fw-black">${heroContent.titleHighlight || 'central hub '}</span>${heroContent.titlePart2 || ' in Vietnam dedicated to the '}<span class="fw-black">${heroContent.titleHighlight2 || 'Vietnamese Game Maker '}</span>${heroContent.titlePart3 || 'Community'}`}></h1>
+                  style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 300ms; animation-direction: normal; animation-fill-mode: both;" set:html={`${heroContent.title || 'The '}`}></h1>
                 <a href="/services" class="btn style-one d-inline-flex flex-wrap align-items-center p-0"
                   data-cue="slideInUp" data-delay="500" data-show="true"
                   style="animation-name: slideInUp; animation-duration: 600ms; animation-timing-function: ease; animation-delay: 500ms; animation-direction: normal; animation-fill-mode: both;"><span
