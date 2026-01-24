@@ -271,18 +271,25 @@ if (!careerData || !careerData.title) {
 }
 
 const {
-  title = '',
-  location = '',
-  type = '',
-  experience = '',
+  title: rawTitle = '',
+  location: rawLocation = '',
+  type: rawType = '',
+  experience: rawExperience = '',
   deadline = '',
-  salary = '',
+  salary: rawSalary = '',
   description = '',
   content = '',
   responsibilities = [],
   qualifications = [],
   offers = [],
 } = careerData;
+
+// Ensure all values are strings
+const title = String(rawTitle || '');
+const location = String(rawLocation || '');
+const type = String(rawType || '');
+const experience = String(rawExperience || '');
+const salary = String(rawSalary || '');
 
 // Format deadline date if it exists
 const formatDeadline = (deadlineValue: any) => {
@@ -301,9 +308,10 @@ const formatDeadline = (deadlineValue: any) => {
 
 const formattedDeadline = formatDeadline(deadline);
 const displayDescription = description || content;
+const pageTitle = title ? `${title} | GameGeek` : 'Career | GameGeek';
 ---
 
-<Layout title={`${title} | GameGeek`}>
+<Layout title={pageTitle}>
 
 
 <!-- Custom Cursor -->

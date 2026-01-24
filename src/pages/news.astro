@@ -1,21 +1,21 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
-import Footer from '../components/Footer.astro';
-import { load } from 'js-yaml';
-import { getContentObject } from '../utils/content.ts';
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import { load } from "js-yaml";
+import { getContentObject } from "../utils/content.ts";
 
 // Helper to parse frontmatter from mdoc content
 function parseFrontmatter(content: string) {
   // Handle both formats: ---\n...\n---\n... and ---\n...\n---\n---\n...
   const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
   let match = content.match(frontmatterRegex);
-  
+
   // If no match, try to find first --- and last ---
   if (!match) {
-    const firstDash = content.indexOf('---\n');
+    const firstDash = content.indexOf("---\n");
     if (firstDash === 0) {
-      const secondDash = content.indexOf('\n---\n', firstDash + 4);
+      const secondDash = content.indexOf("\n---\n", firstDash + 4);
       if (secondDash > 0) {
         const yamlContent = content.substring(4, secondDash);
         const bodyContent = content.substring(secondDash + 5);
@@ -23,7 +23,7 @@ function parseFrontmatter(content: string) {
           const data = load(yamlContent) as any;
           return { data: data || {}, content: bodyContent.trim() };
         } catch (error) {
-          console.error('Error parsing YAML:', error);
+          console.error("Error parsing YAML:", error);
           return { data: {}, content: bodyContent.trim() };
         }
       }
@@ -38,7 +38,7 @@ function parseFrontmatter(content: string) {
     const data = load(yamlContent) as any;
     return { data: data || {}, content: bodyContent.trim() };
   } catch (error) {
-    console.error('Error parsing YAML:', error, 'YAML content:', yamlContent);
+    console.error("Error parsing YAML:", error, "YAML content:", yamlContent);
     return { data: {}, content: bodyContent.trim() };
   }
 }
@@ -57,37 +57,41 @@ function getGitHubToken(): string | null {
   } catch (e) {
     // Ignore
   }
-  
+
   // Fallback to import.meta.env (set in Cloudflare environment variables)
-  return import.meta.env.GITHUB_TOKEN || import.meta.env.KEYSTATIC_GITHUB_TOKEN || null;
+  return (
+    import.meta.env.GITHUB_TOKEN ||
+    import.meta.env.KEYSTATIC_GITHUB_TOKEN ||
+    null
+  );
 }
 
 // Fetch raw file from GitHub (works in build and runtime)
 async function fetchFromGitHub(path: string): Promise<string | null> {
   try {
-    const repo = 'khai-nguyen-dinh/gamegeek';
-    const branch = 'main';
+    const repo = "khai-nguyen-dinh/gamegeek";
+    const branch = "main";
     const url = `https://raw.githubusercontent.com/${repo}/${branch}/${path}`;
-    
+
     const headers: HeadersInit = {
-      'Accept': 'application/vnd.github.v3+raw',
-      'User-Agent': 'GameGeek-CMS',
+      Accept: "application/vnd.github.v3+raw",
+      "User-Agent": "GameGeek-CMS",
     };
-    
+
     const token = getGitHubToken();
     if (token) {
-      headers['Authorization'] = `token ${token}`;
+      headers["Authorization"] = `token ${token}`;
     }
-    
+
     const response = await fetch(url, { headers });
     if (response.ok) {
       return await response.text();
     }
-    
+
     if (response.status === 403) {
       console.error(`GitHub API rate limit or forbidden for ${path}`);
     }
-    
+
     return null;
   } catch (error) {
     console.error(`Error fetching from GitHub: ${path}`, error);
@@ -98,44 +102,53 @@ async function fetchFromGitHub(path: string): Promise<string | null> {
 // List files in a GitHub directory
 async function listGitHubFiles(path: string): Promise<string[]> {
   try {
-    const repo = 'khai-nguyen-dinh/gamegeek';
-    const branch = 'main';
+    const repo = "khai-nguyen-dinh/gamegeek";
+    const branch = "main";
     const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
-    
+
     const headers: HeadersInit = {
-      'Accept': 'application/vnd.github.v3+json',
-      'User-Agent': 'GameGeek-CMS',
+      Accept: "application/vnd.github.v3+json",
+      "User-Agent": "GameGeek-CMS",
     };
-    
+
     const token = getGitHubToken();
     if (token) {
-      headers['Authorization'] = `token ${token}`;
+      headers["Authorization"] = `token ${token}`;
     }
-    
+
     const response = await fetch(url, { headers });
-    
+
     if (!response.ok) {
       if (response.status === 403) {
         const errorData = await response.json().catch(() => ({}));
-        if (errorData.message?.includes('rate limit')) {
-          console.error(`GitHub API rate limit exceeded for ${path}. Please add GITHUB_TOKEN to environment variables.`);
+        if (errorData.message?.includes("rate limit")) {
+          console.error(
+            `GitHub API rate limit exceeded for ${path}. Please add GITHUB_TOKEN to environment variables.`,
+          );
         } else {
-          console.error(`GitHub API forbidden for ${path}:`, errorData.message || response.statusText);
+          console.error(
+            `GitHub API forbidden for ${path}:`,
+            errorData.message || response.statusText,
+          );
         }
       } else if (response.status === 404) {
         console.error(`Directory not found: ${path}`);
       } else {
-        console.error(`GitHub API error for ${path}: ${response.status} ${response.statusText}`);
+        console.error(
+          `GitHub API error for ${path}: ${response.status} ${response.statusText}`,
+        );
       }
       return [];
     }
-    
+
     const files = await response.json();
     if (Array.isArray(files)) {
-      const fileNames = files.filter((file: any) => file.type === 'file').map((file: any) => file.name);
+      const fileNames = files
+        .filter((file: any) => file.type === "file")
+        .map((file: any) => file.name);
       return fileNames;
     }
-    
+
     console.warn(`Unexpected response format for ${path}:`, typeof files);
     return [];
   } catch (error) {
@@ -147,14 +160,14 @@ async function listGitHubFiles(path: string): Promise<string[]> {
 // Helper to convert slug to readable title
 function slugToTitle(slug: string): string {
   // If slug already looks like a title (has spaces or special chars), return as-is
-  if (slug.includes(' ') || /[A-Z]/.test(slug)) {
+  if (slug.includes(" ") || /[A-Z]/.test(slug)) {
     return slug;
   }
   // Otherwise, convert from kebab-case to Title Case
   return slug
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ');
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
 }
 
 // Read a single post mdoc by slug
@@ -170,7 +183,7 @@ async function readMdocFile(slug: string) {
   if (!data.title) {
     data.title = slugToTitle(slug);
   }
-  
+
   // Auto-generate ID from slug if missing
   if (!data.id) {
     data.id = slug;
@@ -178,7 +191,7 @@ async function readMdocFile(slug: string) {
 
   return {
     ...data,
-    content: fileContentBody || '',
+    content: fileContentBody || "",
     slug,
   };
 }
@@ -186,46 +199,46 @@ async function readMdocFile(slug: string) {
 // Get all posts from GitHub API only
 async function getAllPosts() {
   try {
-    const files = await listGitHubFiles('src/keystatic/posts');
-    const mdocFiles = files.filter(f => f.endsWith('.mdoc'));
-    
+    const files = await listGitHubFiles("src/keystatic/posts");
+    const mdocFiles = files.filter((f) => f.endsWith(".mdoc"));
+
     if (mdocFiles.length === 0) {
       return [];
     }
-    
+
     const posts = await Promise.all(
       mdocFiles.map(async (file) => {
         try {
-          const slug = file.replace('.mdoc', '');
+          const slug = file.replace(".mdoc", "");
           const content = await fetchFromGitHub(`src/keystatic/posts/${file}`);
-          
+
           if (!content) return null;
-          
+
           const { data, content: fileContentBody } = parseFrontmatter(content);
           if (!data || Object.keys(data).length === 0) return null;
-          
+
           // Fallback: if title is missing, generate from slug
           if (!data.title) {
             data.title = slugToTitle(slug);
           }
-          
+
           // Auto-generate ID from slug if missing
           if (!data.id) {
             data.id = slug;
           }
-          
+
           return {
             ...data,
-            content: fileContentBody || '',
+            content: fileContentBody || "",
             slug,
           };
         } catch (err) {
           return null;
         }
-      })
+      }),
     );
-    
-    return posts.filter(p => p !== null);
+
+    return posts.filter((p) => p !== null);
   } catch (error) {
     return [];
   }
@@ -234,45 +247,55 @@ async function getAllPosts() {
 // Get all categories (local filesystem first, then GitHub API)
 async function getAllCategories() {
   let categories: any[] = [];
-  
+
   // Only try local filesystem in development (not on Cloudflare/production)
   const isProduction = import.meta.env.PROD;
-  
+
   if (!isProduction) {
     // Try local filesystem first (for development)
     try {
-      const categoryModules = import.meta.glob('../keystatic/categories/*.yaml?raw', { eager: true });
+      const categoryModules = import.meta.glob(
+        "../keystatic/categories/*.yaml?raw",
+        { eager: true },
+      );
       const moduleEntries = Object.entries(categoryModules);
-      
+
       if (moduleEntries.length > 0) {
-        const localCategories = moduleEntries.map((entry) => {
-          const path = entry[0];
-          const module = entry[1];
-          
-          let content = '';
-          if (typeof module === 'string') {
-            content = module;
-          } else if (module && typeof module === 'object' && 'default' in module) {
-            content = typeof module.default === 'string' ? module.default : '';
-          }
-          
-          if (!content) {
-            return null;
-          }
-          
-          try {
-            const data = load(content) as any;
-            const slug = path.split('/').pop()?.replace('.yaml', '') || '';
-            return {
-              id: data.id || slug,
-              name: data.name || slugToTitle(slug),
-              slug: data.slug || slug,
-            };
-          } catch (error) {
-            return null;
-          }
-        }).filter(c => c !== null && c.name);
-        
+        const localCategories = moduleEntries
+          .map((entry) => {
+            const path = entry[0];
+            const module = entry[1];
+
+            let content = "";
+            if (typeof module === "string") {
+              content = module;
+            } else if (
+              module &&
+              typeof module === "object" &&
+              "default" in module
+            ) {
+              content =
+                typeof module.default === "string" ? module.default : "";
+            }
+
+            if (!content) {
+              return null;
+            }
+
+            try {
+              const data = load(content) as any;
+              const slug = path.split("/").pop()?.replace(".yaml", "") || "";
+              return {
+                id: data.id || slug,
+                name: data.name || slugToTitle(slug),
+                slug: data.slug || slug,
+              };
+            } catch (error) {
+              return null;
+            }
+          })
+          .filter((c) => c !== null && c.name);
+
         if (localCategories.length > 0) {
           categories = localCategories;
         }
@@ -281,35 +304,37 @@ async function getAllCategories() {
       // Silent fail, fallback to GitHub
     }
   }
-  
+
   // Always use GitHub API in production, or as fallback in development
   if (categories.length === 0) {
     try {
-      const files = await listGitHubFiles('src/keystatic/categories');
-      const yamlFiles = files.filter(f => f.endsWith('.yaml'));
-      
+      const files = await listGitHubFiles("src/keystatic/categories");
+      const yamlFiles = files.filter((f) => f.endsWith(".yaml"));
+
       if (yamlFiles.length === 0) {
-        console.warn('No category files found in GitHub');
+        console.warn("No category files found in GitHub");
         return [];
       }
-      
+
       const githubCategories = await Promise.all(
         yamlFiles.map(async (file) => {
           try {
-            const slug = file.replace('.yaml', '');
-            const content = await fetchFromGitHub(`src/keystatic/categories/${file}`);
-            
+            const slug = file.replace(".yaml", "");
+            const content = await fetchFromGitHub(
+              `src/keystatic/categories/${file}`,
+            );
+
             if (!content) {
               console.warn(`Failed to fetch category file: ${file}`);
               return null;
             }
-            
+
             const data = load(content) as any;
             if (!data || !data.name) {
               console.warn(`Category file ${file} missing name field:`, data);
               return null;
             }
-            
+
             return {
               id: data.id || slug,
               name: data.name || slugToTitle(slug),
@@ -319,20 +344,22 @@ async function getAllCategories() {
             console.error(`Error parsing category ${file}:`, err);
             return null;
           }
-        })
+        }),
       );
-      
-      const validCategories = githubCategories.filter(c => c !== null && c.name);
+
+      const validCategories = githubCategories.filter(
+        (c) => c !== null && c.name,
+      );
       if (validCategories.length > 0) {
         categories = validCategories;
       } else {
-        console.warn('No valid categories found after parsing');
+        console.warn("No valid categories found after parsing");
       }
     } catch (error) {
-      console.error('Error fetching categories from GitHub:', error);
+      console.error("Error fetching categories from GitHub:", error);
     }
   }
-  
+
   return categories;
 }
 
@@ -340,7 +367,7 @@ async function getAllCategories() {
 const getDateTime = (value: any) => {
   if (!value) return 0;
   if (value instanceof Date) return value.getTime();
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     const parsed = new Date(value);
     return Number.isNaN(parsed.getTime()) ? 0 : parsed.getTime();
   }
@@ -349,21 +376,23 @@ const getDateTime = (value: any) => {
 
 const getDisplayDate = (value: any) => {
   const time = getDateTime(value);
-  if (!time) return { displayDay: '', displayMonth: '' };
+  if (!time) return { displayDay: "", displayMonth: "" };
   const dateObj = new Date(time);
   const day = String(dateObj.getDate());
-  const month = dateObj.toLocaleString('en-US', { month: 'short' });
+  const month = dateObj.toLocaleString("en-US", { month: "short" });
   return { displayDay: day, displayMonth: month };
 };
 
-const newsContent = getContentObject('news');
+const newsContent = getContentObject("news");
 const breadcrumb = newsContent?.breadcrumb || {};
 const sidebar = newsContent?.sidebar || {};
 
 // Load categories and posts from Keystatic (GitHub)
 const categories = await getAllCategories();
 const categoryMap = new Map(categories.map((cat) => [cat.id, cat.name]));
-const categorySlugToIdMap = new Map(categories.map((cat) => [cat.slug, cat.id]));
+const categorySlugToIdMap = new Map(
+  categories.map((cat) => [cat.slug, cat.id]),
+);
 
 const allPosts = await getAllPosts();
 
@@ -378,22 +407,28 @@ const postsWithMeta = allPosts.map((post) => {
     displayDay,
     displayMonth,
     // Map image to thumb for compatibility
-    thumb: post.image || post.thumb || '',
+    thumb: post.image || post.thumb || "",
   };
 });
 
 // Get category filter from URL query parameter
-const categorySlug = Astro.url.searchParams.get('category');
-const selectedCategoryId = categorySlug ? categorySlugToIdMap.get(categorySlug) : null;
+const categorySlug = Astro.url.searchParams.get("category");
+const selectedCategoryId = categorySlug
+  ? categorySlugToIdMap.get(categorySlug)
+  : null;
 
 // Filter posts by category if category is selected
 let filteredPosts = postsWithMeta;
 if (selectedCategoryId) {
-  filteredPosts = postsWithMeta.filter((post) => post.categoryId === selectedCategoryId);
+  filteredPosts = postsWithMeta.filter(
+    (post) => post.categoryId === selectedCategoryId,
+  );
 }
 
 // Sort posts by date (newest first)
-const sortedPosts = [...filteredPosts].sort((a, b) => getDateTime(b.date) - getDateTime(a.date));
+const sortedPosts = [...filteredPosts].sort(
+  (a, b) => getDateTime(b.date) - getDateTime(a.date),
+);
 
 // Get recent posts (first 3)
 const recentPosts = sortedPosts.slice(0, 3);
@@ -411,246 +446,476 @@ postsWithMeta.forEach((post) => {
 });
 ---
 
-<Layout title="Blog Left Sidebar | GameGeek">
+<Layout title="News | GameGeek">
+  <div id="smooth-wrapper">
+    <div id="smooth-content">
+      <!-- Navbar Start -->
+      <Navbar variant="white" />
+      <!-- Navbar End -->
 
-<!-- Custom Cursor -->
-<div class="cursor"><span class="cursor-text"></span></div>
-<div class="cursor-inner"></div>
+      <!-- Breadcrumb Section Start -->
+      <div class="breadcrumb-area position-relative z-1">
+        <img
+          src="/renius/image/br-line-shape.png"
+          alt="Shape"
+          class="br-line-shape position-absolute top-0 start-0 w-100 h-100 z-n1"
+        />
+        <img
+          src="/renius/image/br-shape-1.png"
+          alt="Shape"
+          class="br-shape-one position-absolute z-n1 bounce"
+        />
+        <img
+          src="/renius/image/br-shape-2.png"
+          alt="Shape"
+          class="br-shape-two position-absolute bottom-0 z-n1 moveHorizontal"
+        />
+        <div class="container-fluid px-xxl-5">
+          <div class="row">
+            <div class="col-md-10 offset-md-1 text-center">
+              <h2 class="section-title style-one fw-black text-title">
+                {breadcrumb.title || "NEWS & INSIGHTS"}
+              </h2>
+              <ul class="br-menu list-unstyled">
+                <li>
+                  <a href="/"
+                    ><img src="/renius/image/home-icon.svg" alt="Icon" />{
+                      breadcrumb.home || "HOME"
+                    }</a>
+                </li>
+                <li>{breadcrumb.current || "BLOG"}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Breadcrumb Section End -->
 
-<div id="smooth-wrapper">
-  <div id="smooth-content">
-    <!-- Navbar Start -->
-    <Navbar variant="white" />
-    <!-- Navbar End -->
-
-    <!-- Breadcrumb Section Start -->
-    <div class="breadcrumb-area position-relative z-1">
-      <img src="/renius/image/br-line-shape.png" alt="Shape" class="br-line-shape position-absolute top-0 start-0 w-100 h-100 z-n1">
-      <img src="/renius/image/br-shape-1.png" alt="Shape" class="br-shape-one position-absolute z-n1 bounce">
-      <img src="/renius/image/br-shape-2.png" alt="Shape" class="br-shape-two position-absolute bottom-0 z-n1 moveHorizontal">
-      <div class="container-fluid px-xxl-5">
+      <!-- Blog Section Start -->
+      <div class="container ptb-120">
         <div class="row">
-          <div class="col-md-10 offset-md-1 text-center">
-            <h2 class="section-title style-one fw-black text-title">{breadcrumb.title || 'NEWS & INSIGHTS'}</h2>
-            <ul class="br-menu list-unstyled">
-              <li><a href="/"><img src="/renius/image/home-icon.svg" alt="Icon">{breadcrumb.home || 'HOME'}</a></li>
-              <li>{breadcrumb.current || 'BLOG'}</li>
+          <div class="col-xl-4 order-xl-1 order-2">
+            <aside class="sidebar mt-lg-50">
+              <div class="sidebar-widget search-widget bg-gray round-10">
+                <form action="#" class="position-relative">
+                  <input
+                    type="search"
+                    placeholder={sidebar.search?.placeholder || "Search"}
+                    class="w-100 bg-white border-0 round-10 text-para outline-0"
+                  />
+                  <button
+                    class="position-absolute top-0 h-100 bg-transparent border-0"
+                    ><i class="ri-search-line"></i></button
+                  >
+                </form>
+              </div>
+              <div class="sidebar-widget category-widget bg-gray round-10">
+                <h3
+                  class="sidebar-widget-title fs-18 fw-semibold text-title mb-15"
+                >
+                  {sidebar.categories?.title || "Categories"}
+                </h3>
+                <ul class="list-unstyled mb-0">
+                  {
+                    categories.map((cat) => {
+                      const count = categoryCounts.get(cat.id) || 0;
+                      return (
+                        <li>
+                          <a
+                            href={`/news?category=${cat.slug}`}
+                            class="position-relative"
+                          >
+                            <i class="ri-arrow-right-s-line position-absolute" />
+                            {cat.name} <span>({count})</span>
+                          </a>
+                        </li>
+                      );
+                    })
+                  }
+                </ul>
+              </div>
+              <div class="sidebar-widget category-widget bg-gray round-10">
+                <h3
+                  class="sidebar-widget-title fs-18 fw-semibold text-title mb-15"
+                >
+                  {sidebar.recentPosts?.title || "Recent Posts"}
+                </h3>
+                <div class="rp-post-wrap">
+                  {
+                    recentPosts.map((post) => (
+                      <div class="rp-post-card d-flex flex-wrap align-items-center">
+                        <div class="rp-post-img">
+                          <img src={post.thumb} alt="Post Thumb" />
+                        </div>
+                        <div class="rp-post-info">
+                          <a
+                            href={`/news/${post.slug}`}
+                            class="fs-15 fw-medium text_primary link-hover-primary d-block mb-1"
+                          >
+                            {post.date}
+                          </a>
+                          <h5 class="fs-15 fw-bold mb-0">
+                            <a
+                              href={`/news/${post.slug}`}
+                              class="text-title hover-text-primary transition"
+                            >
+                              {post.title}
+                            </a>
+                          </h5>
+                        </div>
+                      </div>
+                    ))
+                  }
+                </div>
+              </div>
+              <div class="sidebar-widget tags-widget bg-gray round-10">
+                <h3
+                  class="sidebar-widget-title fs-18 fw-semibold text-title mb-15"
+                >
+                  {sidebar.tags?.title || "Tags"}
+                </h3>
+                <ul class="list-unstyled mb-0">
+                  {
+                    (
+                      sidebar.tags?.items || [
+                        "Business",
+                        "Development",
+                        "Design",
+                        "Marketing",
+                        "Real Estate",
+                      ]
+                    ).map((tag) => (
+                      <li>
+                        <a href="#">{tag}</a>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </div>
+            </aside>
+          </div>
+
+          <div class="col-xl-8 order-xl-2 order-1">
+            <!-- Featured Post (News 1) - Large Box -->
+            {
+              featuredPost && (
+                <div class="mb-40">
+                  <div class="blog-card style-one position-relative">
+                    <div class="blog-img position-relative overflow-hidden round-20">
+                      <img
+                        src={featuredPost.thumb}
+                        alt="Blog"
+                        class="round-20 w-100"
+                        style="height: 400px; object-fit: cover;"
+                      />
+                      <a
+                        href={`/news/${featuredPost.slug}`}
+                        class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10"
+                      >
+                        <span class="font-secondary fs-24 fw-black d-block">
+                          {featuredPost.displayDay}
+                        </span>{" "}
+                        {featuredPost.displayMonth}
+                      </a>
+                    </div>
+                    <ul class="blog-metainfo list-unstyled mt-3">
+                      <li class="fs-15 d-inline-block position-relative">
+                        By <a href="#">{featuredPost.author}</a>
+                      </li>
+                      <li class="fs-15 d-inline-block position-relative">
+                        {featuredPost.category}
+                      </li>
+                    </ul>
+                    <h3 class="fs-28 fw-black mt-2">
+                      <a
+                        href={`/news/${featuredPost.slug}`}
+                        class="text-title link-hover-primary fw-bold transition"
+                      >
+                        {featuredPost.title}
+                      </a>
+                    </h3>
+                    <a
+                      href={`/news/${featuredPost.slug}`}
+                      class="link style-one fw-semibold"
+                    >
+                      {newsContent.readMore || "Read More"}
+                      <img
+                        src="/renius/image/right-arrow-small.svg"
+                        alt="Icon"
+                      />
+                    </a>
+                  </div>
+                </div>
+              )
+            }
+
+            <!-- Two Rows of 2 Posts Each (News 2) -->
+            {
+              twoByTwoPosts.length > 0 && (
+                <>
+                  {/* First Row - 2 Posts */}
+                  <div class="row mb-30">
+                    {twoByTwoPosts.slice(0, 2).map((post) => (
+                      <div class="col-md-6">
+                        <div class="blog-card style-one position-relative mb-30">
+                          <div class="blog-img position-relative overflow-hidden round-20">
+                            <img
+                              src={post.thumb}
+                              alt="Blog"
+                              class="round-20 w-100"
+                              style="height: 280px; object-fit: cover;"
+                            />
+                            <a
+                              href={`/news/${post.slug}`}
+                              class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10"
+                            >
+                              <span class="font-secondary fs-24 fw-black d-block">
+                                {post.displayDay}
+                              </span>{" "}
+                              {post.displayMonth}
+                            </a>
+                          </div>
+                          <ul class="blog-metainfo list-unstyled">
+                            <li class="fs-15 d-inline-block position-relative">
+                              By <a href="#">{post.author}</a>
+                            </li>
+                            <li class="fs-15 d-inline-block position-relative">
+                              {post.category}
+                            </li>
+                          </ul>
+                          <h3 class="fs-24 fw-black">
+                            <a
+                              href={`/news/${post.slug}`}
+                              class="text-title link-hover-primary fw-bold transition"
+                            >
+                              {post.title}
+                            </a>
+                          </h3>
+                          <a
+                            href={`/news/${post.slug}`}
+                            class="link style-one fw-semibold"
+                          >
+                            Read More
+                            <img
+                              src="/renius/image/right-arrow-small.svg"
+                              alt="Icon"
+                            />
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Second Row - 2 Posts */}
+                  <div class="row mb-30">
+                    {twoByTwoPosts.slice(2, 4).map((post) => (
+                      <div class="col-md-6">
+                        <div class="blog-card style-one position-relative mb-30">
+                          <div class="blog-img position-relative overflow-hidden round-20">
+                            <img
+                              src={post.thumb}
+                              alt="Blog"
+                              class="round-20 w-100"
+                              style="height: 280px; object-fit: cover;"
+                            />
+                            <a
+                              href={`/news/${post.slug}`}
+                              class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10"
+                            >
+                              <span class="font-secondary fs-24 fw-black d-block">
+                                {post.displayDay}
+                              </span>{" "}
+                              {post.displayMonth}
+                            </a>
+                          </div>
+                          <ul class="blog-metainfo list-unstyled">
+                            <li class="fs-15 d-inline-block position-relative">
+                              By <a href="#">{post.author}</a>
+                            </li>
+                            <li class="fs-15 d-inline-block position-relative">
+                              {post.category}
+                            </li>
+                          </ul>
+                          <h3 class="fs-24 fw-black">
+                            <a
+                              href={`/news/${post.slug}`}
+                              class="text-title link-hover-primary fw-bold transition"
+                            >
+                              {post.title}
+                            </a>
+                          </h3>
+                          <a
+                            href={`/news/${post.slug}`}
+                            class="link style-one fw-semibold"
+                          >
+                            Read More
+                            <img
+                              src="/renius/image/right-arrow-small.svg"
+                              alt="Icon"
+                            />
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )
+            }
+
+            <!-- Three Vertical Posts (3) - Long Narrow Boxes -->
+            {
+              verticalPosts.length > 0 && (
+                <div class="vertical-posts">
+                  {verticalPosts.map((post) => (
+                    <div class="blog-card style-one position-relative mb-30 d-flex flex-row align-items-center">
+                      <div
+                        class="blog-img position-relative overflow-hidden round-20 me-3"
+                        style="width: 200px; min-width: 200px; height: 150px;"
+                      >
+                        <img
+                          src={post.thumb}
+                          alt="Blog"
+                          class="round-20 w-100 h-100"
+                          style="object-fit: cover;"
+                        />
+                        <a
+                          href={`/news/${post.slug}`}
+                          class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10"
+                        >
+                          <span class="font-secondary fs-20 fw-black d-block">
+                            {post.displayDay}
+                          </span>{" "}
+                          {post.displayMonth}
+                        </a>
+                      </div>
+                      <div class="blog-content flex-grow-1">
+                        <ul class="blog-metainfo list-unstyled">
+                          <li class="fs-15 d-inline-block position-relative">
+                            By <a href="#">{post.author}</a>
+                          </li>
+                          <li class="fs-15 d-inline-block position-relative">
+                            {post.category}
+                          </li>
+                        </ul>
+                        <h3 class="fs-20 fw-black mb-2">
+                          <a
+                            href={`/news/${post.slug}`}
+                            class="text-title link-hover-primary fw-bold transition"
+                          >
+                            {post.title}
+                          </a>
+                        </h3>
+                        <a
+                          href={`/news/${post.slug}`}
+                          class="link style-one fw-semibold"
+                        >
+                          Read More
+                          <img
+                            src="/renius/image/right-arrow-small.svg"
+                            alt="Icon"
+                          />
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
+            }
+
+            <!-- Remaining Posts (if any) -->
+            {
+              sortedPosts.length > 8 && (
+                <div class="row justify-content-center mt-4">
+                  {sortedPosts.slice(8).map((post) => (
+                    <div class="col-md-6">
+                      <div class="blog-card style-one position-relative mb-30">
+                        <div class="blog-img position-relative overflow-hidden round-20">
+                          <img src={post.thumb} alt="Blog" class="round-20" />
+                          <a
+                            href={`/news/${post.slug}`}
+                            class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10"
+                          >
+                            <span class="font-secondary fs-24 fw-black d-block">
+                              {post.displayDay}
+                            </span>{" "}
+                            {post.displayMonth}
+                          </a>
+                        </div>
+                        <ul class="blog-metainfo list-unstyled">
+                          <li class="fs-15 d-inline-block position-relative">
+                            By <a href="#">{post.author}</a>
+                          </li>
+                          <li class="fs-15 d-inline-block position-relative">
+                            {post.category}
+                          </li>
+                        </ul>
+                        <h3 class="fs-24 fw-black">
+                          <a
+                            href={`/news/${post.slug}`}
+                            class="text-title link-hover-primary fw-bold transition"
+                          >
+                            {post.title}
+                          </a>
+                        </h3>
+                        <a
+                          href={`/news/${post.slug}`}
+                          class="link style-one fw-semibold"
+                        >
+                          Read More
+                          <img
+                            src="/renius/image/right-arrow-small.svg"
+                            alt="Icon"
+                          />
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
+            }
+            <ul class="page-nav pagination justify-content-center mb-0 mt-lg-4">
+              <li class="page-item">
+                <a
+                  class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle"
+                  href="#"
+                  aria-label="Previous"
+                >
+                  <i class="ri-arrow-left-line"></i>
+                </a>
+              </li>
+              <li class="page-item">
+                <a
+                  class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle active"
+                  href="#">01</a>
+              </li>
+              <li class="page-item">
+                <a
+                  class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle"
+                  href="#">02</a>
+              </li>
+              <li class="page-item">
+                <a
+                  class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle"
+                  href="#">03</a>
+              </li>
+              <li class="page-item">
+                <a
+                  class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle"
+                  href="#"
+                  aria-label="Next"
+                >
+                  <i class="ri-arrow-right-line"></i>
+                </a>
+              </li>
             </ul>
           </div>
         </div>
       </div>
+      <!-- Blog Details End -->
+
+      <!-- Footer Section Start -->
+      <Footer />
+      <!-- Footer End -->
     </div>
-    <!-- Breadcrumb Section End -->
-
-    <!-- Blog Section Start -->
-    <div class="container ptb-120">
-      <div class="row">
-        <div class="col-xl-4 order-xl-1 order-2">
-          <aside class="sidebar mt-lg-50">
-            <div class="sidebar-widget search-widget bg-gray round-10">
-              <form action="#" class="position-relative">
-                <input type="search" placeholder={sidebar.search?.placeholder || 'Search'} class="w-100 bg-white border-0 round-10 text-para outline-0">
-                <button class="position-absolute top-0 h-100 bg-transparent border-0"><i class="ri-search-line"></i></button>
-              </form>
-            </div>
-            <div class="sidebar-widget category-widget bg-gray round-10">
-              <h3 class="sidebar-widget-title fs-18 fw-semibold text-title mb-15">{sidebar.categories?.title || 'Categories'}</h3>
-              <ul class="list-unstyled mb-0">
-                {categories.map(cat => {
-                  const count = categoryCounts.get(cat.id) || 0;
-                  return (
-                    <li>
-                      <a href={`/news?category=${cat.slug}`} class="position-relative">
-                        <i class="ri-arrow-right-s-line position-absolute"></i>
-                        {cat.name} <span>({count})</span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-            <div class="sidebar-widget category-widget bg-gray round-10">
-              <h3 class="sidebar-widget-title fs-18 fw-semibold text-title mb-15">{sidebar.recentPosts?.title || 'Recent Posts'}</h3>
-              <div class="rp-post-wrap">
-                {recentPosts.map(post => (
-                  <div class="rp-post-card d-flex flex-wrap align-items-center">
-                    <div class="rp-post-img">
-                      <img src={post.thumb} alt="Post Thumb">
-                    </div>
-                    <div class="rp-post-info">
-                      <a href={`/news/${post.slug}`} class="fs-15 fw-medium text_primary link-hover-primary d-block mb-1">{post.date}</a>
-                      <h5 class="fs-15 fw-bold mb-0">
-                        <a href={`/news/${post.slug}`} class="text-title hover-text-primary transition">{post.title}</a>
-                      </h5>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div class="sidebar-widget tags-widget bg-gray round-10">
-              <h3 class="sidebar-widget-title fs-18 fw-semibold text-title mb-15">{sidebar.tags?.title || 'Tags'}</h3>
-              <ul class="list-unstyled mb-0">
-                {(sidebar.tags?.items || ['Business', 'Development', 'Design', 'Marketing', 'Real Estate']).map((tag) => (
-                  <li><a href="#">{tag}</a></li>
-                ))}
-              </ul>
-            </div>
-          </aside>
-        </div>
-
-        <div class="col-xl-8 order-xl-2 order-1">
-          <!-- Featured Post (News 1) - Large Box -->
-          {featuredPost && (
-            <div class="mb-40">
-              <div class="blog-card style-one position-relative">
-                <div class="blog-img position-relative overflow-hidden round-20">
-                  <img src={featuredPost.thumb} alt="Blog" class="round-20 w-100" style="height: 400px; object-fit: cover;">
-                  <a href={`/news/${featuredPost.slug}`} class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10">
-                    <span class="font-secondary fs-24 fw-black d-block">{featuredPost.displayDay}</span> {featuredPost.displayMonth}
-                  </a>
-                </div>
-                <ul class="blog-metainfo list-unstyled mt-3">
-                  <li class="fs-15 d-inline-block position-relative">By <a href="#">{featuredPost.author}</a></li>
-                  <li class="fs-15 d-inline-block position-relative">{featuredPost.category}</li>
-                </ul>
-                <h3 class="fs-28 fw-black mt-2">
-                  <a href={`/news/${featuredPost.slug}`} class="text-title link-hover-primary fw-bold transition">{featuredPost.title}</a>
-                </h3>
-                <a href={`/news/${featuredPost.slug}`} class="link style-one fw-semibold">{newsContent.readMore || 'Read More'}<img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
-              </div>
-            </div>
-          )}
-
-          <!-- Two Rows of 2 Posts Each (News 2) -->
-          {twoByTwoPosts.length > 0 && (
-            <>
-              {/* First Row - 2 Posts */}
-              <div class="row mb-30">
-                {twoByTwoPosts.slice(0, 2).map(post => (
-                  <div class="col-md-6">
-                    <div class="blog-card style-one position-relative mb-30">
-                      <div class="blog-img position-relative overflow-hidden round-20">
-                        <img src={post.thumb} alt="Blog" class="round-20 w-100" style="height: 280px; object-fit: cover;">
-                        <a href={`/news/${post.slug}`} class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10">
-                          <span class="font-secondary fs-24 fw-black d-block">{post.displayDay}</span> {post.displayMonth}
-                        </a>
-                      </div>
-                      <ul class="blog-metainfo list-unstyled">
-                        <li class="fs-15 d-inline-block position-relative">By <a href="#">{post.author}</a></li>
-                        <li class="fs-15 d-inline-block position-relative">{post.category}</li>
-                      </ul>
-                      <h3 class="fs-24 fw-black">
-                        <a href={`/news/${post.slug}`} class="text-title link-hover-primary fw-bold transition">{post.title}</a>
-                      </h3>
-                      <a href={`/news/${post.slug}`} class="link style-one fw-semibold">Read More<img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Second Row - 2 Posts */}
-              <div class="row mb-30">
-                {twoByTwoPosts.slice(2, 4).map(post => (
-                  <div class="col-md-6">
-                    <div class="blog-card style-one position-relative mb-30">
-                      <div class="blog-img position-relative overflow-hidden round-20">
-                        <img src={post.thumb} alt="Blog" class="round-20 w-100" style="height: 280px; object-fit: cover;">
-                        <a href={`/news/${post.slug}`} class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10">
-                          <span class="font-secondary fs-24 fw-black d-block">{post.displayDay}</span> {post.displayMonth}
-                        </a>
-                      </div>
-                      <ul class="blog-metainfo list-unstyled">
-                        <li class="fs-15 d-inline-block position-relative">By <a href="#">{post.author}</a></li>
-                        <li class="fs-15 d-inline-block position-relative">{post.category}</li>
-                      </ul>
-                      <h3 class="fs-24 fw-black">
-                        <a href={`/news/${post.slug}`} class="text-title link-hover-primary fw-bold transition">{post.title}</a>
-                      </h3>
-                      <a href={`/news/${post.slug}`} class="link style-one fw-semibold">Read More<img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-
-          <!-- Three Vertical Posts (3) - Long Narrow Boxes -->
-          {verticalPosts.length > 0 && (
-            <div class="vertical-posts">
-              {verticalPosts.map(post => (
-                <div class="blog-card style-one position-relative mb-30 d-flex flex-row align-items-center">
-                  <div class="blog-img position-relative overflow-hidden round-20 me-3" style="width: 200px; min-width: 200px; height: 150px;">
-                    <img src={post.thumb} alt="Blog" class="round-20 w-100 h-100" style="object-fit: cover;">
-                    <a href={`/news/${post.slug}`} class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10">
-                      <span class="font-secondary fs-20 fw-black d-block">{post.displayDay}</span> {post.displayMonth}
-                    </a>
-                  </div>
-                  <div class="blog-content flex-grow-1">
-                    <ul class="blog-metainfo list-unstyled">
-                      <li class="fs-15 d-inline-block position-relative">By <a href="#">{post.author}</a></li>
-                      <li class="fs-15 d-inline-block position-relative">{post.category}</li>
-                    </ul>
-                    <h3 class="fs-20 fw-black mb-2">
-                      <a href={`/news/${post.slug}`} class="text-title link-hover-primary fw-bold transition">{post.title}</a>
-                    </h3>
-                    <a href={`/news/${post.slug}`} class="link style-one fw-semibold">Read More<img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <!-- Remaining Posts (if any) -->
-          {sortedPosts.length > 8 && (
-            <div class="row justify-content-center mt-4">
-              {sortedPosts.slice(8).map(post => (
-                <div class="col-md-6">
-                  <div class="blog-card style-one position-relative mb-30">
-                    <div class="blog-img position-relative overflow-hidden round-20">
-                      <img src={post.thumb} alt="Blog" class="round-20">
-                      <a href={`/news/${post.slug}`} class="blog-date bg-white text-title position-absolute d-flex flex-column align-items-center justify-content-center round-10">
-                        <span class="font-secondary fs-24 fw-black d-block">{post.displayDay}</span> {post.displayMonth}
-                      </a>
-                    </div>
-                    <ul class="blog-metainfo list-unstyled">
-                      <li class="fs-15 d-inline-block position-relative">By <a href="#">{post.author}</a></li>
-                      <li class="fs-15 d-inline-block position-relative">{post.category}</li>
-                    </ul>
-                    <h3 class="fs-24 fw-black">
-                      <a href={`/news/${post.slug}`} class="text-title link-hover-primary fw-bold transition">{post.title}</a>
-                    </h3>
-                    <a href={`/news/${post.slug}`} class="link style-one fw-semibold">Read More<img src="/renius/image/right-arrow-small.svg" alt="Icon"></a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          <ul class="page-nav pagination justify-content-center mb-0 mt-lg-4">
-            <li class="page-item">
-              <a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#" aria-label="Previous">
-                <i class="ri-arrow-left-line"></i>
-              </a>
-            </li>
-            <li class="page-item"><a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle active" href="#">01</a></li>
-            <li class="page-item"><a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#">02</a></li>
-            <li class="page-item"><a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#">03</a></li>
-            <li class="page-item">
-              <a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#" aria-label="Next">
-                <i class="ri-arrow-right-line"></i>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <!-- Blog Details End -->
-
-    <!-- Footer Section Start -->
-    <Footer />
-    <!-- Footer End -->
-
   </div>
-</div>
-
-
 </Layout>

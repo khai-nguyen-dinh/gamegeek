@@ -133,184 +133,159 @@ async function readCareerFile(slug: string) {
   };
 }
 
-// Get all careers (local filesystem first, then GitHub API)
+// Get all careers from GitHub API (works in both dev and production)
 async function getAllCareers() {
-  let careers: any[] = [];
-  
-  // Only try local filesystem in development (not on Cloudflare/production)
-  const isProduction = import.meta.env.PROD;
-  
-  if (!isProduction) {
-    // Try local filesystem first (for development)
-    try {
-      const careerModules = import.meta.glob('../keystatic/careers/*.mdoc?raw', { eager: true });
-      const moduleEntries = Object.entries(careerModules);
-      
-      if (moduleEntries.length > 0) {
-        const localCareers = moduleEntries.map((entry) => {
-          const path = entry[0];
-          const module = entry[1];
-          
-          let content = '';
-          if (typeof module === 'string') {
-            content = module;
-          } else if (module && typeof module === 'object' && 'default' in module) {
-            content = typeof module.default === 'string' ? module.default : '';
-          }
-          
-          if (!content) {
-            return null;
-          }
-          
-          try {
-            const { data, content: fileContentBody } = parseFrontmatter(content);
-            if (!data || Object.keys(data).length === 0) return null;
-            
-            // Only return active careers
-            if (data.active === false) return null;
-            
-            const slug = path.split('/').pop()?.replace('.mdoc', '') || '';
-            return {
-              ...data,
-              content: fileContentBody || '',
-              slug,
-            };
-          } catch (error) {
-            return null;
-          }
-        }).filter(c => c !== null);
-        
-        if (localCareers.length > 0) {
-          careers = localCareers;
-        }
-      }
-    } catch (error) {
-      // Silent fail, fallback to GitHub
-      console.warn('Error reading local careers:', error);
-    }
-  }
-  
-  // Always use GitHub API in production, or as fallback in development
-  if (careers.length === 0) {
-    try {
-      const files = await listGitHubFiles('src/keystatic/careers');
-      const mdocFiles = files.filter(f => f.endsWith('.mdoc'));
-      
-      if (mdocFiles.length === 0) {
-        return [];
-      }
-      
-      const githubCareers = await Promise.all(
-        mdocFiles.map(async (file) => {
-          try {
-            const slug = file.replace('.mdoc', '');
-            const content = await fetchFromGitHub(`src/keystatic/careers/${file}`);
-            
-            if (!content) return null;
-            
-            const { data, content: fileContentBody } = parseFrontmatter(content);
-            if (!data || Object.keys(data).length === 0) return null;
-            
-            // Only return active careers
-            if (data.active === false) return null;
-            
-            return {
-              ...data,
-              content: fileContentBody || '',
-              slug,
-            };
-          } catch (err) {
-            return null;
-          }
-        })
-      );
-      
-      careers = githubCareers.filter(c => c !== null);
-    } catch (error) {
-      console.error('Error fetching careers from GitHub:', error);
+  try {
+    const files = await listGitHubFiles('src/keystatic/careers');
+    const mdocFiles = files.filter(f => f.endsWith('.mdoc'));
+    
+    if (mdocFiles.length === 0) {
       return [];
     }
+    
+    const careers = await Promise.all(
+      mdocFiles.map(async (file) => {
+        try {
+          const slug = file.replace('.mdoc', '');
+          const content = await fetchFromGitHub(`src/keystatic/careers/${file}`);
+          
+          if (!content) return null;
+          
+          const { data, content: fileContentBody } = parseFrontmatter(content);
+          if (!data || Object.keys(data).length === 0) return null;
+          
+          // Only return active careers
+          if (data.active === false) return null;
+          
+          return {
+            ...data,
+            content: fileContentBody || '',
+            slug,
+          };
+        } catch (err) {
+          console.warn(`Error processing career file ${file}:`, err);
+          return null;
+        }
+      })
+    );
+    
+    return careers.filter(c => c !== null && c !== undefined);
+  } catch (error) {
+    console.error('Error fetching careers from GitHub:', error);
+    return [];
   }
-  
-  return careers;
 }
 
-const careerContent = getContentObject('career');
-const breadcrumb = careerContent?.breadcrumb || {};
-const jobMeta = careerContent?.jobMeta || {};
+// Load content and careers with error handling
+let careerContent: any = {};
+let breadcrumb: any = {};
+let jobMeta: any = {};
+let allCareers: any[] = [];
 
-// Load careers from Keystatic
-const allCareers = await getAllCareers();
+try {
+  const content = getContentObject('career');
+  if (content) {
+    careerContent = content;
+    breadcrumb = content.breadcrumb || {};
+    jobMeta = content.jobMeta || {};
+  }
+} catch (error) {
+  console.error('Error loading career content:', error);
+  // Set defaults
+  jobMeta = { location: 'Location:', type: 'Type:', experience: 'Experience:' };
+}
+
+// Ensure all values are strings
+const breadcrumbTitle = String(breadcrumb?.title || 'CAREERS');
+const breadcrumbHome = String(breadcrumb?.home || 'HOME');
+const breadcrumbCurrent = String(breadcrumb?.current || 'CAREERS');
+const jobMetaLocation = String(jobMeta?.location || 'Location:');
+const jobMetaType = String(jobMeta?.type || 'Type:');
+const jobMetaExperience = String(jobMeta?.experience || 'Experience:');
+const applyButtonText = String(careerContent?.applyButton || 'Apply Now');
+
+try {
+  allCareers = await getAllCareers();
+  if (!Array.isArray(allCareers)) {
+    allCareers = [];
+  }
+} catch (error) {
+  console.error('Error loading careers:', error);
+  allCareers = [];
+}
 
 <Layout title="Careers | GameGeek">
-
-<!-- Custom Cursor -->
 <div class="cursor"><span class="cursor-text"></span></div>
 <div class="cursor-inner"></div>
 
 <div id="smooth-wrapper">
   <div id="smooth-content">
-    <!-- Navbar Start -->
     <Navbar variant="white" />
-    <!-- Navbar End -->
-
-    <!-- Breadcrumb Section Start -->
     <div class="breadcrumb-area position-relative z-1">
-      <img src="/renius/image/br-line-shape.png" alt="Shape" class="br-line-shape position-absolute top-0 start-0 w-100 h-100 z-n1">
-      <img src="/renius/image/br-shape-1.png" alt="Shape" class="br-shape-one position-absolute z-n1 bounce">
-      <img src="/renius/image/br-shape-2.png" alt="Shape" class="br-shape-two position-absolute bottom-0 z-n1 moveHorizontal">
+      <img src="/renius/image/br-line-shape.png" alt="Shape" class="br-line-shape position-absolute top-0 start-0 w-100 h-100 z-n1"/>
+      <img src="/renius/image/br-shape-1.png" alt="Shape" class="br-shape-one position-absolute z-n1 bounce" />
+      <img src="/renius/image/br-shape-2.png" alt="Shape" class="br-shape-two position-absolute bottom-0 z-n1 moveHorizontal"/>
       <div class="container-fluid px-xxl-5">
         <div class="row">
           <div class="col-md-10 offset-md-1 text-center">
-            <h2 class="section-title style-one fw-black text-title">{breadcrumb.title || 'CAREERS'}</h2>
+            <h2 class="section-title style-one fw-black text-title">{breadcrumbTitle}</h2>
             <ul class="br-menu list-unstyled">
-              <li><a href="/"><img src="/renius/image/home-icon.svg" alt="Icon">{breadcrumb.home || 'HOME'}</a></li>
-              <li>{breadcrumb.current || 'CAREERS'}</li>
+              <li><a href="/"><img src="/renius/image/home-icon.svg" alt="Icon" />{breadcrumbHome}</a></li>
+              <li>{breadcrumbCurrent}</li>
             </ul>
           </div>
         </div>
       </div>
     </div>
-    <!-- Breadcrumb Section End -->
-
-    <!-- Career Section Start -->
     <div class="container ptb-120">
-      {allCareers.length > 0 ? (
+      {allCareers.length > 0 && (
         <div class="row justify-content-center">
-          {allCareers.map((career) => (
-            <div class="col-xl-4 col-md-6">
-              <div class="job-card style-one position-relative z-1 round-10 mb-30">
-                <div class="job-info">
-                  <h3 class="fs-24 fw-bold">
-                    <a href={`/career/${career.slug}`} class="text-title link-hover-primary transition">
-                      {career.title}
-                    </a>
-                  </h3>
-                  <ul class="job-metainfo list-unstyled">
-                    <li class="position-relative">
-                      <i class="ri-map-pin-line"></i>
-                      <span class="fw-medium text-title me-1">{jobMeta.location || 'Location:'}</span> {career.location}
-                    </li>
-                    <li class="position-relative">
-                      <i class="ri-briefcase-line"></i>
-                      <span class="fw-medium text-title me-1">{jobMeta.type || 'Type:'}</span> {career.type}
-                    </li>
-                    <li class="position-relative">
-                      <i class="ri-user-line"></i>
-                      <span class="fw-medium text-title me-1">{jobMeta.experience || 'Experience:'}</span> {career.experience}
-                    </li>
-                  </ul>
-                  <div class="text-center">
-                    <a href={`/career/${career.slug}`} class="link style-one fw-semibold">
-                      {careerContent.applyButton || 'Apply Now'} <img src="/renius/image/right-arrow-small.svg" alt="Icon">
-                    </a>
+          {allCareers.map(career => {
+            if (!career || !career.slug || !career.title) {
+              return null;
+            }
+            const careerSlug = String(career.slug);
+            const careerTitle = String(career.title);
+            const careerLocation = String(career.location || '');
+            const careerType = String(career.type || '');
+            const careerExperience = String(career.experience || '');
+            const careerUrl = '/career/' + careerSlug;
+            return (
+              <div class="col-xl-4 col-md-6">
+                <div class="job-card style-one position-relative z-1 round-10 mb-30">
+                  <div class="job-info">
+                    <h3 class="fs-24 fw-bold">
+                      <a href={careerUrl} class="text-title link-hover-primary transition">
+                        {careerTitle}
+                      </a>
+                    </h3>
+                    <ul class="job-metainfo list-unstyled">
+                      <li class="position-relative">
+                        <i class="ri-map-pin-line"></i>
+                        <span class="fw-medium text-title me-1">{jobMetaLocation}</span> {careerLocation}
+                      </li>
+                      <li class="position-relative">
+                        <i class="ri-briefcase-line"></i>
+                        <span class="fw-medium text-title me-1">{jobMetaType}</span> {careerType}
+                      </li>
+                      <li class="position-relative">
+                        <i class="ri-user-line"></i>
+                        <span class="fw-medium text-title me-1">{jobMetaExperience}</span> {careerExperience}
+                      </li>
+                    </ul>
+                    <div class="text-center">
+                      <a href={careerUrl} class="link style-one fw-semibold">
+                        {applyButtonText} <img src="/renius/image/right-arrow-small.svg" alt="Icon" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
-      ) : (
+      )}
+      {allCareers.length === 0 && (
         <div class="row justify-content-center">
           <div class="col-12 text-center">
             <p class="text-muted">No job openings available at the moment. Please check back later.</p>
@@ -335,12 +310,7 @@ const allCareers = await getAllCareers();
         </ul>
       )}
     </div>
-    <!-- Career Section End -->
-
-    <!-- Footer Section Start -->
     <Footer />
-    <!-- Footer End -->
-
   </div>
 </div>
 
