@@ -5,7 +5,6 @@ import Footer from '../components/Footer.astro';
 import { load } from 'js-yaml';
 import { getContentObject } from '../utils/content.ts';
 
-// Helper to parse frontmatter from mdoc content
 function parseFrontmatter(content: string) {
   const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
   let match = content.match(frontmatterRegex);
@@ -213,106 +212,180 @@ try {
   console.error('Error loading careers:', error);
   allCareers = [];
 }
+---
 
-<Layout title="Careers | GameGeek">
-<div class="cursor"><span class="cursor-text"></span></div>
-<div class="cursor-inner"></div>
+<Layout title="About Us | GameGeek">
 
-<div id="smooth-wrapper">
-  <div id="smooth-content">
-    <Navbar variant="white" />
-    <div class="breadcrumb-area position-relative z-1">
-      <img src="/renius/image/br-line-shape.png" alt="Shape" class="br-line-shape position-absolute top-0 start-0 w-100 h-100 z-n1"/>
-      <img src="/renius/image/br-shape-1.png" alt="Shape" class="br-shape-one position-absolute z-n1 bounce" />
-      <img src="/renius/image/br-shape-2.png" alt="Shape" class="br-shape-two position-absolute bottom-0 z-n1 moveHorizontal"/>
-      <div class="container-fluid px-xxl-5">
-        <div class="row">
-          <div class="col-md-10 offset-md-1 text-center">
-            <h2 class="section-title style-one fw-black text-title">{breadcrumbTitle}</h2>
-            <ul class="br-menu list-unstyled">
-              <li><a href="/"><img src="/renius/image/home-icon.svg" alt="Icon" />{breadcrumbHome}</a></li>
-              <li>{breadcrumbCurrent}</li>
-            </ul>
+  <div id="smooth-wrapper">
+    <div id="smooth-content">
+
+      <Navbar variant="white" />
+      <div class="breadcrumb-area position-relative z-1">
+        <img
+          src="/renius/image/br-line-shape.png"
+          alt="Shape"
+          class="br-line-shape position-absolute top-0 start-0 w-100 h-100 z-n1"
+        />
+        <img
+          src="/renius/image/br-shape-1.png"
+          alt="Shape"
+          class="br-shape-one position-absolute z-n1 bounce"
+        />
+        <img
+          src="/renius/image/br-shape-2.png"
+          alt="Shape"
+          class="br-shape-two position-absolute bottom-0 z-n1 moveHorizontal"
+        />
+        <div class="container-fluid px-xxl-5">
+          <div class="row">
+            <div class="col-md-10 offset-md-1 text-center">
+              <h2 class="section-title style-one fw-black text-title">
+                {breadcrumbTitle}
+              </h2>
+              <ul class="br-menu list-unstyled">
+                <li>
+                  <a href="/">
+                    <img src="/renius/image/home-icon.svg" alt="Icon" />
+                    {breadcrumbHome}
+                  </a>
+                </li>
+                <li>{breadcrumbCurrent}</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="container ptb-120">
-      {allCareers.length > 0 && (
-        <div class="row justify-content-center">
-          {allCareers.map(career => {
-            if (!career || !career.slug || !career.title) {
-              return null;
-            }
-            const careerSlug = String(career.slug);
-            const careerTitle = String(career.title);
-            const careerLocation = String(career.location || '');
-            const careerType = String(career.type || '');
-            const careerExperience = String(career.experience || '');
-            const careerUrl = '/career/' + careerSlug;
-            return (
-              <div class="col-xl-4 col-md-6">
-                <div class="job-card style-one position-relative z-1 round-10 mb-30">
-                  <div class="job-info">
-                    <h3 class="fs-24 fw-bold">
-                      <a href={careerUrl} class="text-title link-hover-primary transition">
-                        {careerTitle}
-                      </a>
-                    </h3>
-                    <ul class="job-metainfo list-unstyled">
-                      <li class="position-relative">
-                        <i class="ri-map-pin-line"></i>
-                        <span class="fw-medium text-title me-1">{jobMetaLocation}</span> {careerLocation}
-                      </li>
-                      <li class="position-relative">
-                        <i class="ri-briefcase-line"></i>
-                        <span class="fw-medium text-title me-1">{jobMetaType}</span> {careerType}
-                      </li>
-                      <li class="position-relative">
-                        <i class="ri-user-line"></i>
-                        <span class="fw-medium text-title me-1">{jobMetaExperience}</span> {careerExperience}
-                      </li>
-                    </ul>
-                    <div class="text-center">
-                      <a href={careerUrl} class="link style-one fw-semibold">
-                        {applyButtonText} <img src="/renius/image/right-arrow-small.svg" alt="Icon" />
-                      </a>
+      <div class="container ptb-120">
+        {allCareers.length > 0 && (
+          <div class="row justify-content-center">
+            {allCareers.map((career) => {
+              if (!career || !career.slug || !career.title) {
+                return null;
+              }
+              const careerSlug = String(career.slug);
+              const careerTitle = String(career.title);
+              const careerLocation = String(career.location || "");
+              const careerType = String(career.type || "");
+              const careerExperience = String(career.experience || "");
+              const careerUrl = "/career/" + careerSlug;
+              return (
+                <div class="col-xl-4 col-md-6">
+                  <div class="job-card style-one position-relative z-1 round-10 mb-30">
+                    <div class="job-info">
+                      <h3 class="fs-24 fw-bold">
+                        <a
+                          href={careerUrl}
+                          class="text-title link-hover-primary transition"
+                        >
+                          {careerTitle}
+                        </a>
+                      </h3>
+                      <ul class="job-metainfo list-unstyled">
+                        <li class="position-relative">
+                          <i class="ri-map-pin-line"></i>
+                          <span class="fw-medium text-title me-1">
+                            {jobMetaLocation}
+                          </span>{" "}
+                          {careerLocation}
+                        </li>
+                        <li class="position-relative">
+                          <i class="ri-briefcase-line"></i>
+                          <span class="fw-medium text-title me-1">
+                            {jobMetaType}
+                          </span>{" "}
+                          {careerType}
+                        </li>
+                        <li class="position-relative">
+                          <i class="ri-user-line"></i>
+                          <span class="fw-medium text-title me-1">
+                            {jobMetaExperience}
+                          </span>{" "}
+                          {careerExperience}
+                        </li>
+                      </ul>
+                      <div class="text-center">
+                        <a href={careerUrl} class="link style-one fw-semibold">
+                          {applyButtonText}{" "}
+                          <img
+                            src="/renius/image/right-arrow-small.svg"
+                            alt="Icon"
+                          />
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-      {allCareers.length === 0 && (
-        <div class="row justify-content-center">
-          <div class="col-12 text-center">
-            <p class="text-muted">No job openings available at the moment. Please check back later.</p>
+              );
+            })}
           </div>
-        </div>
-      )}
-      {allCareers.length > 0 && (
-        <ul class="page-nav pagination justify-content-center mb-0 mt-lg-5">
-          <li class="page-item">
-            <a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#" aria-label="Previous">
-              <i class="ri-arrow-left-line"></i>
-            </a>
-          </li>
-          <li class="page-item"><a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle active" href="#">01</a></li>
-          <li class="page-item"><a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#">02</a></li>
-          <li class="page-item"><a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#">03</a></li>
-          <li class="page-item">
-            <a class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle" href="#" aria-label="Next">
-              <i class="ri-arrow-right-line"></i>
-            </a>
-          </li>
-        </ul>
-      )}
+        )}
+        {allCareers.length === 0 && (
+          <div class="row justify-content-center">
+            <div class="col-12 text-center">
+              <p class="text-muted">
+                No job openings available at the moment. Please check back
+                later.
+              </p>
+            </div>
+          </div>
+        )}
+        {allCareers.length > 0 && (
+          <ul class="page-nav pagination justify-content-center mb-0 mt-lg-5">
+            <li class="page-item">
+              <a
+                class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle"
+                href="#"
+                aria-label="Previous"
+              >
+                <i class="ri-arrow-left-line"></i>
+              </a>
+            </li>
+            <li class="page-item">
+              <a
+                class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle active"
+                href="#"
+              >
+                01
+              </a>
+            </li>
+            <li class="page-item">
+              <a
+                class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle"
+                href="#"
+              >
+                02
+              </a>
+            </li>
+            <li class="page-item">
+              <a
+                class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle"
+                href="#"
+              >
+                03
+              </a>
+            </li>
+            <li class="page-item">
+              <a
+                class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle"
+                href="#"
+                aria-label="Next"
+              >
+                <i class="ri-arrow-right-line"></i>
+              </a>
+            </li>
+          </ul>
+        )}
+      </div>
+      <Footer />
+      <!-- Footer End -->
+
     </div>
-    <Footer />
   </div>
-</div>
 
+  <!-- Back to Top -->
+  <div id="progress-wrap" class="progress-wrap style-one">
+    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+      <path id="progress-path" d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+    </svg>
+  </div>
 </Layout>
-
