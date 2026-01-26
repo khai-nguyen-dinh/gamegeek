@@ -1455,44 +1455,9 @@ body {
     transform: translateZ(0);
   }
 }
-/*-------------------------------
-    Custom Cursor CSS - DISABLED
--------------------------------*/
-.cursor {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
 
-.cursor-inner {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-.cursor-inner.hidden {
-  display: none !important;
-}
 
 .hover {
-  display: none !important;
-}
-
-.cursorinnerhover {
-  display: none !important;
-}
-
-.cursor-text {
-  display: none !important;
-}
-
-.cursor.view {
-  display: none !important;
-}
-
-.cursor.view .cursor-text {
   display: none !important;
 }
 

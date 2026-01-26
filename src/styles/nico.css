@@ -25793,43 +25793,7 @@ input[type=radio]~label:before {
     visibility: hidden
 }
 
-.cursor-inner {
-    width: 6px;
-    height: 6px;
-    z-index: 10000001;
-    background-color: var(--theme2);
-    -webkit-transition: width .3s ease-in-out, height .3s ease-in-out, margin .3s ease-in-out, opacity .3s ease-in-out;
-    -o-transition: width .3s ease-in-out, height .3s ease-in-out, margin .3s ease-in-out, opacity .3s ease-in-out;
-    transition: width .3s ease-in-out, height .3s ease-in-out, margin .3s ease-in-out, opacity .3s ease-in-out
-}
 
-.cursor-inner.cursor-hover {
-    margin-left: -35px;
-    margin-top: -35px;
-    width: 70px;
-    height: 70px;
-    background-color: var(--theme2);
-    opacity: .3
-}
-
-.cursor-outer {
-    margin-left: -12px;
-    margin-top: -12px;
-    width: 30px;
-    height: 30px;
-    border: 1px solid var(--theme2);
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    z-index: 10000000;
-    opacity: .5;
-    -webkit-transition: all .08s ease-out;
-    -o-transition: all .08s ease-out;
-    transition: all .08s ease-out
-}
-
-.cursor-outer.cursor-hover {
-    opacity: 0
-}
 
 .before-after-section .thumb,
 .before-after-section .thumb img {

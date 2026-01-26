@@ -838,6 +838,7 @@ img[src*="services2.png"] {
     position: fixed !important;
     z-index: 999999 !important;
     transform: translate(0%) !important;
+    height: 1000px !important;
   }
 
   /* Overlay for mobile menu - below menu but above everything else */
