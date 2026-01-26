@@ -622,13 +622,17 @@ export default config({
         ),
       },
     }),
-  },
-  singletons: {
-    // Site Content - Singleton for managing all page content
-    siteContent: singleton({
-      label: 'Site Content',
-      path: 'src/keystatic/site-content',
+
+    // Page Content Collection - Content for individual pages
+    pageContent: collection({
+      label: 'Page Content',
+      slugField: 'title',
+      path: 'src/keystatic/page-content/*',
       schema: {
+        title: fields.text({ 
+          label: 'Page Title',
+          description: 'Identifier for this page (e.g., "home", "about", "contact", "news", "blog", "career", "program")',
+        }),
         home: fields.object(
           {
             hero: fields.object(
@@ -637,7 +641,7 @@ export default config({
                 titleHighlight: fields.text({ label: 'Title Highlight' }),
                 subtitle: fields.text({ label: 'Subtitle', multiline: true }),
               },
-              { label: 'Hero' }
+              { label: 'Hero', validation: { isRequired: false } }
             ),
             about: fields.object(
               {
@@ -646,9 +650,9 @@ export default config({
                 description: fields.text({ label: 'Description', multiline: true }),
                 buttonText: fields.text({ label: 'Button Text' }),
               },
-              { label: 'About' }
+              { label: 'About', validation: { isRequired: false } }
             ),
-            moveText: fields.array(fields.text({ label: 'Text' }), { label: 'Move Text' }),
+            moveText: fields.array(fields.text({ label: 'Text' }), { label: 'Move Text', validation: { isRequired: false } }),
             services: fields.object(
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
@@ -665,7 +669,7 @@ export default config({
                   { label: 'Items' }
                 ),
               },
-              { label: 'Services' }
+              { label: 'Services', validation: { isRequired: false } }
             ),
             network: fields.object(
               {
@@ -683,20 +687,20 @@ export default config({
                   { label: 'Stats' }
                 ),
               },
-              { label: 'Network' }
+              { label: 'Network', validation: { isRequired: false } }
             ),
             cta: fields.object(
               {
                 title: fields.text({ label: 'Title' }),
               },
-              { label: 'CTA' }
+              { label: 'CTA', validation: { isRequired: false } }
             ),
             events: fields.object(
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
                 title: fields.text({ label: 'Title' }),
               },
-              { label: 'Events' }
+              { label: 'Events', validation: { isRequired: false } }
             ),
             news: fields.object(
               {
@@ -716,126 +720,11 @@ export default config({
                   { label: 'Stats' }
                 ),
               },
-              { label: 'News' }
+              { label: 'News', validation: { isRequired: false } }
             ),
           },
-          { label: 'Home' }
+          { label: 'Home', validation: { isRequired: false } }
         ),
-        about: fields.object(
-          {
-            quickLinks: fields.object(
-              {
-                title: fields.text({ label: 'Title' }),
-                links: fields.array(
-                  fields.object(
-                    {
-                      text: fields.text({ label: 'Text' }),
-                      href: fields.text({ label: 'Href' }),
-                    },
-                    { label: 'Link' }
-                  ),
-                  { label: 'Links' }
-                ),
-              },
-              { label: 'Quick Links' }
-            ),
-            explore: fields.object(
-              {
-                title: fields.text({ label: 'Title' }),
-                links: fields.array(
-                  fields.object(
-                    {
-                      text: fields.text({ label: 'Text' }),
-                      href: fields.text({ label: 'Href' }),
-                    },
-                    { label: 'Link' }
-                  ),
-                  { label: 'Links' }
-                ),
-              },
-              { label: 'Explore' }
-            ),
-            company: fields.object(
-              {
-                title: fields.text({ label: 'Title' }),
-                links: fields.array(
-                  fields.object(
-                    {
-                      text: fields.text({ label: 'Text' }),
-                      href: fields.text({ label: 'Href' }),
-                    },
-                    { label: 'Link' }
-                  ),
-                  { label: 'Links' }
-                ),
-              },
-              { label: 'Company' }
-            ),
-            address: fields.object(
-              {
-                title: fields.text({ label: 'Title' }),
-                address: fields.text({ label: 'Address', multiline: true }),
-                email: fields.text({ label: 'Email' }),
-                phone: fields.text({ label: 'Phone' }),
-              },
-              { label: 'Address' }
-            ),
-            social: fields.object(
-              {
-                followText: fields.text({ label: 'Follow Text' }),
-                links: fields.array(
-                  fields.object(
-                    {
-                      platform: fields.text({ label: 'Platform' }),
-                      href: fields.text({ label: 'Href' }),
-                      icon: fields.text({ label: 'Icon' }),
-                    },
-                    { label: 'Social Link' }
-                  ),
-                  { label: 'Links' }
-                ),
-              },
-              { label: 'Social' }
-            ),
-            brandText: fields.text({ label: 'Brand Text' }),
-          },
-          { label: 'Footer' }
-        ),
-        contactForm: fields.object(
-          {
-            step1: fields.object(
-              {
-                question: fields.text({ label: 'Question' }),
-                options: fields.array(fields.text({ label: 'Option' }), { label: 'Options' }),
-              },
-              { label: 'Step 1' }
-            ),
-            step2: fields.object(
-              {
-                question: fields.text({ label: 'Question' }),
-                options: fields.array(fields.text({ label: 'Option' }), { label: 'Options' }),
-              },
-              { label: 'Step 2' }
-            ),
-            step3: fields.object(
-              {
-                title: fields.text({ label: 'Title' }),
-                description: fields.text({ label: 'Description', multiline: true }),
-                fields: fields.object(
-                  {
-                    fullName: fields.text({ label: 'Full Name' }),
-                    email: fields.text({ label: 'Email' }),
-                    title: fields.text({ label: 'Title' }),
-                    companyName: fields.text({ label: 'Company Name' }),
-                    socialContact: fields.text({ label: 'Social Contact' }),
-                  },
-                  { label: 'Fields' }
-                ),
-                submitButton: fields.text({ label: 'Submit Button' }),
-              },
-              { label: 'Step 3' }
-            ),
-          },
         about: fields.object(
           {
             hero: fields.object(
@@ -845,7 +734,7 @@ export default config({
                 titlePart1: fields.text({ label: 'Title Part 1', validation: { isRequired: false } }),
                 buttonText: fields.text({ label: 'Button Text' }),
               },
-              { label: 'Hero' }
+              { label: 'Hero', validation: { isRequired: false } }
             ),
             aboutSection: fields.object(
               {
@@ -858,14 +747,14 @@ export default config({
                       label: fields.text({ label: 'Label' }),
                       value: fields.text({ label: 'Value' }),
                       suffix: fields.text({ label: 'Suffix' }),
-                      description: fields.text({ label: 'Description', multiline: true }),
+                      description: fields.text({ label: 'Description' }),
                     },
                     { label: 'Stat' }
                   ),
                   { label: 'Stats' }
                 ),
               },
-              { label: 'About Section' }
+              { label: 'About Section', validation: { isRequired: false } }
             ),
             features: fields.array(
               fields.object(
@@ -875,37 +764,37 @@ export default config({
                 },
                 { label: 'Feature' }
               ),
-              { label: 'Features' }
+              { label: 'Features', validation: { isRequired: false } }
             ),
             vision: fields.object(
               {
                 title: fields.text({ label: 'Title' }),
                 description: fields.text({ label: 'Description', multiline: true }),
               },
-              { label: 'Vision' }
+              { label: 'Vision', validation: { isRequired: false } }
             ),
             mission: fields.object(
               {
                 title: fields.text({ label: 'Title' }),
                 description: fields.text({ label: 'Description', multiline: true }),
               },
-              { label: 'Mission' }
+              { label: 'Mission', validation: { isRequired: false } }
             ),
             team: fields.object(
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
                 title: fields.text({ label: 'Title' }),
               },
-              { label: 'Team' }
+              { label: 'Team', validation: { isRequired: false } }
             ),
             cta: fields.object(
               {
                 title: fields.text({ label: 'Title' }),
               },
-              { label: 'CTA' }
+              { label: 'CTA', validation: { isRequired: false } }
             ),
           },
-          { label: 'About' }
+          { label: 'About', validation: { isRequired: false } }
         ),
         contact: fields.object(
           {
@@ -914,7 +803,7 @@ export default config({
                 title: fields.text({ label: 'Title' }),
                 description: fields.text({ label: 'Description', multiline: true }),
               },
-              { label: 'Hero' }
+              { label: 'Hero', validation: { isRequired: false } }
             ),
             form: fields.object(
               {
@@ -936,7 +825,7 @@ export default config({
                 serviceOptions: fields.array(fields.text({ label: 'Option' }), { label: 'Service Options' }),
                 budgetOptions: fields.array(fields.text({ label: 'Option' }), { label: 'Budget Options' }),
               },
-              { label: 'Form' }
+              { label: 'Form', validation: { isRequired: false } }
             ),
             info: fields.object(
               {
@@ -972,10 +861,10 @@ export default config({
                 ),
                 followText: fields.text({ label: 'Follow Text' }),
               },
-              { label: 'Info' }
+              { label: 'Info', validation: { isRequired: false } }
             ),
           },
-          { label: 'Contact' }
+          { label: 'Contact', validation: { isRequired: false } }
         ),
         news: fields.object(
           {
@@ -985,7 +874,7 @@ export default config({
                 home: fields.text({ label: 'Home' }),
                 current: fields.text({ label: 'Current' }),
               },
-              { label: 'Breadcrumb' }
+              { label: 'Breadcrumb', validation: { isRequired: false } }
             ),
             sidebar: fields.object(
               {
@@ -1010,16 +899,16 @@ export default config({
                 tags: fields.object(
                   {
                     title: fields.text({ label: 'Title' }),
-                    items: fields.array(fields.text({ label: 'Item' }), { label: 'Items' }),
+                    items: fields.array(fields.text({ label: 'Tag' }), { label: 'Items' }),
                   },
                   { label: 'Tags' }
                 ),
               },
-              { label: 'Sidebar' }
+              { label: 'Sidebar', validation: { isRequired: false } }
             ),
-            readMore: fields.text({ label: 'Read More' }),
+            readMore: fields.text({ label: 'Read More', validation: { isRequired: false } }),
           },
-          { label: 'News' }
+          { label: 'News', validation: { isRequired: false } }
         ),
         blog: fields.object(
           {
@@ -1028,14 +917,14 @@ export default config({
                 title: fields.text({ label: 'Title' }),
                 description: fields.text({ label: 'Description', multiline: true }),
               },
-              { label: 'Hero' }
+              { label: 'Hero', validation: { isRequired: false } }
             ),
             featured: fields.object(
               {
                 badge: fields.text({ label: 'Badge' }),
                 loadMore: fields.text({ label: 'Load More' }),
               },
-              { label: 'Featured' }
+              { label: 'Featured', validation: { isRequired: false } }
             ),
             newsletter: fields.object(
               {
@@ -1044,10 +933,10 @@ export default config({
                 placeholder: fields.text({ label: 'Placeholder' }),
                 button: fields.text({ label: 'Button' }),
               },
-              { label: 'Newsletter' }
+              { label: 'Newsletter', validation: { isRequired: false } }
             ),
           },
-          { label: 'Blog' }
+          { label: 'Blog', validation: { isRequired: false } }
         ),
         career: fields.object(
           {
@@ -1057,19 +946,19 @@ export default config({
                 home: fields.text({ label: 'Home' }),
                 current: fields.text({ label: 'Current' }),
               },
-              { label: 'Breadcrumb' }
+              { label: 'Breadcrumb', validation: { isRequired: false } }
             ),
-            applyButton: fields.text({ label: 'Apply Button' }),
+            applyButton: fields.text({ label: 'Apply Button', validation: { isRequired: false } }),
             jobMeta: fields.object(
               {
                 location: fields.text({ label: 'Location' }),
                 type: fields.text({ label: 'Type' }),
                 experience: fields.text({ label: 'Experience' }),
               },
-              { label: 'Job Meta' }
+              { label: 'Job Meta', validation: { isRequired: false } }
             ),
           },
-          { label: 'Career' }
+          { label: 'Career', validation: { isRequired: false } }
         ),
         program: fields.object(
           {
@@ -1077,13 +966,13 @@ export default config({
               {
                 title: fields.text({ label: 'Title' }),
               },
-              { label: 'Hero' }
+              { label: 'Hero', validation: { isRequired: false } }
             ),
             upcomingEvents: fields.object(
               {
                 title: fields.text({ label: 'Title' }),
               },
-              { label: 'Upcoming Events' }
+              { label: 'Upcoming Events', validation: { isRequired: false } }
             ),
             filters: fields.object(
               {
@@ -1110,19 +999,30 @@ export default config({
                 ),
                 searchButton: fields.text({ label: 'Search Button' }),
               },
-              { label: 'Filters' }
+              { label: 'Filters', validation: { isRequired: false } }
             ),
             eventStatus: fields.object(
               {
                 upcoming: fields.text({ label: 'Upcoming' }),
                 completed: fields.text({ label: 'Completed' }),
               },
-              { label: 'Event Status' }
+              { label: 'Event Status', validation: { isRequired: false } }
             ),
-            followText: fields.text({ label: 'Follow Text' }),
+            followText: fields.text({ label: 'Follow Text', validation: { isRequired: false } }),
           },
-          { label: 'Program' }
+          { label: 'Program', validation: { isRequired: false } }
         ),
+      },
+    }),
+  },
+  singletons: {
+    // Site Content - Singleton for managing all page content
+    siteContent: singleton({
+      label: 'Site Content',
+      path: 'src/keystatic/site-content',
+      schema: {
+        // All page content has been moved to pageContent collection
+        // All global content (navbar, footer, contactForm, meta) has been moved to globals collection
       },
     }),
   },
