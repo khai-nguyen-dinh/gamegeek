@@ -283,7 +283,6 @@ export default config({
           label: 'Job Title',
           validation: { isRequired: true },
         }),
-        slug: fields.slug({ name: { label: 'Title' } }),
         location: fields.text({ 
           label: 'Location',
           validation: { isRequired: true },
