@@ -593,7 +593,8 @@ export default config({
             hero: fields.object(
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
-                titlePart1: fields.text({ label: 'Title Part 1' }),
+                title: fields.text({ label: 'Title' }),
+                titlePart1: fields.text({ label: 'Title Part 1', validation: { isRequired: false } }),
                 buttonText: fields.text({ label: 'Button Text' }),
               },
               { label: 'Hero' }
@@ -663,11 +664,16 @@ export default config({
             hero: fields.object(
               {
                 subtitle: fields.text({ label: 'Subtitle' }),
-                title: fields.text({ label: 'Title' }),
-                titleHighlight: fields.text({ label: 'Title Highlight' }),
+                title: fields.text({ label: 'Title', validation: { isRequired: false } }),
+                titlePart1: fields.text({ label: 'Title Part 1', validation: { isRequired: false } }),
+                titleHighlight: fields.text({ label: 'Title Highlight', validation: { isRequired: false } }),
+                titleHighlight2: fields.text({ label: 'Title Highlight 2', validation: { isRequired: false } }),
+                titlePart4: fields.text({ label: 'Title Part 4', validation: { isRequired: false } }),
+                titleHighlight3: fields.text({ label: 'Title Highlight 3', validation: { isRequired: false } }),
                 tagline: fields.text({ 
                   label: 'Tagline',
                   description: 'Hero tagline text (e.g., "leading local gaming market expert & marketing partner")',
+                  validation: { isRequired: false },
                 }),
               },
               { label: 'Hero' }
