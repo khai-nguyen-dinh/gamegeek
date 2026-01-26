@@ -153,7 +153,7 @@ const allSlides = await getAllSlides();
 const slides = allSlides.sort((a, b) => (a.order || 0) - (b.order || 0));
 
 // Get content from JSON
-const homeContent = getContentObject('home');
+const homeContent = await getContentObject('home');
 const aboutContent = homeContent?.about || {};
 const servicesContent = homeContent?.services || {};
 const networkContent = homeContent?.network || {};

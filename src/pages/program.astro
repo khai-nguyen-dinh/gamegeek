@@ -184,7 +184,7 @@ async function getAllEvents() {
 const allEvents = await getAllEvents();
 
 // Get program content
-const programContent = getContentObject('program');
+const programContent = await getContentObject('program');
 const heroContent = programContent?.hero || {};
 const upcomingEvents = programContent?.upcomingEvents || {};
 const filters = programContent?.filters || {};

@@ -142,7 +142,7 @@ export default config({
     servicePages: collection({
       label: 'Services Pages',
       slugField: 'title',
-      path: 'src/keystatic/service-pages/*',
+      path: 'src/keystatic/page-content/*',
       format: { contentField: 'description' },
       schema: {
         title: fields.text({ 

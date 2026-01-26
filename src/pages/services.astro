@@ -42,7 +42,7 @@ function parseFrontmatter(content: string) {
 // Load services page content
 let servicesContent: any = {};
 try {
-  const servicesModule = await import('../keystatic/service-pages/services.mdoc?raw');
+  const servicesModule = await import('../keystatic/page-content/services.mdoc?raw');
   const servicesRaw = typeof servicesModule === 'string' ? servicesModule : servicesModule?.default || '';
   if (servicesRaw) {
     const parsed = parseFrontmatter(servicesRaw);

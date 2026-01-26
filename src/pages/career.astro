@@ -182,7 +182,7 @@ let jobMeta: any = {};
 let allCareers: any[] = [];
 
 try {
-  const content = getContentObject('career');
+  const content = await getContentObject('career');
   if (content) {
     careerContent = content;
     breadcrumb = content.breadcrumb || {};

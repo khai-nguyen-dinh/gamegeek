@@ -383,7 +383,7 @@ const getDisplayDate = (value: any) => {
   return { displayDay: day, displayMonth: month };
 };
 
-const newsContent = getContentObject("news");
+const newsContent = await getContentObject("news");
 const breadcrumb = newsContent?.breadcrumb || {};
 const sidebar = newsContent?.sidebar || {};
 
