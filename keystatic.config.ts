@@ -106,7 +106,7 @@ export default config({
       },
     }),
 
-    // Services Collection
+    // Services Collection (for service items)
     services: collection({
       label: 'Services',
       slugField: 'title',
@@ -134,6 +134,119 @@ export default config({
         featured: fields.checkbox({
           label: 'Featured Service',
           defaultValue: false,
+        }),
+      },
+    }),
+
+    // Services Page Content Collection
+    servicePages: collection({
+      label: 'Services Pages',
+      slugField: 'title',
+      path: 'src/keystatic/service-pages/*',
+      format: { contentField: 'description' },
+      schema: {
+        title: fields.text({ 
+          label: 'Page Title',
+          defaultValue: 'Services',
+        }),
+        hero: fields.object(
+          {
+            subtitle: fields.text({ label: 'Subtitle' }),
+            title: fields.text({ label: 'Title', validation: { isRequired: false } }),
+            titlePart1: fields.text({ label: 'Title Part 1', validation: { isRequired: false } }),
+            titleHighlight: fields.text({ label: 'Title Highlight', validation: { isRequired: false } }),
+            titleHighlight2: fields.text({ label: 'Title Highlight 2', validation: { isRequired: false } }),
+            titlePart4: fields.text({ label: 'Title Part 4', validation: { isRequired: false } }),
+            titleHighlight3: fields.text({ label: 'Title Highlight 3', validation: { isRequired: false } }),
+            tagline: fields.text({ 
+              label: 'Tagline',
+              description: 'Hero tagline text (e.g., "leading local gaming market expert & marketing partner")',
+              validation: { isRequired: false },
+            }),
+          },
+          { label: 'Hero' }
+        ),
+        moveText: fields.array(fields.text({ label: 'Text' }), { label: 'Move Text' }),
+        globalPartners: fields.object(
+          {
+            subtitle: fields.text({ label: 'Subtitle' }),
+            title: fields.text({ label: 'Title' }),
+          },
+          { label: 'Global Partners' }
+        ),
+        globalPartnersTabs: fields.array(
+          fields.object(
+            {
+              name: fields.text({ label: 'Name' }),
+              description: fields.text({ label: 'Description', multiline: true }),
+              image: fields.image({
+                label: 'Image',
+                directory: 'public/images',
+                publicPath: '/images',
+                validation: { isRequired: false },
+              }),
+              items: fields.array(
+                fields.object(
+                  {
+                    number: fields.text({ label: 'Number' }),
+                    title: fields.text({ label: 'Title' }),
+                    description: fields.text({ label: 'Description', multiline: true }),
+                  },
+                  { label: 'Item' }
+                ),
+                { label: 'Items' }
+              ),
+            },
+            { label: 'Tab' }
+          ),
+          { label: 'Global Partners Tabs' }
+        ),
+        localPartners: fields.object(
+          {
+            subtitle: fields.text({ label: 'Subtitle' }),
+            title: fields.text({ label: 'Title' }),
+          },
+          { label: 'Local Partners' }
+        ),
+        tabs: fields.array(
+          fields.object(
+            {
+              name: fields.text({ label: 'Name' }),
+              description: fields.text({ label: 'Description', multiline: true }),
+              image: fields.image({
+                label: 'Image',
+                directory: 'public/images',
+                publicPath: '/images',
+                validation: { isRequired: false },
+              }),
+              items: fields.array(
+                fields.object(
+                  {
+                    number: fields.text({ label: 'Number' }),
+                    title: fields.text({ label: 'Title' }),
+                    description: fields.text({ label: 'Description', multiline: true }),
+                  },
+                  { label: 'Item' }
+                ),
+                { label: 'Items' }
+              ),
+            },
+            { label: 'Tab' }
+          ),
+          { label: 'Tabs' }
+        ),
+        cta: fields.object(
+          {
+            title: fields.text({ label: 'Title' }),
+          },
+          { label: 'CTA' }
+        ),
+        description: fields.document({
+          label: 'Description',
+          formatting: true,
+          dividers: true,
+          links: true,
+          validation: { isRequired: false },
         }),
       },
     }),
@@ -355,6 +468,160 @@ export default config({
         }),
       },
     }),
+
+    // Globals Collection - Shared content across the site
+    globals: collection({
+      label: 'Globals',
+      slugField: 'title',
+      path: 'src/keystatic/globals/*',
+      schema: {
+        title: fields.text({ 
+          label: 'Title',
+          description: 'Identifier for this global content (e.g., "navbar", "footer", "contactForm", "meta")',
+        }),
+        navbar: fields.object(
+          {
+            menu: fields.array(
+              fields.object(
+                {
+                  text: fields.text({ label: 'Text' }),
+                  href: fields.text({ label: 'Href' }),
+                },
+                { label: 'Menu Item' }
+              ),
+              { label: 'Menu' }
+            ),
+            buttonText: fields.text({ label: 'Button Text' }),
+          },
+          { label: 'Navbar', validation: { isRequired: false } }
+        ),
+        footer: fields.object(
+          {
+            quickLinks: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                links: fields.array(
+                  fields.object(
+                    {
+                      text: fields.text({ label: 'Text' }),
+                      href: fields.text({ label: 'Href' }),
+                    },
+                    { label: 'Link' }
+                  ),
+                  { label: 'Links' }
+                ),
+              },
+              { label: 'Quick Links' }
+            ),
+            explore: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                links: fields.array(
+                  fields.object(
+                    {
+                      text: fields.text({ label: 'Text' }),
+                      href: fields.text({ label: 'Href' }),
+                    },
+                    { label: 'Link' }
+                  ),
+                  { label: 'Links' }
+                ),
+              },
+              { label: 'Explore' }
+            ),
+            company: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                links: fields.array(
+                  fields.object(
+                    {
+                      text: fields.text({ label: 'Text' }),
+                      href: fields.text({ label: 'Href' }),
+                    },
+                    { label: 'Link' }
+                  ),
+                  { label: 'Links' }
+                ),
+              },
+              { label: 'Company' }
+            ),
+            address: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                address: fields.text({ label: 'Address', multiline: true }),
+                email: fields.text({ label: 'Email' }),
+                phone: fields.text({ label: 'Phone' }),
+              },
+              { label: 'Address' }
+            ),
+            social: fields.object(
+              {
+                followText: fields.text({ label: 'Follow Text' }),
+                links: fields.array(
+                  fields.object(
+                    {
+                      platform: fields.text({ label: 'Platform' }),
+                      href: fields.text({ label: 'Href' }),
+                      icon: fields.text({ label: 'Icon' }),
+                    },
+                    { label: 'Social Link' }
+                  ),
+                  { label: 'Links' }
+                ),
+              },
+              { label: 'Social' }
+            ),
+            brandText: fields.text({ label: 'Brand Text' }),
+          },
+          { label: 'Footer', validation: { isRequired: false } }
+        ),
+        contactForm: fields.object(
+          {
+            step1: fields.object(
+              {
+                question: fields.text({ label: 'Question' }),
+                options: fields.array(fields.text({ label: 'Option' }), { label: 'Options' }),
+              },
+              { label: 'Step 1' }
+            ),
+            step2: fields.object(
+              {
+                question: fields.text({ label: 'Question' }),
+                options: fields.array(fields.text({ label: 'Option' }), { label: 'Options' }),
+              },
+              { label: 'Step 2' }
+            ),
+            step3: fields.object(
+              {
+                title: fields.text({ label: 'Title' }),
+                description: fields.text({ label: 'Description', multiline: true }),
+                fields: fields.object(
+                  {
+                    fullName: fields.text({ label: 'Full Name' }),
+                    email: fields.text({ label: 'Email' }),
+                    title: fields.text({ label: 'Title' }),
+                    companyName: fields.text({ label: 'Company Name' }),
+                    socialContact: fields.text({ label: 'Social Contact' }),
+                  },
+                  { label: 'Fields' }
+                ),
+                submitButton: fields.text({ label: 'Submit Button' }),
+              },
+              { label: 'Step 3' }
+            ),
+          },
+          { label: 'Contact Form', validation: { isRequired: false } }
+        ),
+        meta: fields.object(
+          {
+            siteTitle: fields.text({ label: 'Site Title' }),
+            defaultDescription: fields.text({ label: 'Default Description', multiline: true }),
+            defaultKeywords: fields.text({ label: 'Default Keywords', multiline: true }),
+          },
+          { label: 'Meta', validation: { isRequired: false } }
+        ),
+      },
+    }),
   },
   singletons: {
     // Site Content - Singleton for managing all page content
@@ -454,23 +721,7 @@ export default config({
           },
           { label: 'Home' }
         ),
-        navbar: fields.object(
-          {
-            menu: fields.array(
-              fields.object(
-                {
-                  text: fields.text({ label: 'Text' }),
-                  href: fields.text({ label: 'Href' }),
-                },
-                { label: 'Menu Item' }
-              ),
-              { label: 'Menu' }
-            ),
-            buttonText: fields.text({ label: 'Button Text' }),
-          },
-          { label: 'Navbar' }
-        ),
-        footer: fields.object(
+        about: fields.object(
           {
             quickLinks: fields.object(
               {
@@ -585,8 +836,6 @@ export default config({
               { label: 'Step 3' }
             ),
           },
-          { label: 'Contact Form' }
-        ),
         about: fields.object(
           {
             hero: fields.object(
@@ -657,103 +906,6 @@ export default config({
             ),
           },
           { label: 'About' }
-        ),
-        services: fields.object(
-          {
-            hero: fields.object(
-              {
-                subtitle: fields.text({ label: 'Subtitle' }),
-                title: fields.text({ label: 'Title', validation: { isRequired: false } }),
-                titlePart1: fields.text({ label: 'Title Part 1', validation: { isRequired: false } }),
-                titleHighlight: fields.text({ label: 'Title Highlight', validation: { isRequired: false } }),
-                titleHighlight2: fields.text({ label: 'Title Highlight 2', validation: { isRequired: false } }),
-                titlePart4: fields.text({ label: 'Title Part 4', validation: { isRequired: false } }),
-                titleHighlight3: fields.text({ label: 'Title Highlight 3', validation: { isRequired: false } }),
-                tagline: fields.text({ 
-                  label: 'Tagline',
-                  description: 'Hero tagline text (e.g., "leading local gaming market expert & marketing partner")',
-                  validation: { isRequired: false },
-                }),
-              },
-              { label: 'Hero' }
-            ),
-            moveText: fields.array(fields.text({ label: 'Text' }), { label: 'Move Text' }),
-            globalPartners: fields.object(
-              {
-                subtitle: fields.text({ label: 'Subtitle' }),
-                title: fields.text({ label: 'Title' }),
-              },
-              { label: 'Global Partners' }
-            ),
-            globalPartnersTabs: fields.array(
-              fields.object(
-                {
-                  name: fields.text({ label: 'Name' }),
-                  description: fields.text({ label: 'Description', multiline: true }),
-                  image: fields.image({
-                    label: 'Image',
-                    directory: 'public/images',
-                    publicPath: '/images',
-                    validation: { isRequired: false },
-                  }),
-                  items: fields.array(
-                    fields.object(
-                      {
-                        number: fields.text({ label: 'Number' }),
-                        title: fields.text({ label: 'Title' }),
-                        description: fields.text({ label: 'Description', multiline: true }),
-                      },
-                      { label: 'Item' }
-                    ),
-                    { label: 'Items' }
-                  ),
-                },
-                { label: 'Tab' }
-              ),
-              { label: 'Global Partners Tabs' }
-            ),
-            localPartners: fields.object(
-              {
-                subtitle: fields.text({ label: 'Subtitle' }),
-                title: fields.text({ label: 'Title' }),
-              },
-              { label: 'Local Partners' }
-            ),
-            tabs: fields.array(
-              fields.object(
-                {
-                  name: fields.text({ label: 'Name' }),
-                  description: fields.text({ label: 'Description', multiline: true }),
-                  image: fields.image({
-                    label: 'Image',
-                    directory: 'public/images',
-                    publicPath: '/images',
-                    validation: { isRequired: false },
-                  }),
-                  items: fields.array(
-                    fields.object(
-                      {
-                        number: fields.text({ label: 'Number' }),
-                        title: fields.text({ label: 'Title' }),
-                        description: fields.text({ label: 'Description', multiline: true }),
-                      },
-                      { label: 'Item' }
-                    ),
-                    { label: 'Items' }
-                  ),
-                },
-                { label: 'Tab' }
-              ),
-              { label: 'Tabs' }
-            ),
-            cta: fields.object(
-              {
-                title: fields.text({ label: 'Title' }),
-              },
-              { label: 'CTA' }
-            ),
-          },
-          { label: 'Services' }
         ),
         contact: fields.object(
           {
@@ -970,14 +1122,6 @@ export default config({
             followText: fields.text({ label: 'Follow Text' }),
           },
           { label: 'Program' }
-        ),
-        meta: fields.object(
-          {
-            siteTitle: fields.text({ label: 'Site Title' }),
-            defaultDescription: fields.text({ label: 'Default Description', multiline: true }),
-            defaultKeywords: fields.text({ label: 'Default Keywords', multiline: true }),
-          },
-          { label: 'Meta' }
         ),
       },
     }),

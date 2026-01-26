@@ -2,9 +2,56 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
-import { getContent, getContentObject } from '../utils/content.ts';
+import { load } from 'js-yaml';
 
-const servicesContent = getContentObject('services');
+function parseFrontmatter(content: string) {
+  const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+  let match = content.match(frontmatterRegex);
+  
+  if (!match) {
+    const firstDash = content.indexOf('---\n');
+    if (firstDash === 0) {
+      const secondDash = content.indexOf('\n---\n', firstDash + 4);
+      if (secondDash > 0) {
+        const yamlContent = content.substring(4, secondDash);
+        const bodyContent = content.substring(secondDash + 5);
+        try {
+          const data = load(yamlContent) as any;
+          return { data: data || {}, content: bodyContent.trim() };
+        } catch (error) {
+          console.error('Error parsing YAML:', error);
+          return { data: {}, content: bodyContent.trim() };
+        }
+      }
+    }
+    return { data: {}, content: content.trim() };
+  }
+
+  const yamlContent = match[1];
+  const bodyContent = match[2];
+
+  try {
+    const data = load(yamlContent) as any;
+    return { data: data || {}, content: bodyContent.trim() };
+  } catch (error) {
+    console.error('Error parsing YAML:', error);
+    return { data: {}, content: bodyContent.trim() };
+  }
+}
+
+// Load services page content
+let servicesContent: any = {};
+try {
+  const servicesModule = await import('../keystatic/service-pages/services.mdoc?raw');
+  const servicesRaw = typeof servicesModule === 'string' ? servicesModule : servicesModule?.default || '';
+  if (servicesRaw) {
+    const parsed = parseFrontmatter(servicesRaw);
+    servicesContent = parsed.data;
+  }
+} catch (error) {
+  console.warn('Could not load services.mdoc, using empty content');
+}
+
 const heroContent = servicesContent?.hero || {};
 const globalPartners = servicesContent?.globalPartners || {};
 const globalPartnersTabs = servicesContent?.globalPartnersTabs || [];

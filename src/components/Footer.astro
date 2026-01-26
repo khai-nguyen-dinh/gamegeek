@@ -1,7 +1,7 @@
 ---
 import { getContentObject } from '../utils/content';
 
-const footerContent = getContentObject('footer');
+const footerContent = await getContentObject('footer');
 const quickLinks = footerContent?.quickLinks || {};
 const explore = footerContent?.explore || {};
 const company = footerContent?.company || {};

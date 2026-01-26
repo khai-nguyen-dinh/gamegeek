@@ -7,7 +7,7 @@ interface Props {
 
 const { variant = 'black' } = Astro.props;
 const textColor = variant === 'white' ? 'text-title' : 'text-white';
-const navbarContent = getContentObject('navbar');
+const navbarContent = await getContentObject('navbar');
 const menuItems = navbarContent?.menu || [];
 const buttonText = navbarContent?.buttonText || 'Get Started';
 ---
