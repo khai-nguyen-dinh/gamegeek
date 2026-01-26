@@ -1,5 +1,5 @@
 import { load as loadYaml } from 'js-yaml';
-import siteContentRaw from '../keystatic/site-content.yaml?raw';
+// site-content.yaml has been removed - all content moved to collections
 
 let cachedContent: any | null = null;
 let cachedGlobals: any | null = null;
@@ -228,21 +228,19 @@ async function getPageContentData(): Promise<any> {
 }
 
 function getContentData(): any {
+  // site-content.yaml has been removed - all content moved to collections
+  // This function is kept for backward compatibility but returns empty object
   if (cachedContent && !import.meta.env.DEV) {
     return cachedContent;
   }
 
-  let data: any = null;
-
-  if (siteContentRaw && typeof siteContentRaw === 'string') {
-    data = loadYaml(siteContentRaw) ?? null;
-  }
+  const data: any = {};
 
   if (!import.meta.env.DEV) {
-    cachedContent = data || {};
+    cachedContent = data;
   }
 
-  return data || {};
+  return data;
 }
 
 /**
