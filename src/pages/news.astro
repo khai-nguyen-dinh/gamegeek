@@ -67,94 +67,221 @@ function getGitHubToken(): string | null {
 }
 
 // Fetch raw file from GitHub (works in build and runtime)
-async function fetchFromGitHub(path: string): Promise<string | null> {
-  try {
-    const repo = "khai-nguyen-dinh/gamegeek";
-    const branch = "main";
-    const url = `https://raw.githubusercontent.com/${repo}/${branch}/${path}`;
+async function fetchFromGitHub(
+  path: string,
+  retries: number = 2,
+): Promise<string | null> {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const repo = "khai-nguyen-dinh/gamegeek";
+      const branch = "main";
+      const url = `https://raw.githubusercontent.com/${repo}/${branch}/${path}`;
 
-    const headers: HeadersInit = {
-      Accept: "application/vnd.github.v3+raw",
-      "User-Agent": "GameGeek-CMS",
-    };
+      const headers: HeadersInit = {
+        Accept: "application/vnd.github.v3+raw",
+        "User-Agent": "GameGeek-CMS",
+      };
 
-    const token = getGitHubToken();
-    if (token) {
-      headers["Authorization"] = `token ${token}`;
+      const token = getGitHubToken();
+      if (token) {
+        headers["Authorization"] = `token ${token}`;
+      }
+
+      // Add timeout to fetch
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      try {
+        const response = await fetch(url, {
+          headers,
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+
+        if (response.ok) {
+          return await response.text();
+        }
+
+        if (response.status === 403) {
+          console.warn(
+            `GitHub API rate limit or forbidden for ${path}. Attempt ${attempt + 1}/${retries + 1}`,
+          );
+          if (attempt < retries) {
+            await new Promise((resolve) =>
+              setTimeout(resolve, 1000 * (attempt + 1)),
+            ); // Exponential backoff
+            continue;
+          }
+        }
+
+        if (response.status === 404) {
+          console.warn(`File not found: ${path}`);
+          return null;
+        }
+
+        // For other errors, try again if we have retries left
+        if (attempt < retries) {
+          await new Promise((resolve) =>
+            setTimeout(resolve, 1000 * (attempt + 1)),
+          );
+          continue;
+        }
+
+        return null;
+      } catch (fetchError: any) {
+        clearTimeout(timeoutId);
+        if (fetchError.name === "AbortError") {
+          console.warn(
+            `Fetch timeout for ${path}. Attempt ${attempt + 1}/${retries + 1}`,
+          );
+        } else {
+          throw fetchError; // Re-throw to be caught by outer catch
+        }
+
+        if (attempt < retries) {
+          await new Promise((resolve) =>
+            setTimeout(resolve, 1000 * (attempt + 1)),
+          );
+          continue;
+        }
+      }
+    } catch (error: any) {
+      // Only log error on last attempt
+      if (attempt === retries) {
+        console.warn(
+          `Error fetching from GitHub: ${path}`,
+          error.message || error,
+        );
+      }
+
+      if (attempt < retries) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, 1000 * (attempt + 1)),
+        );
+        continue;
+      }
     }
-
-    const response = await fetch(url, { headers });
-    if (response.ok) {
-      return await response.text();
-    }
-
-    if (response.status === 403) {
-      console.error(`GitHub API rate limit or forbidden for ${path}`);
-    }
-
-    return null;
-  } catch (error) {
-    console.error(`Error fetching from GitHub: ${path}`, error);
-    return null;
   }
+
+  return null;
 }
 
 // List files in a GitHub directory
-async function listGitHubFiles(path: string): Promise<string[]> {
-  try {
-    const repo = "khai-nguyen-dinh/gamegeek";
-    const branch = "main";
-    const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
+async function listGitHubFiles(
+  path: string,
+  retries: number = 2,
+): Promise<string[]> {
+  // Direct GitHub API
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const repo = "khai-nguyen-dinh/gamegeek";
+      const branch = "main";
+      const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
 
-    const headers: HeadersInit = {
-      Accept: "application/vnd.github.v3+json",
-      "User-Agent": "GameGeek-CMS",
-    };
+      const headers: HeadersInit = {
+        Accept: "application/vnd.github.v3+json",
+        "User-Agent": "GameGeek-CMS",
+      };
 
-    const token = getGitHubToken();
-    if (token) {
-      headers["Authorization"] = `token ${token}`;
-    }
+      const token = getGitHubToken();
+      if (token) {
+        headers["Authorization"] = `token ${token}`;
+      }
 
-    const response = await fetch(url, { headers });
+      // Add timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    if (!response.ok) {
-      if (response.status === 403) {
-        const errorData = await response.json().catch(() => ({}));
-        if (errorData.message?.includes("rate limit")) {
-          console.error(
-            `GitHub API rate limit exceeded for ${path}. Please add GITHUB_TOKEN to environment variables.`,
+      try {
+        const response = await fetch(url, {
+          headers,
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          if (response.status === 403) {
+            const errorData = await response.json().catch(() => ({}));
+            if (errorData.message?.includes("rate limit")) {
+              console.warn(
+                `GitHub API rate limit exceeded for ${path}. Attempt ${attempt + 1}/${retries + 1}`,
+              );
+            } else {
+              console.warn(
+                `GitHub API forbidden for ${path}:`,
+                errorData.message || response.statusText,
+              );
+            }
+
+            if (attempt < retries) {
+              await new Promise((resolve) =>
+                setTimeout(resolve, 1000 * (attempt + 1)),
+              );
+              continue;
+            }
+          } else if (response.status === 404) {
+            console.warn(`Directory not found: ${path}`);
+            return [];
+          } else {
+            console.warn(
+              `GitHub API error for ${path}: ${response.status} ${response.statusText}. Attempt ${attempt + 1}/${retries + 1}`,
+            );
+
+            if (attempt < retries) {
+              await new Promise((resolve) =>
+                setTimeout(resolve, 1000 * (attempt + 1)),
+              );
+              continue;
+            }
+          }
+          return [];
+        }
+
+        const files = await response.json();
+        if (Array.isArray(files)) {
+          const fileNames = files
+            .filter((file: any) => file.type === "file")
+            .map((file: any) => file.name);
+          return fileNames;
+        }
+
+        console.warn(`Unexpected response format for ${path}:`, typeof files);
+        return [];
+      } catch (fetchError: any) {
+        clearTimeout(timeoutId);
+        if (fetchError.name === "AbortError") {
+          console.warn(
+            `Fetch timeout for ${path}. Attempt ${attempt + 1}/${retries + 1}`,
           );
         } else {
-          console.error(
-            `GitHub API forbidden for ${path}:`,
-            errorData.message || response.statusText,
-          );
+          throw fetchError;
         }
-      } else if (response.status === 404) {
-        console.error(`Directory not found: ${path}`);
-      } else {
-        console.error(
-          `GitHub API error for ${path}: ${response.status} ${response.statusText}`,
+
+        if (attempt < retries) {
+          await new Promise((resolve) =>
+            setTimeout(resolve, 1000 * (attempt + 1)),
+          );
+          continue;
+        }
+      }
+    } catch (error: any) {
+      if (attempt === retries) {
+        console.warn(
+          `Error listing GitHub files: ${path}`,
+          error.message || error,
         );
       }
-      return [];
-    }
 
-    const files = await response.json();
-    if (Array.isArray(files)) {
-      const fileNames = files
-        .filter((file: any) => file.type === "file")
-        .map((file: any) => file.name);
-      return fileNames;
+      if (attempt < retries) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, 1000 * (attempt + 1)),
+        );
+        continue;
+      }
     }
-
-    console.warn(`Unexpected response format for ${path}:`, typeof files);
-    return [];
-  } catch (error) {
-    console.error(`Error listing GitHub files: ${path}`, error);
-    return [];
   }
+
+  return [];
 }
 
 // Helper to convert slug to readable title
@@ -481,7 +608,8 @@ postsWithMeta.forEach((post) => {
                   <a href="/"
                     ><img src="/renius/image/home-icon.svg" alt="Icon" />{
                       breadcrumb.home || "HOME"
-                    }</a>
+                    }</a
+                  >
                 </li>
                 <li>{breadcrumb.current || "BLOG"}</li>
               </ul>
@@ -516,6 +644,11 @@ postsWithMeta.forEach((post) => {
                   {sidebar.categories?.title || "Categories"}
                 </h3>
                 <ul class="list-unstyled mb-0">
+                  <li>
+                    <a href="/news"class="position-relative">
+                      <i class="ri-arrow-right-s-line position-absolute"></i> All categories 
+                    </a>
+                  </li>
                   {
                     categories.map((cat) => {
                       const count = categoryCounts.get(cat.id) || 0;
@@ -886,17 +1019,20 @@ postsWithMeta.forEach((post) => {
               <li class="page-item">
                 <a
                   class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle active"
-                  href="#">01</a>
+                  href="#">01</a
+                >
               </li>
               <li class="page-item">
                 <a
                   class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle"
-                  href="#">02</a>
+                  href="#">02</a
+                >
               </li>
               <li class="page-item">
                 <a
                   class="page-link d-flex flex-column align-items-center justify-content-center rounded-circle"
-                  href="#">03</a>
+                  href="#">03</a
+                >
               </li>
               <li class="page-item">
                 <a
